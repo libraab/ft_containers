@@ -1,0 +1,28 @@
+BUT : recoder les containers de la STL
+
+pas de fct dans un fichier d'en tete
+fichiers d'en tete separés
+namespaces doit etre ft
+ne pas utiliser un tableau pour map
+si le container standars a x fct public = ne pas depasser ce nombre
+        --> donc mettre le rest des fct en privé
+il faut recoder tte les fct membre et non membre d'un containers ainsi que les surcharges
+si le containers a un system d'iterator il faut le mettre
+il faut utiliser std::allecator
+pour les surcharges non membre on a le droit a friend 
+        ---> ex : map::value_compare = friend autorisé
+
+
+links :
+
+https://cplusplus.com/
+https://en.cppreference.com/w/
+
+to understand allocator
+http://casteyde.christian.free.fr/cpp/cours/online/x5348.html
+
+to understand map binary tree
+https://www.tutorialspoint.com/data_structures_algorithms/tree_data_structure.htm
+https://www.programiz.com/dsa/red-black-tree
+
+https://learn.microsoft.com/fr-fr/cpp/standard-library/vector-class?view=msvc-170#vector
