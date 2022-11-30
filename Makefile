@@ -19,8 +19,8 @@ OBJS			= $(SRCS_FILES:.cpp=.o)
 # ╚██████╗    ╚██████╔╝    ██║ ╚═╝ ██║    ██║         ██║    ███████╗ #
 #  ╚═════╝     ╚═════╝     ╚═╝     ╚═╝    ╚═╝         ╚═╝    ╚══════╝ #
 #➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ #
-COMP		= c++
-FLAGS	  	= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+COMP		= clang++
+FLAGS	  	= -Wall -Wextra -Werror -std=c++98 #-D STD=1 -g -fsanitize=address
 
 RM			= rm -rf
 #➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ #
