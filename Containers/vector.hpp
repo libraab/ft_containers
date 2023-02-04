@@ -5,7 +5,7 @@
 namespace ft
 {
 
-	template < class T, class Alloc = std::allocator<T> >
+	template <class T, class Alloc = std::allocator<T>>
     class vector
     {
         private:
@@ -60,6 +60,9 @@ namespace ft
                 _capacity = 0;
                 _size = 0;
                 *this = x;
+            }
+            vector& operator= (const vector& x) {
+                
             }
             //------------------------------------------------------------------
 			vector	& operator=(vector const & x)
@@ -200,7 +203,7 @@ namespace ft
     - constructor (x 4) ✅
     - destructor ✅
     - operateur= ❌
-    I T E R A T O R S
+    I T E R A T O R S // renvoi un iteratir
         - begin ❌
         - end ❌
         - rbegin ❌
