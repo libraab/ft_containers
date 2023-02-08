@@ -34,7 +34,7 @@ namespace ft
         typedef typename    random_access_iterator_tag  iterator_category;
     };
     //=====================================================================================================================================
-    template <class T> class random_access_iterator iterator : public iterator_traits{ // --> https://legacy.cplusplus.com/reference/iterator/RandomAccessIterator/
+    template <class T> class random_access_iterator : public iterator_traits{ // --> https://legacy.cplusplus.com/reference/iterator/RandomAccessIterator/
         public: 
         typedef typename    ptrdiff_t                   difference_type; // --> https://legacy.cplusplus.com/reference/iterator/iterator/
         typedef typename    T                           value_type;
@@ -90,7 +90,6 @@ namespace ft
         } // destructor of other is called to release the resources formerly managed by *this
         //======================================================================
 
-
         // --> https://en.cppreference.com/w/cpp/language/operators
         // I N C R E M E N T  &   D E C R E M E N T 
         iterator& operator++() { // prefix increment
@@ -104,7 +103,6 @@ namespace ft
         }
         iterator* operator++() { // pointer increment
             pointer = pointer + sizeof(*pointer);
-            // OR      (*_ptr)++;
             return *this;
         }
         //-------------------------------------------
@@ -119,7 +117,6 @@ namespace ft
         }
         iterator* operator--() { // pointer decrement
             pointer = pointer - sizeof(*pointer);
-            // OR      (*_ptr)--;
             return *this;
         }
         //======================================================================
@@ -132,10 +129,16 @@ namespace ft
             _ptr = _ptr - rhs;
             return *this;
         }
-        iterator operator+(difference_type rhs) const {
+        iterator operator+(difference_type rhs) const { // a + n (a is object of iterator & n is value of its difference type)
             return (iterator(_ptr + rhs));
         }
-        iterator operator-(difference_type rhs) const {
+        difference_type operator+(iterator rhs) const { // n + a
+            return (difference_type(_ptr + rhs));
+        }
+        iterator operator-(difference_type rhs) const { // a - n 
+            return (iterator(_ptr - rhs));
+        }
+        iterator operator-(iterator& rhs) const { // a - b (a & b are object of iterator)
             return (iterator(_ptr - rhs));
         }
         //======================================================================
@@ -151,10 +154,7 @@ namespace ft
         //======================================================================
         reference   operator*() const {return (*_ptr);}
         pointer     operator->() const {return (_ptr);}
-        //reference   operator[](difference_type index) const {return (_ptr[index]);}
-        reference           operator[](difference_type idx)       { return _ptr[idx]; }
-        const reference     operator[](difference_type idx) const { return _ptr[idx]; }         
-        }
+        reference   operator[](difference_type idx) { return _ptr[idx]; }
     }; 
 }
 
