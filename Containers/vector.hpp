@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
 #include "../ft_containers.hpp"
+#include "../iterators/vectors_iterators.hpp"
 
 namespace ft
 {
 
-	template <class T, class Alloc = std::allocator<T>>
+	template <class T, class Alloc = std::allocator<T> >
     class vector
     {
         private:
