@@ -130,14 +130,6 @@ namespace ft
             *this = *this - rhs;
             return *this;
         }
-        bool operator< (const iterator& lhs, const iterator& rhs) { return rhs > lhs; }
-        bool operator> (const iterator& lhs, const iterator& rhs) { return rhs < lhs; }
-        bool operator<=(const iterator& lhs, const iterator& rhs) { return !(lhs > rhs); }
-        bool operator>=(const iterator& lhs, const iterator& rhs) { return !(lhs < rhs); }
-
-        bool operator==(const iterator& lhs, const iterator& rhs) { return !(lhs != rhs); } 
-        bool operator!=(const iterator& lhs, const iterator& rhs) { return !(lhs == rhs); }
-
         //====================================================================//
         //         O V E R L O A D I N G     O P E R A T O R S                //   
         //====================================================================//
@@ -179,7 +171,7 @@ namespace ft
     //             C O M P A R I S O N   O P E R A T O R S                    //   
     //========================================================================//
     template <class A, class B>
-    bool operator==(const iterator<A>& lhs, const iterator<B>& rhs){
+    bool operator== (const iterator<A>& lhs, const iterator<B>& rhs){
         return (lhs.base() == rhs.base());
     }
     template <class A, class B>
@@ -187,4 +179,12 @@ namespace ft
         return (lhs.base() != rhs.base());
     }
     //--------------------------------------------------------------------------
+    template <class A, class B>
+    template <class A, class B>
+    template <class A, class B>
+    template <class A, class B>
+    bool operator< (const iterator& lhs, const iterator& rhs) { return rhs > lhs; }
+    bool operator> (const iterator& lhs, const iterator& rhs) { return rhs < lhs; }
+    bool operator<= (const iterator& lhs, const iterator& rhs) { return !(lhs > rhs); }
+    bool operator>= (const iterator& lhs, const iterator& rhs) { return !(lhs < rhs); }
 }
