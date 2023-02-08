@@ -171,20 +171,20 @@ namespace ft
     //             C O M P A R I S O N   O P E R A T O R S                    //   
     //========================================================================//
     template <class A, class B>
-    bool operator== (const iterator<A>& lhs, const iterator<B>& rhs){
-        return (lhs.base() == rhs.base());
-    }
+    bool operator== (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() == rhs.base());}
+
     template <class A, class B>
-    bool operator!= (const iterator<A>& lhs, const iterator<B>& rhs){
-        return (lhs.base() != rhs.base());
-    }
-    //--------------------------------------------------------------------------
+    bool operator!= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() != rhs.base());}
+    
     template <class A, class B>
+    bool operator< (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() < rhs.base());}
+
     template <class A, class B>
+    bool operator> (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() > rhs.base());}
+
     template <class A, class B>
+    bool operator<= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() <= rhs.base());}
+
     template <class A, class B>
-    bool operator< (const iterator& lhs, const iterator& rhs) { return rhs > lhs; }
-    bool operator> (const iterator& lhs, const iterator& rhs) { return rhs < lhs; }
-    bool operator<= (const iterator& lhs, const iterator& rhs) { return !(lhs > rhs); }
-    bool operator>= (const iterator& lhs, const iterator& rhs) { return !(lhs < rhs); }
+    bool operator>= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() >= rhs.base());}
 }
