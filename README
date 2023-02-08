@@ -27,8 +27,8 @@ https://learn.microsoft.com/fr-fr/cpp/standard-library/vector-class?view=msvc-17
 //==============================================================================
 
 
-/* TO DO : 4 containers (3 types of containers)
+/* TO DO :3 containers
 - Sequence container = vector
-- Associative container = set & map
 - Container adaptor = stack
+- Associative container = map
 */

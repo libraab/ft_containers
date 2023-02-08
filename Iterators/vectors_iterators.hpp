@@ -46,11 +46,55 @@ namespace ft
             pointer _ptr;
             
         public: 
-        // --> https://en.cppreference.com/w/cpp/language/operators
         //======================================================================
+        // A S S I G N E M E N T   O P E R A T O R
+        // copy assignment
+        reference operator=(const reference other)
+        {
+            // Guard self assignment 
+            // (The canonical copy-assignment operator is expected to perform no action on self-assignment, and to return the lhs by reference)
+            if (this == &other)
+                return *this;
+            // assume *this manages a reusable resource, such as a heap-allocated buffer mArray
+            if (sizeof(_ptr) != sizeof(other))           // if resource in *this cannot be reused
+            {
+                delete[] _ptr;                           // release resource in *this of the current instance
+                _ptr = nullptr;
+                sizeof(_ptr) = 0;                       // preserve invariants in case next line throws (security)
+                _ptr = new int[sizeof(other)];          // allocate resource in *this
+                sizeof(_ptr) = sizeof(other);
+            } 
+            std::copy(other._ptr, other._ptr + sizeof(other), _ptr);
+            return *this;
+        }
+        //---------------------------------------------------------------------
+        // move assignment
+        reference operator=(reference& other) noexcept
+        {
+            // Guard self assignment
+            if (this == &other)
+                return *this; // delete[]/size=0 would also be ok
+        
+            delete[] _ptr;                                  // release resource in *this
+            _ptr = std::exchange(other._ptr, nullptr);      // leave other in valid state
+            sizeof(_ptr) = std::exchange(sizeof(other), 0);
+            return *this;
+        }
+        //---------------------------------------------------------------------
+        // copy assignment (copy-and-swap idiom)
+        reference value_type::operator=(value_type other) noexcept // call copy or move constructor to construct other
+        {
+            std::swap(sizeof(_ptr), sizeof(other)); // exchange resources between *this and other
+            std::swap(_ptr, other._ptr);
+            return *this;
+        } // destructor of other is called to release the resources formerly managed by *this
+        //======================================================================
+
+
+        // --> https://en.cppreference.com/w/cpp/language/operators
         // I N C R E M E N T  &   D E C R E M E N T 
         iterator& operator++() { // prefix increment
-            _ptr++;
+            _ptr++; /* actual incrementation */
             return *this;
         }
         iterator operator++(int) { // postfix increment
@@ -58,6 +102,12 @@ namespace ft
             operator++();
             return old;
         }
+        iterator* operator++() { // pointer increment
+            pointer = pointer + sizeof(*pointer);
+            // OR      (*_ptr)++;
+            return *this;
+        }
+        //-------------------------------------------
         iterator& operator--() { // prefix decrement
             _ptr--;
             return *this;
@@ -66,6 +116,11 @@ namespace ft
             iterator old = *this;
             operator--();
             return old;
+        }
+        iterator* operator--() { // pointer decrement
+            pointer = pointer - sizeof(*pointer);
+            // OR      (*_ptr)--;
+            return *this;
         }
         //======================================================================
         // B I N A R Y   A R I T H M E T I C   O P E R A T O R S
@@ -90,12 +145,54 @@ namespace ft
         bool operator<=(const iterator& lhs, const iterator& rhs) { return !(lhs > rhs); }
         bool operator>=(const iterator& lhs, const iterator& rhs) { return !(lhs < rhs); }
 
-        bool operator==(const iterator& lhs, const iterator& rhs) { return !(lhs != rhs); }
+        bool operator==(const iterator& lhs, const iterator& rhs) { return !(lhs != rhs); } 
         bool operator!=(const iterator& lhs, const iterator& rhs) { return !(lhs == rhs); }
 
         //======================================================================
-        reference	operator*() const {return (*_ptr);}
-        pointer		operator->() const {return (_ptr);}
-        reference	operator[](difference_type index) const {return (_ptr[index]);}
+        reference   operator*() const {return (*_ptr);}
+        pointer     operator->() const {return (_ptr);}
+        //reference   operator[](difference_type index) const {return (_ptr[index]);}
+        reference           operator[](difference_type idx)       { return _ptr[idx]; }
+        const reference     operator[](difference_type idx) const { return _ptr[idx]; }         
+        }
     }; 
 }
+
+/*
+
+X a;
+X b(a);
+b = a; ✅
+
+a == b ✅
+a != b ✅
+
+*a ✅
+a->m ✅
+
+*a = t ✅
+
+++a ✅
+a++ ✅
+*a++ ✅
+
+--a ✅
+a-- ✅
+*a-- ✅
+
+a + n ✅
+n + a
+a - n ✅
+a - b
+
+a < b ✅
+a > b ✅
+a <= b ✅
+a >= b ✅
+
+a += n ✅
+a -= n ✅
+
+a[n] ✅
+
+*/
