@@ -35,9 +35,6 @@ namespace ft
         typedef typename    T&                          reference;
         typedef typename    random_access_iterator_tag  iterator_category;
     };
-    //====================================//
-    //  R E V E R S E - I T E R A T O R  //
-    //====================================//
     //================================================//
     //     P R I N C I P A L     I T E R A T O R      //
     //================================================//
@@ -65,7 +62,7 @@ namespace ft
         //====================================================================//
         //          A S S I G N E M E N T   O P E R A T O R                   //
         //====================================================================//
-        iterator &operator=(const iterator &rhs){
+        iterator &operator= (const iterator &rhs) {
             if (*this != rhs)
                 this->_ptr = rhs._ptr;
             return (*this);
@@ -100,7 +97,7 @@ namespace ft
         }
         iterator operator--(int) {      // postfix decrement
             iterator old = *this;
-            operator--();
+            --(*this);
             return old;
         }
         iterator* operator--() {        // pointer decrement
@@ -116,7 +113,7 @@ namespace ft
         iterator operator- (difference_type rhs) const { // a - n 
             return (iterator(_ptr - rhs));
         }
-        iterator& operator+= (const iterator& rhs) {
+        iterator& operator+= (difference_type& rhs) {
             *this = *this + rhs;
             return *this;
         }
@@ -128,7 +125,7 @@ namespace ft
         //         O V E R L O A D I N G     O P E R A T O R S                //   
         //====================================================================//
         reference   operator*() const                       {return (*this->_ptr);}
-        pointer     operator->() const                      {return (this->_ptr_t);}
+        pointer     operator->() const                      {return (this->_ptr);}
         reference   operator[](difference_type idx) const   {return (*(_ptr + idx));}
 
         // 👇🏻 to access the raw pointer that iterator is pointing to (direct access to the data) 👇🏻
@@ -181,4 +178,86 @@ namespace ft
 
     template <class A, class B>
     bool operator>= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() >= rhs.base());}
+    //========================================================================//
+    //               R E V E R S E       I T E R A T O R S                    //
+    //========================================================================//
+
+    template <class Iterator>
+    class reverse_iterator : public iterator_traits<T> {
+        public:
+            typedef Iterator                                                    iterator_type;
+
+            typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
+            typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
+            typedef typename ft::iterator_traits<Iterator>::pointer             pointer;
+            typedef typename ft::iterator_traits<Iterator>::reference           reference;
+            typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
+        
+        private:
+            iterator_type   _it;
+        
+        public:
+        //====================================================================//
+        //        C O N S T R U C T O R S     &   D E S T R U C T O R         //
+        //====================================================================//
+        reverse_iterator (void)                     : _it(0)      {return;}
+        explicit reverse_iterator (Iterator i)      : _it(i - 1)  {return;}
+        // 👆🏻 explicit = used for only direct initioalisation, no implicit conversion
+        // no destructor needed cause it doesn't own any resources that need to be cleaned up (no dynamically allocated memory, nofile handles, no sockets ...)
+        //====================================================================//
+        //          A S S I G N E M E N T   O P E R A T O R                   //
+        //====================================================================//
+        reverse_iterator &operator= (const reverse_iterator &rhs) { // same thing as general iterator l65
+            if (*this != rhs)
+                this->_it = rhs._it;
+            return (*this);
+        }
+        //====================================================================//
+        //              I N C R E M E N T  &   D E C R E M E N T              //
+        //====================================================================//
+        reverse_iterator& operator++() {       
+            _it--;               
+            return *this;
+        }
+        reverse_iterator& operator--() { 
+            _it++;
+            return *this;
+        }
+        reverse_iterator operator++(int) {     
+            reverse_iterator old = *this;
+            ++(*this);
+            return old;
+        }
+        reverse_iterator operator--(int) {   
+            reverse_iterator old = *this;
+            --(*this);
+            return old;
+        }
+        //====================================================================//
+        //        B I N A R Y   A R I T H M E T I C   O P E R A T O R S       //
+        //====================================================================//
+        reverse_iterator operator+ (difference_type rhs) const { // a + n 
+            return (reverse_iterator(base() - rhs));
+        }
+        reverse_iterator operator- (difference_type rhs) const { // a - n 
+            return (reverse_iterator(base() + rhs));
+        }
+        reverse_iterator& operator+= (difference_type rhs) {
+            *this = *this - rhs;
+            return *this;
+        }
+        reverse_iterator& operator-= (difference_type rhs) {
+            *this = *this + rhs;
+            return *this;
+        }
+        //====================================================================//
+        //         O V E R L O A D I N G     O P E R A T O R S                //   
+        //====================================================================//
+        reference   operator*() const                       {return (*this->_it);}
+        pointer     operator->() const                      {return (_it.operator->());}
+        reference   operator[](difference_type idx) const   {return (*(_it - idx));}
+
+        // 👇🏻 to access the raw pointer that iterator is pointing to (direct access to the data) 👇🏻
+        iterator_type     base() const                            {return (_it + 1);}
+    }; 
 }
