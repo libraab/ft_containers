@@ -44,11 +44,11 @@ namespace ft
 
         protected:
             pointer _ptr;
-
+            
         public: 
         // --> https://en.cppreference.com/w/cpp/language/operators
         //======================================================================
-        // Increment and decrement
+        // I N C R E M E N T  &   D E C R E M E N T 
         iterator& operator++() { // prefix increment
             _ptr++;
             return *this;
@@ -68,7 +68,7 @@ namespace ft
             return old;
         }
         //======================================================================
-        // Binary arithmetic operators
+        // B I N A R Y   A R I T H M E T I C   O P E R A T O R S
         iterator& operator+=(const iterator& rhs) {
             _ptr = _ptr + rhs;
             return *this;
@@ -84,8 +84,8 @@ namespace ft
             return (iterator(_ptr - rhs));
         }
         //======================================================================
-        // comparison op
-        bool operator< (const iterator& lhs, const iterator& rhs) { /* do actual comparison */ }
+        // C O M P A R I S O N   O P ER A T O R 
+        bool operator< (const iterator& lhs, const iterator& rhs) { return rhs > lhs; }
         bool operator> (const iterator& lhs, const iterator& rhs) { return rhs < lhs; }
         bool operator<=(const iterator& lhs, const iterator& rhs) { return !(lhs > rhs); }
         bool operator>=(const iterator& lhs, const iterator& rhs) { return !(lhs < rhs); }
@@ -93,12 +93,6 @@ namespace ft
         bool operator==(const iterator& lhs, const iterator& rhs) { return !(lhs != rhs); }
         bool operator!=(const iterator& lhs, const iterator& rhs) { return !(lhs == rhs); }
 
-        bool operator==(const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) == 0; }
-        bool operator!=(const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) != 0; }
-        bool operator< (const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) <  0; }
-        bool operator> (const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) >  0; }
-        bool operator<=(const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) <= 0; }
-        bool operator>=(const iterator& lhs, const iterator& rhs) { return cmp(lhs,rhs) >= 0; }
         //======================================================================
         reference	operator*() const {return (*_ptr);}
         pointer		operator->() const {return (_ptr);}
