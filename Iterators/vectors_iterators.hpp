@@ -110,23 +110,17 @@ namespace ft
         //====================================================================//
         //        B I N A R Y   A R I T H M E T I C   O P E R A T O R S       //
         //====================================================================//
-        iterator operator+(difference_type rhs) const { // a + n (a is object of iterator & n is value of its difference type)
+        iterator operator+ (difference_type rhs) const { // a + n 
             return (iterator(_ptr + rhs));
         }
-        difference_type operator+(iterator rhs) const { // n + a
-            return (difference_type(_ptr + rhs));
-        }
-        iterator operator-(difference_type rhs) const { // a - n 
+        iterator operator- (difference_type rhs) const { // a - n 
             return (iterator(_ptr - rhs));
         }
-        iterator operator-(iterator& rhs) const { // a - b (a & b are object of iterator)
-            return (iterator(_ptr - rhs));
-        }
-        iterator& operator+=(const iterator& rhs) {
+        iterator& operator+= (const iterator& rhs) {
             *this = *this + rhs;
             return *this;
         }
-        iterator& operator-=(difference_type rhs) {
+        iterator& operator-= (difference_type rhs) {
             *this = *this - rhs;
             return *this;
         }
@@ -150,22 +144,22 @@ namespace ft
         return (os);
     }
     //--------------------------------------------------------------------------
-    template <typename T>
+    template <typename T> // n + a where a is object of iterator & n is value of its difference type
     iterator<T> operator+ (typename iterator<T>::difference_type lhs, const iterator<T> rhs) {
         return (lhs + rhs.base());
     }
-    template <typename T>
+    template <typename T> // n - a
     iterator<T> operator- (typename iterator<T>::difference_type lhs, const iterator<T> rhs) {
         return (lhs - rhs.base());
     }
     //--------------------------------------------------------------------------
-    template <typename A, typename B>
-    typename iterator<A>::difference_type operator- (const iterator<A> lhs, const iterator<B> rhs) {
-        return (lhs.base() - rhs.base());
-    }
-    template <typename A, typename B>
+    template <typename A, typename B> // a + b where a & b are object of iterator
     typename iterator<A>::difference_type operator+ (const iterator<A> lhs, const iterator<B> rhs) {
         return (lhs.base() + rhs.base());
+    }
+    template <typename A, typename B> // a - b 
+    typename iterator<A>::difference_type operator- (const iterator<A> lhs, const iterator<B> rhs) {
+        return (lhs.base() - rhs.base());
     }
     //========================================================================//
     //             C O M P A R I S O N   O P E R A T O R S                    //   
@@ -175,7 +169,7 @@ namespace ft
 
     template <class A, class B>
     bool operator!= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() != rhs.base());}
-    
+
     template <class A, class B>
     bool operator< (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() < rhs.base());}
 
