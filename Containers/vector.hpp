@@ -212,17 +212,39 @@ namespace ft
             //================================================================//
             //                        C A P A C I T Y                         //
             //================================================================//
-            size_type size() const {
-            }
-            size_type max_size() const {
-            }
+            size_type size() const {return (_size);}
+            size_type max_size() const {return(_alloc.max_size();)}
             void resize (size_type n, value_type val = value_type()) {
+                if (n > this->_capacity)
+                    reserve(n);
+                if (n > this->_size) { // >= ?
+                    for (size_type i = this->_size; i < n; i++)
+                        _alloc.construct(this->_data + i, val);
+                }
+                else {
+                    for (size_type i = n; i < this->_size; i++) {
+                        _alloc.destruct(this->_data + i);
+                        this->_capacity = n;
+                    }
+                }
+                _size = n;
             }
-            size_type capacity() const {
-            }
-            bool empty() const {
-            }
+            size_type capacity() const {return(_capacity);}
+            bool empty() const {return (size() == 0 ? true : false);}
             void reserve (size_type n) {
+                if (n >= max_size())
+                    throw (std::length_error("vector"));
+                else if (n > _capacity) {
+                    pointer newData = _alloc.allocate(n);
+                    for (size_type i = 0; i < _size; i++)
+                        _alloc.construct(newData + i, *(_data + i));
+                    _alloc.deallocate(_data, _capacity);
+                    _data = newData;
+                    _capacity = n;
+                }
             }
+            //================================================================//
+            //                      I T E R A T O R S                         //
+            //================================================================//
     };
 }
