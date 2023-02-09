@@ -25,10 +25,224 @@ https://www.programiz.com/dsa/red-black-tree
 https://learn.microsoft.com/fr-fr/cpp/standard-library/vector-class?view=msvc-170#vector
 
 //==============================================================================
-
-
 /* TO DO :3 containers
 - Sequence container = vector
 - Container adaptor = stack
 - Associative container = map
 */
+PROB :
+In C++98, there's no built-in support for a vector data structure.
+However, we can emulate a vector-like functionality by
+- using an array
+- & implementing functions to handle resizing
+- & other common vector operations and stuff
+
+//==============================================================================
+Basic implementation of vector class in C++98
+
+class Vector {
+        public:
+        //---------------------------------------------
+        Vector() : _size(0), _capacity(8), _data(new int[_capacity] { }
+        //---------------------------------------------
+        ~Vector() {delete[] _data;}
+        //---------------------------------------------
+        void push_back(int value) {
+                if (_size == _capacity)
+                        resize();
+                _data[_size++] = value;
+        }
+        //---------------------------------------------
+        void pop_back() {
+                if (_size > 0)
+                        _size--;
+        }
+        //---------------------------------------------
+        int& operator[](int index) {return _data[index];}
+        //---------------------------------------------
+        int at(int index) {
+                if (index < 0 || index >= _size)
+                        throw "Index out of range";
+                return _data[index];
+        }
+        //---------------------------------------------
+        int getSize() {return _size;}
+        //---------------------------------------------
+        int getCapacity() {return _capacity;}
+        //---------------------------------------------
+        private:
+                int*    _data;
+                int     _size;
+                int     _capacity;
+                //---------------------------------------------
+                void resize() {
+                        _capacity *= 2;
+                        int* newData = new int[_capacity];
+                        for (int i = 0; i < _size; i++)
+                                newData[i] = _data[i];
+                        delete[] _data;
+                        _data = newData;
+                }
+};
+//==============================================================================
+This Vector class has basic functionality like :
+
+push_back()
+pop_back()
+operator[]
+at()
+getSize()
+getCapacity()
+
+It uses an array to store the data
+It automatically resizes the array when the capacity is reached
+It is important to note that C++98 does not have move semantics
+So when resizing the array the elements need to be copied individually.
+
+//==============================================================================
+You can use this Vector class like this:
+
+Vector v;
+v.push_back(1);
+v.push_back(2);
+v.push_back(3);
+
+cout << v.at(1) << endl; // prints 2
+cout << v.getSize() << endl; // prints 3
+cout << v.getCapacity() << endl; // prints 8
+//==============================================================================
+I did not include an allocator_type.
+An allocator_type is a class template that's used to manage memory allocation and deallocation for container classes
+such as std::vector.
+
+In C++98, allocators were not a part of the standard library, so they had to be implemented manually.
+It's not necessary to include an allocator_type in the Vector class that I provided
+because it simply uses the new and delete operators to manage memory allocation & deallocation.
+However, to have more control over memory management or to use custom memory allocation, just implement an allocator_type.
+C++11 introduces the std::allocator, which is a class that can be used as an allocator_type for container classes.
+The std::allocator provides a standard-compliant & general-purpose allocator that can be used with many different types of memory resources.
+//==============================================================================
+Here's a simple implementation with an allocator_type
+
+template <typename T, typename Alloc = std::allocator<T> > // vscode needs a space between two > otherwise it goes banana
+class Vector {
+        public:
+        //---------------------------------------------
+        Vector() : _size(0), _capacity(8), _data(_alloc.allocate(_capacity)) { }
+        //---------------------------------------------
+        ~Vector() {
+                for (int i = 0; i < _size; ++i) {
+                        _alloc.destroy(&_data[i]);
+                }
+                _alloc.deallocate(_data, _capacity);
+        }
+        //---------------------------------------------
+        void push_back(const T& value) {
+                if (_size == _capacity) {
+                        resize();
+                }
+                _alloc.construct(&_data[size++], value);
+        }
+        //---------------------------------------------
+        void pop_back() {
+                if (_size > 0) {
+                        _alloc.destroy(&_data[--size]);
+                }
+        }
+        //---------------------------------------------
+        T& operator[](int index) {return _data[index];}
+        //---------------------------------------------
+        T at(int index) {
+                if (index < 0 || index >= _size) {
+                        throw "Index out of range";
+                }
+                return _data[index];
+        }
+        //---------------------------------------------
+        int getSize() {return _size;}
+        //---------------------------------------------
+        int getCapacity() {return _capacity;}
+        //---------------------------------------------
+        private:
+                Alloc   _alloc;
+                T*      _data;
+                int     _size;
+                int     _capacity;
+                //---------------------------------------------
+                void resize() {
+                        _capacity *= 2;
+                        T* newData = _alloc.allocate(_capacity);
+                        for (int i = 0; i < _size; i++) {
+                                _alloc.construct(&newData[i], _data[i]);
+                                _alloc.destroy(&_data[i]);
+                        }
+                        _alloc.deallocate(_data, _capacity);
+                        _data = newData;
+                }
+};
+//===============================================================================================================//
+Vector class template takes two template arguments:
+- the type of the elements stored in the vector (T)
+- an allocator class (Alloc)
+
+By default, it uses std::allocator, which is a class that can be used as an allocator_type for container classes.
+The allocator class provides several member functions such as: 
+- allocate()
+- construct()
+- destroy()
+- deallocate()
+which are used to manage memory allocation and deallocation.
+
+This example uses the default constructor of the allocator
+which will use the global new and delete operators to allocate and deallocate memory.
+
+This version is not a production-ready code & it has some limitations
+For example, it does not handle exceptions, it does not have a copy constructor or copy assignment operator.
+//=================================================================================================================//
+
+Iterators
+
+Iterators are a wrapper around a pointer that must behave in a certain way.
+If you have an extra hour and a half, click here
+Basically, if you describe an 'iterator' class that behaves according to the documentation
+https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+Then congratulations! You have created your iterator.
+Great link with step by step instructions for implementing your own iterator:
+https://stackoverflow.com/questions/3582608/how-to-correctly-implement-custom-iterators-and-const-iterators
+https://www.cs.odu.edu/~zeil/cs361/latest/Public/treetraversal/index.html
+
+At some point, you need a vector constructor with iterators, and you stumble upon the fact that two constructors have the same number of parameters.
+How to let the compiler know which one to call? enable_if comes to the rescue!
+Well written here: https://www.cplusplus.com/reference/type_traits/enable_if/
+But before jumping straight into the enable_if implementation, it would be good to understand the SFINAE (Substitution failure is not an error) idiom.
+The material is presented quite well here: http://scrutator.me/post/2016/12/12/sfinae.aspx
+Also, during implementation, certain difficulties may arise with understanding patterns, namely, what specialisation is and why it is needed.
+Useful links:
+https://en.cppreference.com/w/cpp/language/template_specialization
+https://en.cppreference.com/w/cpp/language/partial_specialization
+
+//================================================================================================================//
+is_integral
+
+In C++, std::is_integral is a type trait that provides compile-time information about whether a type is an integral type or not; such as int, long, char, and bool.
+It evaluates to std::true_type if the type is an integral type, and to std::false_type otherwise.
+
+Imagine you're at a 42cafet and you're trying to decide what kind of drinks to serve.
+Some people prefer coffee (integral types) and some prefer tea (non-integral types).
+You don't want to accidentally serve coffee to someone who hates it, so you ask your friend, "Hey, is this drink an integral type?"
+In C++, std::is_integral is like that friend. It helps you determine whether a type is a tea drinker or a coffee drinker. If it's a coffee drinker, std::is_integral will give you a thumbs up and say, "Yep, it's an integral type." If it's not, it will shake its head and say, "Nope, not an integral type."
+So the next time you're trying to serve drinks in C++, just ask std::is_integral to help you out!
+
+//================================================================================================================//
+Equal and/or lexicographical_compare
+
+Are standard library algorithms that do comparisons as you can guess
+- Equal is a fact template that compares elements of 2 ranges & return a boolean
+it takes 3 arg std::equal(range1.begin(), range1.end(), range2.begin())
+- lexicographical_compare compares the whole ranges from begin to end
+it returns true if ranges elements are differents
+it returns true if the 1st range's elements are less than the 2nd (=> range1 is lexicographical LESS than range2)
+it returns TRUE if they are the same
+
+//================================================================================================================//
+
