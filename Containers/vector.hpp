@@ -48,7 +48,8 @@ namespace ft
             {assign(n, val);}
             //------------------------------------------------------------------
             // renge constructor : Constructs a container with as many elements as the range (from 1rst till last)
-            template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+            template <class InputIterator>
+            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
                 assign(first, last);
                 _data = nullptr;
                 _alloc = alloc;
@@ -155,25 +156,43 @@ namespace ft
             //------------------------------------------------------------------
             // insert one element
             iterator insert (iterator position, const value_type& val) {
-                size_type x = ft::distance(this->begin(), position);
                 insert(position, 1, val);
-                iterator y = this->_data[x];
-                return (&y);
+                return (iterator(&this->_data[ft::distance(this->begin(), position)]));
             }
             //------------------------------------------------------------------
             // insert fill
             void insert (iterator position, size_type n, const value_type& val) {
-
+                vector tmp(position, end()); // create new vector
+                this->_size -= ft::distance(position, end());
+                while (n) {
+                    push_back(val); // already a ref
+                    n--;
+                }
+                iterator tmpStart = tmp.begin();
+                while (tmpStart != tmp.ebd()) {
+                    push_back(*tmpStart);
+                    tmpStart++;
+                }
             }
             //------------------------------------------------------------------
             template <class InputIterator>
             // insert a range of elements
             void insert (iterator position, InputIterator first, InputIterator last) {
-
+                vector tmp(position, end());
+                this->_size -= ft::distance(position, end());
+                while (first != last) {
+                    push_back(*first);
+                    first++;
+                }
+                iterator tmpStart = tmp.begin();
+                while (tmpStart != tmp.ebd()) {
+                    push_back(*tmpStart);
+                    tmpStart++;
+                }
             }
-            //=========================================================//
-            //                E L E M E N T   A C C E S S              //
-            //=========================================================//
+            //================================================================//
+            //                E L E M E N T          A C C E S S              //
+            //================================================================//
             reference operator[] (size_type n) {
             }
             const_reference operator[] (size_type n) const {
@@ -190,9 +209,9 @@ namespace ft
             }
             const_reference back() const {
             }
-            //=========================================================//
-            //                      C A P A C I T Y                    //
-            //=========================================================//
+            //================================================================//
+            //                        C A P A C I T Y                         //
+            //================================================================//
             size_type size() const {
             }
             size_type max_size() const {
@@ -209,67 +228,3 @@ namespace ft
 
 }
 
-// ❌ ✅
-/* M E M B E R - T Y P E S 
-    - value_type ✅
-    - allocator_type ✅
-    - reference ✅
-    - const_reference ✅
-    - pointer ✅
-    - const_pointer ✅
-    - iterator ❌
-    - const_iterator ❌
-    - reverse_iterator ❌
-    - const_reverse_iterator ❌
-    - difference_type ❌
-    - size_type ✅
-
-  M E M B E R - F U N C T I O N S
-    - constructor (x 4) ✅
-    - destructor ✅
-    - operateur= ❌
-    I T E R A T O R S // renvoi un iteratir
-        - begin ❌
-        - end ❌
-        - rbegin ❌
-        - rend ❌
-    C A P A C I T Y 
-        - size ❌
-        - max_size ❌
-        - resize ❌
-        - capacity ❌
-        - empty ❌
-        - reserve ❌
-    E L E M E N T - A C C E S S
-        - operator[] ❌
-        - at ❌
-        - front ❌
-        - back ❌
-    M O D I F I E R S
-        - assign ✅
-        - push_back ✅
-        - pop_back ✅
-        - insert ❌
-        - erase ❌
-        - swap ✅
-        - clear ✅
-
-
-    A L L O C A T O R <--------------???
-        - get_allocator ❌
-
-N O N - M E M B E R - F U N C T I O N S
-    - relational operators ❌
-    - swap ❌
-    Template specializations <--------------???
-        - vector<bool> ❌
-
-/*
-* Elements are stored continiously
-* => they can be accessed through iterators but also using offsets to regular pointers to elements
-* => A pointer to an element of a vector may be passed to any function that expects a pointer to an element of an array.
-* The storage of the vector is handled automatically, being expanded and contracted as needed.
-* More memory is allocated to handle future growth that's why vectors usually occupy more space than a static arrays 
-* This, in order to avoid reallocation every time a new element is added.
-* Reallocation is done only when the additional memory is not enough.
-*/
