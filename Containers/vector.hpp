@@ -14,6 +14,8 @@ namespace ft
 			size_type		_capacity;
 			size_type		_size;
             pointer			_data;
+            // pointer         _begin;
+            // pointer         _end;
 
         public:
             //=========================================//
@@ -29,8 +31,8 @@ namespace ft
             typedef std::ptrdiff_t	                                            difference_type;
             typedef ft::iterator<value_type>                                    iterator;
             typedef ft::iterator<const value_type>                              const_iterator;
-            typedef	reverse_iterator;
-            typedef	const_reverse_iterator;
+            typedef	ft::reverse_iterator<value_type>                            reverse_iterator;
+            typedef	ft::reverse_iterator<const value_type>                      const_reverse_iterator;
 
             //=========================================//
             // ----- M E M B E R   F U N C TI O N -----//
