@@ -37,7 +37,9 @@ namespace ft
             //================================================================//
             //             M E M B E R            F U N C T I O N S           //
             //================================================================//
-            // C O N S T R U C T O R S ---> https://cplusplus.com/reference/vector/vector/vector/
+            // ---> https://cplusplus.com/reference/vector/vector/vector/
+
+            C O N S T R U C T O R S 
             //------------------------------------------------------------------
             // default : contruct an empty container with no elements
             explicit vector(const allocator_type& alloc = allocator_type())
@@ -74,8 +76,9 @@ namespace ft
 				return *this;
 			}
             //==================================================================
-            // M O D I F I E R S --> https://cplusplus.com/reference/vector/vector/assign/
+            //                      M O D I F I E R S                         //
             //==================================================================
+            // -> https://cplusplus.com/reference/vector/vector/assign/
             template <class InputIterator>
 			// assign range
             void assign (InputIterator first, InputIterator last) { // typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *enable = nullptr
@@ -193,22 +196,19 @@ namespace ft
             //================================================================//
             //                E L E M E N T          A C C E S S              //
             //================================================================//
-            reference operator[] (size_type n) {
-            }
-            const_reference operator[] (size_type n) const {
-            }
-            reference at (size_type n) {
-            }
-            const_reference at (size_type n) const {
-            }
-            reference front() {
-            }
-            const_reference front() const {
-            }
-            reference back() {
-            }
-            const_reference back() const {
-            }
+            // Returns a ref to the elt at pos n in the vector container
+            reference operator[] (size_type n) {return (_data[n]);}
+            const_reference operator[] (size_type n) const {return (_data[n]);}
+            reference at (size_type n) {size() <= n ? throw (std::out_of_range("vector")) : return _data[n];}
+            const_reference at (size_type n) const {size() <= n ? throw (std::out_of_range("vector")) : return _data[n];}
+            //------------------------------------------------------------------
+            // Returns a ref to the 1rst elt in the vector
+            reference front() {return (*begin());}
+            const_reference front() const {return (*begin());}
+            //------------------------------------------------------------------
+            // Returns a ref to the last elt in the vector
+            reference back() {return(*(end() - 1));}
+            const_reference back() const {return(*(end() - 1));}
             //================================================================//
             //                        C A P A C I T Y                         //
             //================================================================//
@@ -225,6 +225,4 @@ namespace ft
             void reserve (size_type n) {
             }
     };
-
 }
-
