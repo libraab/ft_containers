@@ -254,5 +254,21 @@ namespace ft
             const_reverse_iterator rbegin() const   {return (const_reverse_iterator(end()));}
             reverse_iterator rend()                 {return (reverse_iterator(begin()));}
             const_reverse_iterator rend() const     {return (const_reverse_iterator(begin()));}
+            //================================================================//
+            //      R E L A T I O N A L          O P E R A T O R S            //
+            //================================================================//
+            // --> https://cplusplus.com/reference/vector/vector/operators/
+            template <class T, class Alloc>  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
+            template <class T, class Alloc>  bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (!(lhs == rhs));}
+            template <class T, class Alloc>  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
+            template <class T, class Alloc>  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (!(lhs > rhs));}
+            template <class T, class Alloc>  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (lhs > rhs);}
+            template <class T, class Alloc>  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+                {return (!(lhs < rhs));}
     };
 }
