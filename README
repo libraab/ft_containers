@@ -246,3 +246,36 @@ it returns TRUE if they are the same
 
 //================================================================================================================//
 
+introduction to tree traversal in C++
+https://www.cs.odu.edu/~zeil/cs361/latest/Public/treetraversal/index.html
+A tree is a data structure that is made up of nodes, where each node can have zero or more child nodes.
+Each node in a tree has a value, and the order in which the nodes are visited is referred to as tree traversal.
+This link explains three different methods for tree traversal: pre-order, in-order, and post-order.
+- Pre-order: This method visits the root node first, then the left subtree, and finally the right subtree.
+- In-order: This method visits the left subtree first, then the root node, and finally the right subtree.
+- Post-order: This method visits the left subtree first, then the right subtree, and finally the root node.
+This page includes C++ code examples for each of these three methods, along with visual representations of the tree to help illustrate how the different methods work.
+
+It's similar to decorating a cake, but instead of icing and toppings, we have "nodes".
+Have you ever wondered about the different ways to decorate a cake layer by layer?
+well in C++, that's called "tree traversal".
+There are three ways to do it: pre-order, in-order, and post-order.
+
+* Pre-order: We start by putting the main decoration (the "root node") on top of the cake, then we add decorations to the left side of the cake, and finally, we add decorations to the right side.
+
+* In-order: We start by adding decorations to the left side of the cake, then we put the main decoration (the "root node") on top of the cake, and finally, we add decorations to the right side.
+
+* Post-order: We start by adding decorations to the left side of the cake, then we add decorations to the right side, and finally, we put the main decoration (the "root node") on top of the cake.
+
+You might ask which order to choose? As a pastry chef, you know that the order in which you decorate a cake can make all the difference in how it looks and tastes.
+In the same way, the order in which you visit the nodes in a tree in computer programming can affect the outcome of your program.
+Here are a few things to consider when choosing the right tree traversal order:
+- Decoration sequence: Just like you choose the order of decorations based on what looks best, you can choose the tree traversal order based on the desired order of processing the data in each node.
+- Finding the perfect toppings: If you're looking for a specific decoration for your cake(=code), like a cherry, you can choose a tree traversal order that makes finding it easier.
+- Cake reconstruction: If you want to rebuild the same cake later, you'll want to choose the order of decorations that makes it easier to recreate the cake (=re use the fct).
+- Space for decorations: Just like you need enough space to store all your decorations, you'll also need to consider the amount of memory required to store the tree traversal sequence when choosing the order.
+   In the end, choosing the right tree traversal order is all about making sure your program gets the desired outcome.
+Just like making sure your cake looks and tastes amazing!
+//================================================================================================================//
+
+
