@@ -131,39 +131,44 @@ namespace ft
                 }
             }
             //------------------------------------------------------------------
-            iterator erase (iterator position) {
-                if (this->empty())
-                    return(this->end());
-                difference_type pos = position.base() - this->_data.begin();
-                std::memmove(this->_data.begin() + pos, this->_data.begin() + pos + 1, (this->_size - pos - 1) * sizeof(value_type));
-                _allocator.destroy(this->_data.begin() + this->_size);
-                this->_data.end()--;
-                this->_size--;
-                return (iterator(this->_data.begin() + pos));
-            }
+            iterator erase (iterator position)
+            { empty() ? return end() : return (erase(position, position + 1)); }
             //------------------------------------------------------------------
             iterator erase (iterator first, iterator last) {
                 if (this->empty())
                     return(this->end());
-                difference_type diff = last.base() - first.base();
-                std::memmove(first.base(), last.base(), (this->_size - diff) * sizeof(value_type));
-                for(size_type i = this->_size - diff; i < this->_size ; i++)
-                    _allocator.destroy(this->_data.begin() + i);
-                this->_size -= diff;
-                this->_data.end() -= diff;
-                return (last - diff)
+                iterator start = this->begin();
+                iterator x = first; // to return it later
+                difference_type diff = last - first;
+                while (start != first)
+                    start++;
+                for (; first != last; first++)
+                    _alloc.destroy(&(*first));
+                while (start + diff != end()) {
+                    _alloc.construct(&(*start), *(start + diff));
+                    start++;
+                }
+                while (diff-- > 0)
+                    pop_back();
+                return (x);
             }
             //------------------------------------------------------------------
             // insert one element
             iterator insert (iterator position, const value_type& val) {
-
+                size_type x = ft::distance(this->begin(), position);
+                insert(position, 1, val);
+                iterator y = this->_data[x];
+                return (&y);
             }
+            //------------------------------------------------------------------
             // insert fill
             void insert (iterator position, size_type n, const value_type& val) {
 
             }
+            //------------------------------------------------------------------
+            template <class InputIterator>
             // insert a range of elements
-            template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last) {
+            void insert (iterator position, InputIterator first, InputIterator last) {
 
             }
             //=========================================================//
