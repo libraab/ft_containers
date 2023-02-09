@@ -246,5 +246,13 @@ namespace ft
             //================================================================//
             //                      I T E R A T O R S                         //
             //================================================================//
+            iterator begin()                        {return (iterator(_data));}
+            const_iterator begin() const            {return (const_iterator(_data));}
+            iterator end()                          {return (iterator(_data + _size));}
+            const_iterator end() const              {return (const_iterator(_data + _size));}
+            reverse_iterator rbegin()               {return (reverse_iterator(end()));}
+            const_reverse_iterator rbegin() const   {return (const_reverse_iterator(end()));}
+            reverse_iterator rend()                 {return (reverse_iterator(begin()));}
+            const_reverse_iterator rend() const     {return (const_reverse_iterator(begin()));}
     };
 }
