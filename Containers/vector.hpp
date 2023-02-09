@@ -18,9 +18,9 @@ namespace ft
             // pointer         _end;
 
         public:
-            //=========================================//
-            // -------- M E M B E R   T Y P E ---------//
-            //=========================================//
+            //================================================================//
+            //              M E M B E R            T Y P E                    //
+            //================================================================//
             typedef T	                                                        value_type;
             typedef Alloc	                                                    allocator_type;
             typedef value_type&	                                                reference;
@@ -34,108 +34,126 @@ namespace ft
             typedef	ft::reverse_iterator<value_type>                            reverse_iterator;
             typedef	ft::reverse_iterator<const value_type>                      const_reverse_iterator;
 
-            //=========================================//
-            // ----- M E M B E R   F U N C TI O N -----//
-            //=========================================//
-
+            //================================================================//
+            //             M E M B E R            F U N C T I O N S           //
+            //================================================================//
             // C O N S T R U C T O R S ---> https://cplusplus.com/reference/vector/vector/vector/
-            // default
-            explicit vector (const allocator_type& alloc = allocator_type()) {
-                _data = NULL;
-                _alloc(alloc), _capacity(0), _size(0) {}
-            }
-            // fill
-            explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
-                assign(n, val);
-            }
-            // range
+            //------------------------------------------------------------------
+            // default : contruct an empty container with no elements
+            explicit vector(const allocator_type& alloc = allocator_type())
+				: _dat(nullptr), _alloc(alloc), _capacity(0), _size(0) {}
+            //------------------------------------------------------------------
+            // fill constructor : constructs a container with n elments (each is copy of val)
+            explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+            {assign(n, val);}
+            //------------------------------------------------------------------
+            // renge constructor : Constructs a container with as many elements as the range (from 1rst till last)
             template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
                 assign(first, last);
-                _data = NULL;
+                _data = nullptr;
                 _alloc = alloc;
                 _capacity = 0;
                 _size = 0;
             }
-            // copy
-			vector(vector const & x){
-                _data = NULL;
-                _capacity = 0;
-                _size = 0;
-                *this = x;
-            }
-            vector& operator= (const vector& x) {
-                
-            }
             //------------------------------------------------------------------
-			vector	& operator=(vector const & x)
-			{
-				if (this != &x)
-					assign(x.begin(), x.end());
-				return (*this);
-			}
+            // copy constructor 
+            vector(const vector& x) : _alloc(allocator_type()), _capacity(0), _size(0), _data(nullptr)
+            {assign(x.begin(), x.end());}
             //------------------------------------------------------------------
 			// D E S T R U C T O R
-			~vector() { clear(); _alloc.deallocate(_data, _capacity); }
-
-
+			~vector() {
+                clear();
+                if (_capacity > 0) // --> ternaire
+                    _alloc.deallocate(_data, _capacity);}
             //------------------------------------------------------------------
-            // ------M O D I F I E R S--------// --> https://cplusplus.com/reference/vector/vector/assign/
-			// assign range
-            template <class InputIterator>  void assign (InputIterator first, InputIterator last) {
-				size_type	n = 0;
-				n = ft::distance(first, last);
-				clear();
-				reserve(n);
-				_size = n;
-				for (size_type i = 0; i < _size; i++)
-					_alloc.construct((_data + i), *first++);
+			vector& operator=(const vector& rhs)
+			{
+				if (this != &rhs)
+					assign(rhs.begin(), rhs.end());
+				return *this;
 			}
+            //==================================================================
+            // M O D I F I E R S --> https://cplusplus.com/reference/vector/vector/assign/
+            //==================================================================
+            template <class InputIterator>
+			// assign range
+            void assign (InputIterator first, InputIterator last) { // typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *enable = nullptr
+				this->clear();
+                while(first != last) {
+                    push_back(*first); // push_back(*first++); ??
+                    ++first; }
+			}
+            //------------------------------------------------------------------
 			// assign fill
 			void assign (size_type n, const value_type& val) {
-				clear();
-				reserve(n);
-				_size = n;
-				for (size_type i = 0; i < _size; i++)
-					_alloc.construct((_data + i), val);
+				this->clear();
+				for (size_type i = 0; i < n; i++)
+					push_back(val);
 			}
-
+            //------------------------------------------------------------------
             void clear() {
-                for (size_type i = 0; i < _size; i++)
-                    _alloc.destroy(_data[i]);
-                _size = 0;
+                if (_size > 0) {
+                    for (size_type i = 0; i < _size; i++)
+                        _alloc.destroy(_data[i]);
+                    _size = 0;
+                }
             }
-
+            //------------------------------------------------------------------
             void swap (vector& x) {
-                pointer temp_data;
-                temp_data = x._data;
-                x._alloc = _alloc;
-                x._data = _data;
-                _alloc = temp_data.alloc;
-                _data = temp_data._data;
-            }
 
+                allocator_type	tmpAlloc = this->_alloc;
+                size_type		tmpCapacity = this->_capacity;
+                size_type		tmpSize = this->_size;
+                pointer			tmpData = this->_data;
+
+                this->_alloc = x._alloc;
+                this->_capacity = x._capacity; 
+                this->_size = x._size;
+                this->_data = x._data
+
+                x._alloc = tmpAlloc;
+                x._capacity = tmpCapacity; 
+                x._size = tmpSize;
+                x._data = tmpData;
+            }
+            //------------------------------------------------------------------
             void push_back (const value_type& val) {
+                if (_capacity == _size)
+                    empty() ? reserve(1) : reserve(_size * 2);
+                _alloc.construct(_data + _size, val);
                 _size++;
-                _data[_size] = val;
             }
-
+            //------------------------------------------------------------------
             void pop_back() {
-                _alloc.destroy(_data[_size]);
-                _size--;
+                if (_size > 0) {
+                    _alloc.destroy(_data + (_size - 1));
+                    _size--;
+                }
             }
-            //------------------------------------------------------------------------------------------------------------
-            //  FAIRE ITERATOR FIRST POUR CES FCT
-            //------------------------------------------------------------------------------------------------------------
+            //------------------------------------------------------------------
             iterator erase (iterator position) {
-                // do iterator first
-                _alloc.destroy(position);
-                // decaller tt a la gauche apres 
-                _size--;
+                if (this->empty())
+                    return(this->end());
+                difference_type pos = position.base() - this->_data.begin();
+                std::memmove(this->_data.begin() + pos, this->_data.begin() + pos + 1, (this->_size - pos - 1) * sizeof(value_type));
+                _allocator.destroy(this->_data.begin() + this->_size);
+                this->_data.end()--;
+                this->_size--;
+                return (iterator(this->_data.begin() + pos));
             }
-            
+            //------------------------------------------------------------------
             iterator erase (iterator first, iterator last) {
-                    // do iterator first
+                if (this->empty())
+                    return(this->end());
+                difference_type diff = last.base() - first.base();
+                std::memmove(first.base(), last.base(), (this->_size - diff) * sizeof(value_type));
+                for(size_type i = this->_size - diff; i < this->_size ; i++)
+                    _allocator.destroy(this->_data.begin() + i);
+                this->_size -= diff;
+                this->_data.end() -= diff;
+                return (last - diff)
             }
+            //------------------------------------------------------------------
             // insert one element
             iterator insert (iterator position, const value_type& val) {
 
