@@ -94,12 +94,15 @@ namespace ft
             // -> https://cplusplus.com/reference/vector/vector/assign/
             template <class InputIterator>
 			// assign range
-            void assign (InputIterator first, InputIterator last) { // typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *enable = nullptr
-				this->clear();
-                while(first != last) {
-                    push_back(*first); // push_back(*first++); ??
-                    ++first; }
-			}
+		    void assign (InputIterator first,
+                        InputIterator last,
+                        typename enable_if<!is_integral<InputIterator>::value>::type* = 0)
+            {
+			    clear();
+			    while (first != last) {
+				    push_back(*first);
+				    ++first;}
+		    }
             //------------------------------------------------------------------
 			// assign fill
 			void assign (size_type n, const value_type& val) {
