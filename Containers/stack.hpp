@@ -14,7 +14,6 @@ namespace ft
     //========================================================================//
         typedef T           value_type;
         typedef container   container_type;
-        typedef size_t      size_type;
     //========================================================================//
     //                        C O N S T R U C T O R                           //
     //========================================================================//
@@ -24,18 +23,42 @@ namespace ft
     //             R E L A T I O N A L          O P E R A T O R S             //
     //========================================================================//
     // --> https://cplusplus.com/reference/stack/stack/operators/
-    (1)	
-template <class T, class Container>  bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-(2)	
-template <class T, class Container>  bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-(3)	
-template <class T, class Container>  bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-(4)	
-template <class T, class Container>  bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-(5)	
-template <class T, class Container>  bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-(6)	
-template <class T, class Container>  bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+    template <class T, class Container>
+    friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr == rhs._ctnr);}
+    
+    template <class T, class Container>
+    friend bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr != rhs._ctnr);}
+
+    template <class T, class Container>
+    friend bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr < rhs._ctnr);}
+
+    template <class T, class Container> 
+    friend bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr <= rhs._ctnr);}
+
+    template <class T, class Container> 
+    friend bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr > rhs._ctnr);}
+
+    template <class T, class Container> 
+    friend bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    {return (lhs._ctnr >= rhs._ctnr);}
+    //========================================================================//
+    //                    M E M B E R    F U N C T I O N S                    //
+    //========================================================================//
+    bool empty() const {retur}
+    size_t size() const;
+    value_type& top();const value_type& top() const;
+    void push (const value_type& val);
+
+    template <class... Args> void emplace (Args&&... args);
+    void pop();
+    void swap (stack& x) noexcept(/*see below*/);
+
+    //--------------------------------------------------------------------------
       protected:
         container_type      _ctnr;
   };
