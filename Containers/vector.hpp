@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "../ft_containers.hpp"
 #include "../iterators/vectors_iterators.hpp"
 
@@ -14,8 +13,6 @@ namespace ft
 			size_type		_capacity;
 			size_type		_size;
             pointer			_data;
-            // pointer         _begin;
-            // pointer         _end;
 
         public:
             //================================================================//
@@ -49,7 +46,23 @@ namespace ft
             explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
             {assign(n, val);}
             //------------------------------------------------------------------
-            // renge constructor : Constructs a container with as many elements as the range (from 1rst till last)
+            // range constructor : Constructs a container with as many elements as the range (from 1rst till last)
+            // template <class InputIterator>
+            // vector(InputIterator first,
+            //         InputIterator last,
+            //         const allocator_type& alloc = allocator_type(),
+            //         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+            // {        
+            //     _alloc = alloc;
+            //     _size = 0; 
+			//     difference_type n = ft::distance(first, last);
+			//     _ptr = _alloc.allocate(n);
+			//     _capacity = n;
+			//     for (; first != last; first++)
+			// 	    push_back(*first);
+		    // }
+            //------------------------------------------------------------------
+            // range constructor : Constructs a container with as many elements as the range (from 1rst till last)
             template <class InputIterator>
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
                 assign(first, last);
@@ -180,9 +193,13 @@ namespace ft
             //------------------------------------------------------------------
             template <class InputIterator>
             // insert a range of elements
-            void insert (iterator position, InputIterator first, InputIterator last) {
+            void insert(    iterator position,
+                            InputIterator first,
+                            InputIterator last,
+                            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+            {
                 vector tmp(position, end());
-                this->_size -= ft::distance(position, end());
+                _size -= ft::distance(position, end());
                 while (first != last) {
                     push_back(*first);
                     first++;
@@ -270,5 +287,6 @@ namespace ft
                 {return (lhs > rhs);}
             template <class T, class Alloc>  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
                 {return (!(lhs < rhs));}
+       
     };
 }
