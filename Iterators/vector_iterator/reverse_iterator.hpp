@@ -1,3 +1,6 @@
+#pragma once
+#include "../../ft_containers.hpp"
+
 /*██████╗     ███████╗    ██╗   ██╗    ███████╗    ██████╗     ███████╗    ███████╗                                     
   ██╔══██╗    ██╔════╝    ██║   ██║    ██╔════╝    ██╔══██╗    ██╔════╝    ██╔════╝                                     
   ██████╔╝    █████╗      ██║   ██║    █████╗      ██████╔╝    ███████╗    █████╗                                       
@@ -11,7 +14,8 @@
 ██║       ██║       ██╔══╝      ██╔══██╗    ██╔══██║       ██║       ██║   ██║    ██╔══██╗    ╚════██║
 ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║    ███████║
 ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═╝    ╚══════*/
-
+namespace ft
+{
     template <class Iterator>
     class reverse_iterator : public iterator_traits<T> {
         public:
@@ -135,3 +139,4 @@
     template <class A, class B> // reverse
     bool operator>= (const reverse_iterator<A>& lhs, const reverse_iterator<B>& rhs) {
         return (lhs.base() <= rhs.base());}
+}

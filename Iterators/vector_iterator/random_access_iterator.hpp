@@ -1,4 +1,8 @@
-/*              ███╗   ███╗     █████╗     ██╗    ███╗   ██╗                                              
+#pragma once
+#include "../../ft_containers.hpp"
+#include "iterator_traits.hpp"
+
+              /*███╗   ███╗     █████╗     ██╗    ███╗   ██╗                                              
                 ████╗ ████║    ██╔══██╗    ██║    ████╗  ██║                                              
                 ██╔████╔██║    ███████║    ██║    ██╔██╗ ██║                                              
                 ██║╚██╔╝██║    ██╔══██║    ██║    ██║╚██╗██║                                              
@@ -11,6 +15,8 @@
  ██║       ██║       ██╔══╝      ██╔══██╗    ██╔══██║       ██║       ██║   ██║    ██╔══██╗
  ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║
  ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/ 
+namespace ft
+{
 
     // general definition --> https://legacy.cplusplus.com/reference/iterator/iterator/
     template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
@@ -29,7 +35,7 @@
         //====================================================================//
         //        C O N S T R U C T O R S     &   D E S T R U C T O R         //
         //====================================================================//
-        iterator(pointer pointer)              : _ptr(pointer)       {return;}
+        iterator(pointer pointer)           : _ptr(pointer)     {return;}
         iterator()                          : _ptr(nullptr)     {return;}
         iterator(const iterator &copy)                          {*this = copy;}
         ~iterator();
@@ -137,3 +143,4 @@
 
     template <class A, class B>
     bool operator>= (const iterator<A>& lhs, const iterator<B>& rhs) {return (lhs.base() >= rhs.base());}
+}
