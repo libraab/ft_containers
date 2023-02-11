@@ -1,18 +1,12 @@
 #pragma once
-#include "../ft_containers.hpp"
-#include "../iterators/vectors_iterators.hpp"
+#include "ft_containers.hpp"
+#include "Iterators/vectors_iterators.hpp"
 
 namespace ft
 {
 	template <class T, class Alloc = std::allocator<T> >
     class vector
     {
-        private:
-
-			allocator_type	_alloc;
-			size_type		_capacity;
-			size_type		_size;
-            pointer			_data;
 
         public:
             //================================================================//
@@ -31,12 +25,19 @@ namespace ft
             typedef	ft::reverse_iterator<value_type>                            reverse_iterator;
             typedef	ft::reverse_iterator<const value_type>                      const_reverse_iterator;
 
+        private:
+
+			allocator_type	_alloc;
+			size_type		_capacity;
+			size_type		_size;
+            pointer			_data;
+        public:
             //================================================================//
             //             M E M B E R            F U N C T I O N S           //
             //================================================================//
             // ---> https://cplusplus.com/reference/vector/vector/vector/
 
-            C O N S T R U C T O R S 
+            //C O N S T R U C T O R S 
             //------------------------------------------------------------------
             // default : contruct an empty container with no elements
             explicit vector(const allocator_type& alloc = allocator_type())
@@ -135,6 +136,12 @@ namespace ft
                 x._capacity = tmpCapacity; 
                 x._size = tmpSize;
                 x._data = tmpData;
+            }
+                void push_back (value_type& val) {
+                if (_capacity == _size)
+                    empty() ? reserve(1) : reserve(_size * 2);
+                _alloc.construct(_data + _size, val);
+                _size++;
             }
             //------------------------------------------------------------------
             void push_back (const value_type& val) {
