@@ -4,6 +4,7 @@
 #  define TESTED_NAMESPACE ft
 
 # include <iostream>
+# include <vector>
 # include <string>
 
 // --- Class foo
@@ -91,44 +92,41 @@ void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true
 
 #define TESTED_TYPE int
 
-template <class T, class Alloc>
-void	cmp(const TESTED_NAMESPACE::vector<T, Alloc> &lhs, const TESTED_NAMESPACE::vector<T, Alloc> &rhs)
-{
-	static int i = 0;
-    
-	std::cout << "############### [" << i++ << "] ###############"  << std::endl;
-	std::cout << "lt: " << (lhs <  rhs) << std::endl;
-	std::cout << "le: " << (lhs <= rhs) << std::endl;
-
-	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
-	// std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
-	std::cout << "ge: " << (lhs >= rhs) << std::endl;
-	std::cout << "gt: " << (lhs >  rhs) << std::endl;
-}
-
 int		main(void)
 {
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(4);
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2(4);
-
-	cmp(vct, vct);  // 0
-	cmp(vct, vct2); // 1
-    
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(5);
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin(), ite = vct.end();
 
 
-	vct2.resize(10);
+	std::cout << "len: " << (ite - it) << std::endl;
+	for (; it != ite; ++it)
+		*it = (ite - it);
 
-	cmp(vct, vct2); // 2
-	cmp(vct2, vct); // 3
+	it = vct.begin();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_range(it, --(--ite));
+	for (int i = 0; it != ite; ++it)
+		*it = ++i * 5;
 
-	vct[2] = 42;
+	it = vct.begin();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_copy(vct);
+	for (int i = 0; it != ite; ++it)
+		*it = ++i * 7;
+	vct_copy.push_back(42);
+	vct_copy.push_back(21);
 
-	cmp(vct, vct2); // 4
-	cmp(vct2, vct); // 5
-	swap(vct, vct2);
+	std::cout << "\t-- PART ONE --" << std::endl;
+	printSize(vct);
+	printSize(vct_range);
+	printSize(vct_copy);
 
-	cmp(vct, vct2); // 6
-	cmp(vct2, vct); // 7
+	vct = vct_copy;
+	vct_copy = vct_range;
+	vct_range.clear();
 
+	std::cout << "\t-- PART TWO --" << std::endl;
+	printSize(vct);
+	printSize(vct_range);
+	printSize(vct_copy);
 	return (0);
 }
+

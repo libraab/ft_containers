@@ -127,7 +127,7 @@ namespace ft
     template <typename A, typename B>
     typename random_access_iterator_tag<A>::difference_type operator-(const random_access_iterator_tag<A> &lhs, const random_access_iterator_tag<B> &rhs)
     {
-        return (rhs.base() - lhs.base());
+        return (lhs.base() - rhs.base());
     }
     //========================================================================//
     //             C O M P A R I S O N   O P E R A T O R S                    //
