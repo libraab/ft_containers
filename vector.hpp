@@ -371,16 +371,16 @@ namespace ft
         template <class G, class H>
         bool operator<=(const vector<G, H> &lhs, const vector<G, H> &rhs)
         {
-            return (!(lhs > rhs));
+            return (lhs == rhs || lhs < rhs);
         }
         template <class I, class J>
         bool operator>(const vector<I, J> &lhs, const vector<I, J> &rhs)
         {
-            return (lhs > rhs);
+            return (!(lhs < rhs));
         }
         template <class K, class L>
         bool operator>=(const vector<K, L> &lhs, const vector<K, L> &rhs)
         {
-            return (!(lhs < rhs));
+            return (lhs == rhs || lhs > rhs);
         }
 }

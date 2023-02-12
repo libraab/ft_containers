@@ -89,47 +89,46 @@ void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true
 
 
 
-#define TESTED_TYPE foo<int>
+#define TESTED_TYPE int
+
+template <class T, class Alloc>
+void	cmp(const TESTED_NAMESPACE::vector<T, Alloc> &lhs, const TESTED_NAMESPACE::vector<T, Alloc> &rhs)
+{
+	static int i = 0;
+    
+	std::cout << "############### [" << i++ << "] ###############"  << std::endl;
+	std::cout << "lt: " << (lhs <  rhs) << std::endl;
+	std::cout << "le: " << (lhs <= rhs) << std::endl;
+
+	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
+	// std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
+	std::cout << "ge: " << (lhs >= rhs) << std::endl;
+	std::cout << "gt: " << (lhs >  rhs) << std::endl;
+}
 
 int		main(void)
 {
-	const int size = 5;
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator it(vct.rbegin());
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator ite(vct.rend());
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(4);
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2(4);
 
-	for (int i = 1; it != ite; ++i)
-		*it++ = (i * 7);
-	printSize(vct, 1);
+	cmp(vct, vct);  // 0
+	cmp(vct, vct2); // 1
+    
 
-	it = vct.rbegin();
-	ite = vct.rbegin();
 
-	std::cout << *(++ite) << std::endl;
-	std::cout << *(ite++) << std::endl;
-	std::cout << *ite++ << std::endl;
-	std::cout << *++ite << std::endl;
+	vct2.resize(10);
 
-	it->m();
-	ite->m();
+	cmp(vct, vct2); // 2
+	cmp(vct2, vct); // 3
 
-	std::cout << *(++it) << std::endl;
-	std::cout << *(it++) << std::endl;
-	std::cout << *it++ << std::endl;
-	std::cout << *++it << std::endl;
+	vct[2] = 42;
 
-	std::cout << *(--ite) << std::endl;
-	std::cout << *(ite--) << std::endl;
-	std::cout << *--ite << std::endl;
-	std::cout << *ite-- << std::endl;
+	cmp(vct, vct2); // 4
+	cmp(vct2, vct); // 5
+	swap(vct, vct2);
 
-	(*it).m();
-	(*ite).m();
-
-	std::cout << *(--it) << std::endl;
-	std::cout << *(it--) << std::endl;
-	std::cout << *it-- << std::endl;
-	std::cout << *--it << std::endl;
+	cmp(vct, vct2); // 6
+	cmp(vct2, vct); // 7
 
 	return (0);
 }
