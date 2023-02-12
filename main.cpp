@@ -1,7 +1,7 @@
 #include "vector.hpp"
 #include <iostream>
 
-#  define TESTED_NAMESPACE ft
+#  define TESTED_NAMESPACE std
 
 # include <iostream>
 # include <vector>
@@ -90,43 +90,47 @@ void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true
 
 
 
-#define TESTED_TYPE int
+#define TESTED_TYPE foo<int>
 
 int		main(void)
 {
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(5);
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin(), ite = vct.end();
+	const int size = 5;
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator it(vct.rbegin());
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator ite(vct.rend());
 
+	for (int i = 1; it != ite; ++i)
+		*it++ = (i * 7);
+	printSize(vct, 1);
 
-	std::cout << "len: " << (ite - it) << std::endl;
-	for (; it != ite; ++it)
-		*it = (ite - it);
+	it = vct.rbegin();
+	ite = vct.rbegin();
 
-	it = vct.begin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_range(it, --(--ite));
-	for (int i = 0; it != ite; ++it)
-		*it = ++i * 5;
+	std::cout << *(++ite) << std::endl;
+	std::cout << *(ite++) << std::endl;
+	std::cout << *ite++ << std::endl;
+	std::cout << *++ite << std::endl;
 
-	it = vct.begin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct_copy(vct);
-	for (int i = 0; it != ite; ++it)
-		*it = ++i * 7;
-	vct_copy.push_back(42);
-	vct_copy.push_back(21);
+	it->m();
+	ite->m();
 
-	std::cout << "\t-- PART ONE --" << std::endl;
-	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
+	std::cout << *(++it) << std::endl;
+	std::cout << *(it++) << std::endl;
+	std::cout << *it++ << std::endl;
+	std::cout << *++it << std::endl;
 
-	vct = vct_copy;
-	vct_copy = vct_range;
-	vct_range.clear();
+	std::cout << *(--ite) << std::endl;
+	std::cout << *(ite--) << std::endl;
+	std::cout << *--ite << std::endl;
+	std::cout << *ite-- << std::endl;
 
-	std::cout << "\t-- PART TWO --" << std::endl;
-	printSize(vct);
-	printSize(vct_range);
-	printSize(vct_copy);
+	(*it).m();
+	(*ite).m();
+
+	std::cout << *(--it) << std::endl;
+	std::cout << *(it--) << std::endl;
+	std::cout << *it-- << std::endl;
+	std::cout << *--it << std::endl;
+
 	return (0);
 }
-

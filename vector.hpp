@@ -376,7 +376,7 @@ namespace ft
         template <class I, class J>
         bool operator>(const vector<I, J> &lhs, const vector<I, J> &rhs)
         {
-            return (!(lhs < rhs));
+            return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
         }
         template <class K, class L>
         bool operator>=(const vector<K, L> &lhs, const vector<K, L> &rhs)

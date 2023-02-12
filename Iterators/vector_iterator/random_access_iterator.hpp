@@ -140,26 +140,26 @@ namespace ft
     template <typename C, typename D> // same
     bool operator!=(const random_access_iterator_tag<C> &lhs, const random_access_iterator_tag<D> &rhs)
     {
-        return (lhs.base() != rhs.base());
+        return (!(lhs == rhs));
     }
     template <typename C, typename D> // reverse
     bool operator<(const random_access_iterator_tag<C> &lhs, const random_access_iterator_tag<D> &rhs)
     {
-        return (lhs.base() > rhs.base());
+        return (lhs.base() < rhs.base());
     }
     template <typename C, typename D> // reverse
     bool operator>(const random_access_iterator_tag<C> &lhs, const random_access_iterator_tag<D> &rhs)
     {
-        return (lhs.base() < rhs.base());
+        return (lhs.base() > rhs.base());
     }
     template <typename C, typename D> // reverse
     bool operator<=(const random_access_iterator_tag<C> &lhs, const random_access_iterator_tag<D> &rhs)
     {
-        return (lhs.base() >= rhs.base());
+        return (lhs.base() <= rhs.base());
     }
     template <typename C, typename D> // reverse
     bool operator>=(const random_access_iterator_tag<C> &lhs, const random_access_iterator_tag<D> &rhs)
     {
-        return (lhs.base() <= rhs.base());
+        return (lhs.base() >= rhs.base());
     }
 }

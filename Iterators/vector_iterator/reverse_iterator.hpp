@@ -80,20 +80,33 @@ namespace ft
             return (reverse_iterator(base() + rhs));
         }
         reverse_iterator& operator+= (difference_type rhs) {
-            *this = *this - rhs;
+            // *this = *this - rhs;
+            _it -= rhs;
             return *this;
         }
         reverse_iterator& operator-= (difference_type rhs) {
-            *this = *this + rhs;
+            // *this = *this + rhs;
+            _it += rhs;
             return *this;
         }
         //====================================================================//
         //       D E R E F E R E N C E R I N G       O P E R A T O R S        //   
         //====================================================================//
-        reference   operator*() const                       {return *_it;}
-        pointer     operator->() const                      { return &(*_it); }
+        reference   operator*() const                       {
+            iterator_type tmp = _it;
+            --tmp;
+            return (tmp.operator*());
+            }
+        pointer     operator->() const                      {
+            iterator_type tmp = _it;
+            --tmp;
+            return (tmp.operator->());
+        }
         // subscript operator
-        reference   operator[](difference_type n) const   {return (*(_it - n));}
+        reference   operator[](difference_type n) const   {
+            //return (*(_it - n));
+            return (_it[-n - 1]);
+        }
     };
     //========================================================================//
     //     R E V E R S E   O P E R A T O R S    T E M P L A T E S             //
