@@ -36,7 +36,7 @@ namespace ft
         //====================================================================//
         // --> https://cplusplus.com/reference/stack/stack/operators/
 		template <class TT, class Container>
-		friend bool operator== (const stack<TT,Container>& lhs, const stack<TT,Container>& rhs)
+		friend bool operator== (const stack<TT,Container>& lhs, const stack<TT,Container>& rhs) // TO DO : without friend
 		{return lhs._ctnr == rhs._ctnr;}
 		
 		template <class TT, class Container>
