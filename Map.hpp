@@ -11,33 +11,28 @@ namespace ft
            class Compare = std::less<Key>,                     // map::key_compare
            class Alloc = std::allocator<std::pair<const Key,T> >    // map::allocator_type
            > 
-        // TO DO need to recode the pair 👆🏻 (ft::pair)
+        // TO DO : recode the pair 👆🏻 (ft::pair)
     class map
     {
     public:
     //========================================================================//
     //                 M E M B E R               T Y P E                      //
     //========================================================================//
-    /*
     typedef Key                                             key_type;
     typedef T                                               mapped_type;
     typedef std::pair<const Key_type, mapped_type>          value_type;
     typedef Compare                                         key_compare;
     typedef Alloc                                           allocator_type;
-     
-    	            
-    allocator_type	        Alloc
-    reference	            ft::allocator_type::reference            
-    const_reference	        ft::allocator_type::const_reference
-    pointer                 ft::allocator_type::pointer
-    const_pointer           ft::allocator_type::_const_pointer
-    iterator	            (LegacyBidirectional) Iterator to value_type
-    const_iterator	        (LegacyBidirectional) Iterator to const value_type
-    reverse_iterator	    ft::reverse_iterator<iterator>
-    const_reverse_iterator	ft::reverse_iterator<const_iterator>
-    difference_type	Signed  ft::iterator_traits<iterator>::difference_type
-    size_type	            std::size_t
-    */
+    typedef typename allocator_type::reference              reference;
+    typedef typename allocator_type::const_reference        const_reference;
+    typedef typename allocator_type::pointer                pointer; 
+    typedef typename allocator_type::const_pointer          const_pointer; 	            
+    typedef ft::map_iterator<value_type>                    iterator;
+    typedef ft::map_iterator<const value_type>              const_iterator;
+    typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
+    typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
+    typedef std::ptrdiff_t                                  difference_type;  
+    typedef std::size_t                                     size_type;
     //========================================================================//
     //                   M E M B E R              F U N C T I O N S           //
     //========================================================================//
@@ -46,7 +41,7 @@ namespace ft
     //       C O N S T R U C T O R S      &      D E S T R U C T O R          //
     //========================================================================//
     // --> https://legacy.cplusplus.com/reference/map/map/map/
-    //empty
+    //empty 
     explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
     //range
     template <class InputIterator> 
