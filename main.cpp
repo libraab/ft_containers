@@ -1,43 +1,19 @@
-# include "stack.hpp"
-# include <iostream>
-# include <list>
-# include <string>
-typedef std::list<int> container_type;
-#define t_stack_ ft::stack<int, container_type>
-void	cmp(const t_stack_ &lhs, const t_stack_ &rhs) {
-	static int i = 0;
+#include <iostream>
+#include <map>
+#include "ft_containers.hpp"
 
-	std::cout << "############### [" << i++ << "] ###############"  << std::endl;
-	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
-	std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
-	std::cout << "gt: " << (lhs >  rhs) << " | ge: " << (lhs >= rhs) << std::endl;
-}
-int		main(void) {
-	container_type	ctnr;
-	ctnr.push_back(21);
-	ctnr.push_back(42);
-	ctnr.push_back(1337);
-	ctnr.push_back(19);
-	ctnr.push_back(0);
-	ctnr.push_back(183792);
-	t_stack_	stck(ctnr);
-	t_stack_	stck2(ctnr);
-	cmp(stck, stck);  // 0
-	cmp(stck, stck2); // 1
-	stck2.push(60);
-	stck2.push(61);
-	stck2.push(62);
-	cmp(stck, stck2); // 2
-	cmp(stck2, stck); // 3
+int main()
+{
+    ft::map<int, std::string> test_map;
 
-	stck.push(42);
+    test_map[1] = "one";
+    test_map[2] = "two";
+    test_map[3] = "three";
 
-	cmp(stck, stck2); // 4
-	cmp(stck2, stck); // 5
+    std::cout << "Size of the map: " << test_map.size() << std::endl;
+    std::cout << "Value at key 1: " << test_map[1] << std::endl;
+    std::cout << "Value at key 2: " << test_map[2] << std::endl;
+    std::cout << "Value at key 3: " << test_map[3] << std::endl;
 
-	stck.push(100);
-
-	cmp(stck, stck2); // 6
-	cmp(stck2, stck); // 7
-	return (0);
+    return 0;
 }

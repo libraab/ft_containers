@@ -12,8 +12,9 @@ namespace ft
         //====================================================================//
         //                    M E M B E R          T Y P E S                  //
         //====================================================================//
-        	typedef T           value_type;
-        	typedef container   container_type;
+		// typedef -> give new name to existing data type
+		typedef T           value_type;
+		typedef container   container_type;
         //====================================================================//
         //                        C O N S T R U C T O R                       //
         //====================================================================//
@@ -62,6 +63,5 @@ namespace ft
         	container_type      _ctnr;
 	};
 }
-// typedef -> give new name to existing data type
 // explicit -> only direct initialisation (no implicit conversion or copy initialisation)
 // friend -> can acess private & protected stuff from class 
