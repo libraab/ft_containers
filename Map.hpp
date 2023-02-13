@@ -25,19 +25,16 @@ namespace ft
     key_compare	            Compare
     allocator_type	        Alloc
     reference	            ft::allocator_type::reference            
-    size_type	Unsigned integer type (usually std::size_t)
-    difference_type	Signed integer type (usually std::ptrdiff_t)
-    const_reference	const value_type&
-    iterator	(LegacyBidirectional) Iterator to value_type
-    const_iterator	(LegacyBidirectional) Iterator to const value_type
-    reverse_iterator	std::reverse_iterator<iterator>
-    const_reverse_iterator	std::reverse_iterator<const_iterator>
-
-
-    typedef pair<const Key, T> value_type;
-
+    const_reference	        ft::allocator_type::const_reference
+    pointer                 ft::allocator_type::pointer
+    const_pointer           ft::allocator_type::_const_pointer
+    iterator	            (LegacyBidirectional) Iterator to value_type
+    const_iterator	        (LegacyBidirectional) Iterator to const value_type
+    reverse_iterator	    ft::reverse_iterator<iterator>
+    const_reverse_iterator	ft::reverse_iterator<const_iterator>
+    difference_type	Signed  ft::iterator_traits<iterator>::difference_type
+    size_type	            std::size_t
     */
-
     //========================================================================//
     //                   M E M B E R              F U N C T I O N S           //
     //========================================================================//
@@ -45,12 +42,7 @@ namespace ft
     //========================================================================//
     //       C O N S T R U C T O R S      &      D E S T R U C T O R          //
     //========================================================================//
-    map();
-    explicit map( const Compare& comp, const Allocator& alloc = Allocator() );
-    template< class InputIt >
-    map( InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& alloc = Allocator());
-    map( const map& other );
-    //-------------------------------------------------------------------------
+    // --> https://legacy.cplusplus.com/reference/map/map/map/
     //empty
     explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
     //range
@@ -61,6 +53,69 @@ namespace ft
     ~map();
     //-------------------------------------------------------------------------
     map& operator= (const map& x);
+    //========================================================================//
+    //                          I T E R A T O R S                             //
+    //========================================================================//
+    iterator begin();
+    const_iterator begin() const;
+    //--------------------------------------------------------------------------
+    iterator end();
+    const_iterator end() const;
+    //--------------------------------------------------------------------------
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+    //--------------------------------------------------------------------------
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
+    //========================================================================//
+    //                           C A P A C I T Y                              //
+    //========================================================================//
+    bool empty() const;
+    size_type size() const;
+    size_type max_size() const;
+    //========================================================================//
+    //                  E L E M E N T         A C C E S                       //
+    //========================================================================//
+    mapped_type& operator[] (const key_type& k);
+    //========================================================================//
+    //                          M O D I F I E R S                             //
+    //========================================================================//
+    pair<iterator,bool> insert (const value_type& val);
+    iterator insert (iterator position, const value_type& val);	
+    template <class InputIterator>
+    void insert (InputIterator first, InputIterator last);
+    //--------------------------------------------------------------------------
+    void erase (iterator position);
+    size_type erase (const key_type& k);
+    void erase (iterator first, iterator last);
+    //--------------------------------------------------------------------------
+    void swap (map& x);
+    void clear();
+    //========================================================================//
+    //                           O B S E R V E R S                            //
+    //========================================================================//
+    key_compare key_comp() const;
+    value_compare value_comp() const;
+    //========================================================================//
+    //                         O P E R A T I O N S                            //
+    //========================================================================//
+    iterator find (const key_type& k);
+    const_iterator find (const key_type& k) const;
+    //--------------------------------------------------------------------------
+    size_type count (const key_type& k) const;
+    //--------------------------------------------------------------------------
+    iterator lower_bound (const key_type& k);
+    const_iterator lower_bound (const key_type& k) const;
+    //--------------------------------------------------------------------------
+    iterator upper_bound (const key_type& k);
+    const_iterator upper_bound (const key_type& k) const;
+    //--------------------------------------------------------------------------
+    pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+    pair<iterator,iterator>             equal_range (const key_type& k);
+    //========================================================================//
+    //                           A L L O C A T O R                            //
+    //========================================================================//
+    allocator_type get_allocator() const;
     };
 }
 
