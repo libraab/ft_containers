@@ -19,10 +19,13 @@ namespace ft
     //                 M E M B E R               T Y P E                      //
     //========================================================================//
     /*
-    key_type	            Key
-    mapped_type	            T
-    value_type	            std::pair<const Key_type, mapped_type>
-    key_compare	            Compare
+    typedef Key                                             key_type;
+    typedef T                                               mapped_type;
+    typedef std::pair<const Key_type, mapped_type>          value_type;
+    typedef Compare                                         key_compare;
+    typedef Alloc                                           allocator_type;
+     
+    	            
     allocator_type	        Alloc
     reference	            ft::allocator_type::reference            
     const_reference	        ft::allocator_type::const_reference
