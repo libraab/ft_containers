@@ -91,10 +91,7 @@ namespace ft
         //------------------------------------------------------------------
         // copy constructor
         vector(const vector &x) : _alloc(allocator_type()), _capacity(0), _size(0), _data(nullptr)
-        {
-            
-            assign(x.begin(), x.end());
-        }
+        { assign(x.begin(), x.end()); }
         //------------------------------------------------------------------
         // D E S T R U C T O R
         ~vector()

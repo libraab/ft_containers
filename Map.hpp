@@ -1,5 +1,7 @@
 #pragma once
 #include "ft_containers.hpp"
+#include "Iterators/map_iterator/binary_tree.hpp"
+#include "Iterators/map_iterator/node.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
 // --> https://en.cppreference.com/w/cpp/container/map
@@ -36,6 +38,7 @@ namespace ft
 
         protected:
             key_compare     _comp;
+            allocator_type  _alloc;
         //====================================================================//
         //                   M E M B E R          F U N C T I O N S           //
         //====================================================================//
@@ -48,7 +51,7 @@ namespace ft
             //empty (2)
             explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
             {_comp = comp;
-            allocator_type = alloc;}
+            _alloc = alloc;}
             //range (4)
             template <class InputIterator> 
             map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -58,9 +61,12 @@ namespace ft
                 // insert iterator into node 
             }
             //copy (1)
-            map (const map& x);
+            map (const map& cpy) {
+                _comp = cpy._comp;
+                _alloc = cpy._alloc;
+            }
             //destructor
-            ~map();
+            ~map() { }
             //-----------------------------------------------------------------
             // V A L U E _ C O M P A R E 
             // --> https://cplusplus.com/reference/map/map/value_comp/
