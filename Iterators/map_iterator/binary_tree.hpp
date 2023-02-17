@@ -158,6 +158,15 @@ namespace ft {
             else 
                 return tree_contains_val(node->right, val);
         }
+        //====================================================================//
+        Node* search(Node* root, int val) {
+            if (root == NULL || root->val == val)
+                return root;
+            if (val < root->val)
+                return search(root->left, val);
+            else
+                return search(root->right, val);
+        }
     };
     //========================================================================//
     // --> https://cplusplus.com/reference/utility/pair/
