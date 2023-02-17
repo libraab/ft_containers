@@ -63,30 +63,27 @@ namespace ft {
         //===========================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* node, int val) {
-            if (node == NULL) {
-                // If the current node is null, create a new node with the given value and return it
-                return new Node(val); }
+            // If the current node is null, create a new node with the given value and return it
+            if (node == NULL) 
+                return new Node(val);
             // Insert the new node in the left or right subtree depending on its value
             if (val < node->val) {
                 node->left = insert_node(node->left, val);
-            } else {
+            else
                 node->right = insert_node(node->right, val);
-            }
             update_height(node);
             int balance_factor = get_balance_factor(node);
             // if the balance is more than 1 => left heavy => rotate right
-            if (balance_factor > 1 && val < node->left->val) {
+            if (balance_factor > 1 && val < node->left->val)
                 return rotate_right(node);
-            }
             // If the new node is in the right subtree of the left child of the current node, perform a left-right double rotation
             if (balance_factor > 1 && val > node->left->val) {
                 node->left = rotate_left(node->left);
                 return rotate_right(node);
             }
             // if the balance is more than 1 => right heavy => rotate left
-            if (balance_factor < -1 && val > node->right->val) {
+            if (balance_factor < -1 && val > node->right->val)
                 return rotate_left(node);
-            }
             // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
             if (balance_factor < -1 && val < node->right->val) {
                 node->right = rotate_right(node->right);
@@ -97,11 +94,14 @@ namespace ft {
         //===========================================================//
         Node* delete_node(Node* node, int val) {
             if (node == NULL) {return node;}
-            if (val < node->val) { // move to the left subtree
+
+            if (val < node->val) // move to the left subtree
                 node->left = delete_node(node->left, val);
-            } else if (val > node->val) { // move to the right subtree
+        
+            else if (val > node->val) // move to the right subtree
                 node->right = delete_node(node->right, val);
-            } else { // if found 
+
+            else { // if found 
                 if (node->left == NULL && node->right == NULL) { // if no children => delete the node
                     delete node;
                     node = NULL;
@@ -121,6 +121,7 @@ namespace ft {
             }
             if (node == NULL) {return node;}
             update_height(node);
+            // re equilibrage
             int balance_factor = get_balance_factor(node);
             if (balance_factor > 1) { // if left-heavy
                 if (get_balance_factor(node->left) >= 0) // if left is also heavy
@@ -142,10 +143,20 @@ namespace ft {
         }
         //====================================================================//
         Node* find_min(Node* node) {
-            while (node->left != NULL) {
+            while (node->left != NULL)
                 node = node->left;
-            }
             return node;
+        }
+        //====================================================================//
+        bool tree_contains_val(Node* node, int val) {
+            if (node == NULL)
+                return false;
+            if (node->val == val)
+                return true;
+            if (val < node->val)
+                return tree_contains_val(node->left, val);
+            else 
+                return tree_contains_val(node->right, val);
         }
     };
     //========================================================================//
