@@ -283,5 +283,6 @@ following the AVL tree method
 https://www.geeksforgeeks.org/introduction-to-binary-tree-data-structure-and-algorithm-tutorials/
 https://www.tutorialspoint.com/python_data_structure/python_binary_tree.htm
 
-
-
+starting by building a balanced binary tree 
+search and traversing doesn't affect it 
+but inserting and deleting DOES ⛔️
