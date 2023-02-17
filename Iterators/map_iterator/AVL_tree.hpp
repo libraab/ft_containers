@@ -1,5 +1,6 @@
 #pragma once
 #include "../../ft_containers.hpp"
+#include "utils.hpp"
 
 namespace ft {
     template<class T, class Key, class compare, class Alloc>
@@ -9,27 +10,29 @@ namespace ft {
         //               N O D E              //
         //====================================//
             struct Node {
-                int val;
-                int height;
-                Node* left;
-                Node* right;
+                typedef ft::pair<key_type, T>       type_value;
+                type_value      val;
+                int             height;
+                Node*           left;
+                Node*           right;
                 
-                Node(int v) {
-                    val = v;
-                    height = 1;
-                    left = NULL;
-                    right = NULL; } };
+        public:
+            Node(int v) { // TO DO initiate empty pointer of node (ask Dan) 
+                val = v;
+                height = 1;
+                left = NULL;
+                right = NULL; } };
+        Node node;
         //===========================================================//
         int get_height(Node* node) {
-            if (node == NULL) {
+            if (node == NULL)
                 return 0;
-            }
-            return node->height; }
+            return node->height;
+        }
         //===========================================================//
         int get_balance_factor(Node* node) {
-            if (node == NULL) {
+            if (node == NULL)
                 return 0;
-            }
             return get_height(node->left) - get_height(node->right);
         }
         //===========================================================//
@@ -37,7 +40,8 @@ namespace ft {
             int left_height = get_height(node->left);
             int right_height = get_height(node->right);
             // --> https://www.youtube.com/watch?v=vRwi_UcZGjU
-            node->height = std::max(left_height, right_height) + 1; }
+            node->height = std::max(left_height, right_height) + 1;
+        }
         //===========================================================//
         Node* rotate_right(Node* node) {
             // not possible if the left node is null
@@ -67,7 +71,7 @@ namespace ft {
             if (node == NULL) 
                 return new Node(val);
             // Insert the new node in the left or right subtree depending on its value
-            if (val < node->val) {
+            if (val < node->val)
                 node->left = insert_node(node->left, val);
             else
                 node->right = insert_node(node->right, val);
@@ -93,14 +97,12 @@ namespace ft {
         }
         //===========================================================//
         Node* delete_node(Node* node, int val) {
-            if (node == NULL) {return node;}
-
+            if (node == NULL)
+                return node;
             if (val < node->val) // move to the left subtree
                 node->left = delete_node(node->left, val);
-        
             else if (val > node->val) // move to the right subtree
                 node->right = delete_node(node->right, val);
-
             else { // if found 
                 if (node->left == NULL && node->right == NULL) { // if no children => delete the node
                     delete node;
@@ -119,7 +121,8 @@ namespace ft {
                     node->right = delete_node(node->right, temp->val);
                 }
             }
-            if (node == NULL) {return node;}
+            if (node == NULL)
+                return node;
             update_height(node);
             // re equilibrage
             int balance_factor = get_balance_factor(node);
@@ -168,22 +171,4 @@ namespace ft {
                 return search(root->right, val);
         }
     };
-    //========================================================================//
-    // --> https://cplusplus.com/reference/utility/pair/
-    template <class T1, class T2>
-    struct pair {
-        // --> https://www.oreilly.com/library/view/c-in-a/059600298X/re854.html
-        typedef T1 first_type;
-        typedef T2 second_type;
-        T1 first;
-        T2 second;
-        pair() : first(0), second(0) {} 
-        pair(const T1& x, const T2& y) : first(x), second(0) {}
-        template<typename U, typename V>
-        pair(const pair<U, V> &p) : first(p.first), second(p.second) {}
-    };
-    //========================================================================//
-    // --> https://cplusplus.com/reference/utility/make_pair/
-    template <class T1,class T2>
-    ft::pair<T1,T2> make_pair (T1 x, T2 y)
-    { return ( pair<T1,T2>(x,y) ); }
+}

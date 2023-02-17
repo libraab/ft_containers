@@ -2,6 +2,7 @@
 #include "ft_containers.hpp"
 #include "Iterators/map_iterator/AVL_tree.hpp"
 #include "Iterators/map_iterator/bidirectional_iterator.hpp"
+#include "Iterators/map_iterator/utils.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
 // --> https://en.cppreference.com/w/cpp/container/map
@@ -22,7 +23,7 @@ namespace ft
         //====================================================================//
         typedef Key                                             key_type;
         typedef T                                               mapped_type;
-        typedef ft::pair<const Key_type, mapped_type>          value_type;
+        typedef ft::pair<const Key, T>                          value_type;
         typedef Compare                                         key_compare;
         typedef Alloc                                           allocator_type;
         typedef typename allocator_type::reference              reference;
@@ -53,12 +54,12 @@ namespace ft
         public:
             // --> https://legacy.cplusplus.com/reference/map/map/map/
             //empty (2)
-            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+            explicit map (const key_compare& comp = key_comp(), const allocator_type& alloc = allocator_type())
             {_comp = comp;
             _alloc = alloc;}
             //range (4)
             template <class InputIterator> 
-            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+            map (InputIterator first, InputIterator last, const key_compare& comp = key_comp(), const allocator_type& alloc = allocator_type())
             {
                 _comp = comp;
                 _alloc = alloc;
@@ -71,7 +72,7 @@ namespace ft
 
 
                 if (*this != cpy){
-					this->_key_comp = x.key_comp();
+					this->_key_compare = x.key_comp();
 					this->_allocator = x.get_allocator();
 					this->_tree = x._tree;
 					this->_size = x.size();
@@ -82,18 +83,25 @@ namespace ft
             //-----------------------------------------------------------------
             // V A L U E _ C O M P A R E 
             // --> https://cplusplus.com/reference/map/map/value_comp/
-            class value_compare
+            // basically it compares the keys (first arg) of a pair, the same as key_comp who takes 2 keys instead of 2 pairs
+            // --> https://cplusplus.com/reference/map/map/key_comp/
+            class value_compare : public std::binary_function<value_type,value_type,bool> // 👇🏻 
             {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
                 friend class map;
                 protected:
                     Compare comp;
                     value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
                 public:
-                    typedef bool result_type;
-                    typedef value_type first_argument_type;
-                    typedef value_type second_argument_type;
-                    bool operator() (const value_type& x, const value_type& y) const
+                    typedef bool result_type; // useless
+                    typedef value_type first_argument_type; // useless
+                    typedef value_type second_argument_type; // useless
+                    bool operator() (const value_type& x, const value_type& y) const // takes 2 value_type (pairs)
                         return comp(x.first, y.first);
+                    //added to official
+                    // bool operator() (const value_type& x, const key_type& y) const // take value_type & key_type
+                    //     return comp(x.first, y);
+                    // bool operator() (const value_type& x, const value_type& y) const // takes key_type & value_type
+                    //     return comp(x, y.first);
             };
             //------------------------------------------------------------------
             map& operator= (const map& x) {
