@@ -1,6 +1,5 @@
-#include <iostream>
-#include <map>
 #include "ft_containers.hpp"
+#include "map.hpp"
 
 int main()
 {

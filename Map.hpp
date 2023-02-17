@@ -2,17 +2,18 @@
 #include "ft_containers.hpp"
 #include "Iterators/map_iterator/AVL_tree.hpp"
 #include "Iterators/map_iterator/bidirectional_iterator.hpp"
-#include "Iterators/map_iterator/utils.hpp"
+#include "Iterators/map_iterator/pair.hpp"
+#include "Iterators/map_iterator/node.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
 // --> https://en.cppreference.com/w/cpp/container/map
 
 namespace ft
 {
-    template < class Key,                                     // map::key_type
-           class T,                                       // map::mapped_type
-           class Compare = std::less<Key>,                     // map::key_compare
-           class Alloc = std::allocator<std::pair<const Key,T> >    // map::allocator_type
+    template < class Key,                                               // map::key_type
+           class T,                                                     // map::mapped_type
+           class Compare = std::less<Key>,                              // map::key_compare
+           class Alloc = std::allocator<std::pair<const Key,T> >        // map::allocator_type
            > 
         // TO DO : recode the pair 👆🏻 (ft::pair)
     class map

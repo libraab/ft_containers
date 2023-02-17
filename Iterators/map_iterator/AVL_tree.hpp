@@ -1,28 +1,21 @@
 #pragma once
 #include "../../ft_containers.hpp"
-#include "utils.hpp"
+//#include "pair.hpp"
+#include "node.hpp"
 
 namespace ft {
     template<class T, class Key, class compare, class Alloc>
     class AVL_tree {
-        private:
-        //====================================//
-        //               N O D E              //
-        //====================================//
-            struct Node {
-                typedef ft::pair<key_type, T>       type_value;
-                type_value      val;
-                int             height;
-                Node*           left;
-                Node*           right;
-                
+        protected:     
+            Node node;
+        //====================================================================//
+        //       C O N S T R U C T O R S      &      D E S T R U C T O R      //
+        //====================================================================//
         public:
-            Node(int v) { // TO DO initiate empty pointer of node (ask Dan) 
-                val = v;
-                height = 1;
-                left = NULL;
-                right = NULL; } };
-        Node node;
+            AVL_tree() : node(NULL) {}
+            AVL_tree(node &n) : node(n) {}
+            AVL_tree(node &cpy) : node(cpy.node) {}
+            ~AVL_tree() {}
         //===========================================================//
         int get_height(Node* node) {
             if (node == NULL)
