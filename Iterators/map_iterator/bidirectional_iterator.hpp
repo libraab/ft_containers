@@ -1,5 +1,5 @@
 template <typename KeyType, typename ValueType>
-class ft_map {
+class map_iterator {
 private:
     // Internal node struct for storing map nodes
     struct Node {

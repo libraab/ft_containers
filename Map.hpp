@@ -1,7 +1,7 @@
 #pragma once
 #include "ft_containers.hpp"
-#include "Iterators/map_iterator/binary_tree.hpp"
-#include "Iterators/map_iterator/node.hpp"
+#include "Iterators/map_iterator/AVL_tree.hpp"
+#include "Iterators/map_iterator/bidirectional_iterator.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
 // --> https://en.cppreference.com/w/cpp/container/map
@@ -22,7 +22,7 @@ namespace ft
         //====================================================================//
         typedef Key                                             key_type;
         typedef T                                               mapped_type;
-        typedef std::pair<const Key_type, mapped_type>          value_type;
+        typedef ft::pair<const Key_type, mapped_type>          value_type;
         typedef Compare                                         key_compare;
         typedef Alloc                                           allocator_type;
         typedef typename allocator_type::reference              reference;
@@ -35,10 +35,14 @@ namespace ft
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
         typedef std::size_t                                     size_type;
+		typedef AVL_tree<T, Key, Compare, alloc>              	BBST;
+
 
         protected:
             key_compare     _comp;
             allocator_type  _alloc;
+            size_type       _size;
+            BBST            _tree;
         //====================================================================//
         //                   M E M B E R          F U N C T I O N S           //
         //====================================================================//
@@ -57,13 +61,21 @@ namespace ft
             map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
             {
                 _comp = comp;
-                allocator_type = alloc;
-                // insert iterator into node 
+                _alloc = alloc;
+                this->insert(first, last); 
             }
             //copy (1)
             map (const map& cpy) {
                 _comp = cpy._comp;
                 _alloc = cpy._alloc;
+
+
+                if (*this != cpy){
+					this->_key_comp = x.key_comp();
+					this->_allocator = x.get_allocator();
+					this->_tree = x._tree;
+					this->_size = x.size();
+				}
             }
             //destructor
             ~map() { }

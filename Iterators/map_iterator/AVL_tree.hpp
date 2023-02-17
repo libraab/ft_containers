@@ -37,7 +37,7 @@ namespace ft {
             int left_height = get_height(node->left);
             int right_height = get_height(node->right);
             // --> https://www.youtube.com/watch?v=vRwi_UcZGjU
-            node->height = max(left_height, right_height) + 1; }
+            node->height = std::max(left_height, right_height) + 1; }
         //===========================================================//
         Node* rotate_right(Node* node) {
             // not possible if the left node is null
