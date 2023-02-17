@@ -4,23 +4,41 @@
 #include "node.hpp"
 
 namespace ft {
+    /*
+  █████╗     ██╗   ██╗    ██╗             ████████╗    ██████╗     ███████╗    ███████╗
+ ██╔══██╗    ██║   ██║    ██║             ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝
+ ███████║    ██║   ██║    ██║                ██║       ██████╔╝    █████╗      █████╗  
+ ██╔══██║    ╚██╗ ██╔╝    ██║                ██║       ██╔══██╗    ██╔══╝      ██╔══╝  
+ ██║  ██║     ╚████╔╝     ███████╗           ██║       ██║  ██║    ███████╗    ███████╗
+ ╚═╝  ╚═╝      ╚═══╝      ╚══════╝           ╚═╝       ╚═╝  ╚═╝    ╚══════╝    ╚══════*/
     template<class T, class Key, class compare, class Alloc>
     class AVL_tree {
-        protected:     
-            Node node;
+        private :     
+            Node* _node;
+            Node* root;
         //====================================================================//
         //       C O N S T R U C T O R S      &      D E S T R U C T O R      //
         //====================================================================//
-        public:
-            AVL_tree() : node(NULL) {}
-            AVL_tree(node &n) : node(n) {}
-            AVL_tree(node &cpy) : node(cpy.node) {}
+        public :
+            AVL_tree() : _node(NULL) {}
+            AVL_tree(Node &n) : node(n) {}
+            AVL_tree(Node &cpy) : node(cpy.node) {}
             ~AVL_tree() {}
         //===========================================================//
         int get_height(Node* node) {
             if (node == NULL)
                 return 0;
             return node->height;
+        }
+        //===========================================================//
+        AVL_tree() : _root(nullptr) {
+        _nil = new Node(K(), V());
+        _nil->height = 0;
+        _nil->left = _nil->right = _nil->parent = _nil;
+    }
+        //===========================================================//
+        int getSize() {
+            return (_tree.size());
         }
         //===========================================================//
         int get_balance_factor(Node* node) {

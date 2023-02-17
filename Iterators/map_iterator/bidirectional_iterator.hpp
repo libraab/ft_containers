@@ -3,6 +3,8 @@
 #include "node.hpp"
 
 namespace ft {
+        template <typename T>
+        class Node ;
 /*██████╗     ██╗    ██████╗     ██╗    ██████╗     ███████╗     ██████╗    ████████╗    ██╗     ██████╗     ███╗   ██╗     █████╗     ██╗
   ██╔══██╗    ██║    ██╔══██╗    ██║    ██╔══██╗    ██╔════╝    ██╔════╝    ╚══██╔══╝    ██║    ██╔═══██╗    ████╗  ██║    ██╔══██╗    ██║
   ██████╔╝    ██║    ██║  ██║    ██║    ██████╔╝    █████╗      ██║            ██║       ██║    ██║   ██║    ██╔██╗ ██║    ███████║    ██║
@@ -17,17 +19,72 @@ namespace ft {
                     ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
     // --> https://en.cppreference.com/w/cpp/iterator/bidirectional_iterator
     // --> https://cplusplus.com/reference/iterator/BidirectionalIterator/?kw=bidirectional+iterator
-    template <typename KeyType, typename ValueType>
+    template <class B>
     class bidirectional_iterator_tag {
-        protected:
-            Node* _node;
+
+        private :
+			typedef bidirectional_iterator	        iterator;
+	
+            Node*               _root;
+            Node*               _node;
+            Node*               _prev_node;
+            ft::stack<Node*>    _node_stack;
+            ft::stack<Node*>    _prev_node_stack;
+            //------------------------------------------------------------------
+            void pushLeft(Node *n) {
+                while (n) {
+                    _node_stack.push(n);
+                    n = n->left;
+                }
+            }
+            //------------------------------------------------------------------
+            void findPredecessor() {
+                if (_node->left != nullptr) {
+                    _prev_node = node->left;
+                    while (_prev_node->right != nullptr)
+                        _prev_node = _prev_node->right;
+                } else {
+                    _prev_node = nullptr;
+                    Node *cur = _root;
+                    while (cur != _node) {
+                        if (cur->key < node->key) {
+                            _prev_node = cur;
+                            cur = cur->right;
+                        } else
+                            cur = cur->left;
+                    }
+                }
+            }
+            //------------------------------------------------------------------
+            void findSuccessor() {
+                if (_node->right != nullptr) {
+                    _prev_node = _node->right;
+                    while (_prev_node->left != nullptr)
+                        _prev_node = _prev_node->left;
+                } else {
+                    prevNode = nullptr;
+                    Node *cur = root;
+                    while (cur != node) {
+                        if (cur->key > node->key) {
+                            prevNode = cur;
+                            cur = cur->left;
+                        } else
+                            cur = cur->right;
+                    }
+                }
+            }
         public:
         //=========================================================//
         //   C O N S T R U C T O R S   &    D E S T R U C T O R    //
         //=========================================================//
-        bidirectional_iterator_tag() : _node(NULL) {}
-        bidirectional_iterator_tag(Node* n) : _node(n) {}
-        bidirectional_iterator_tag(const iterator& cpy) : _node(cpy._node) {}
+        bidirectional_iterator_tag() : _node(nullptr), _prev_node(nullptr) {}
+        bidirectional_iterator_tag(Node *n) : _node(n), _prev_node(nullptr) {pushLeft(n);}
+        bidirectional_iterator_tag(const bidirectional_iterator_tag &other) { 
+            _node = other._node;
+            _prev_node = other._prev_node;
+            _node_stack = other._node_stack;
+            _prev_node_stack = other._prev_node_stack;
+        }
         ~bidirectional_iterator_tag() {}
         //=========================================================//
         //        A S S I G N M E N T           O P E R A T O R    //
@@ -39,43 +96,37 @@ namespace ft {
         //=========================================================//
         //   I N C R E M E N T       &         D E C R E M E N T   //
         //=========================================================//
-        // Prefix increment
-        iterator& operator++() {
-            if (_node == NULL)
+        Iterator& operator++() { // prefix increment
+            if (_node_stack.empty()) {
+                _node = nullptr;
                 return *this;
-            if (_node->right != NULL) {
-                _node = _node->right;
-                while (_node->left != NULL)
-                    _node = _node->left;
             }
-            else
-                while (_node->parent != NULL && _node == _node->parent->right)
-                    _node = _node->parent;
+            _node = _node_stack.top();
+            _node_stack.pop();
+            _prev_node = _node;
+            _prev_node_stack.push(_node);
+            pushLeft(_node->right);
             return *this;
         }
-        // Postfix increment
-        iterator operator++(int) {
-            iterator tmp(*this);
-            ++(*this);
+        Iterator operator++(int) { // postfix increment
+            Iterator tmp(*this);
+            operator++();
             return tmp;
         }
-        // Prefix decrement operator
-        iterator& operator--() {
-            if (_node == NULL)
+        Iterator& operator--() { // prefix decrement
+            if (_prev_node_stack.empty()) {
+                _node = nullptr;
                 return *this;
-            if (_node->left != NULL) {
-                _node = _node->left;
-                while (_node->right != NULL) _node = _node->right;
             }
-            else
-                while (_node->parent != NULL && _node == _node->parent->left)
-                    _node = _node->parent;
+            _prev_node = _prev_node_stack.top();
+            _prev_node_stack.pop();
+            _node = _prev_node;
+            pushLeft(_node->left);
             return *this;
         }
-        // Postfix decrement operator
-        iterator operator--(int) {
-            iterator tmp(*this);
-            --(*this);
+        Iterator operator--(int) { // postfix decrement
+            Iterator tmp(*this);
+            operator--();
             return tmp;
         }
         //=========================================================//
@@ -83,18 +134,18 @@ namespace ft {
         //=========================================================//
         // Equality operator
         bool operator==(const iterator& other) const {
-            return _node == other._node;
+            return (_node == other._node);
         }
         // Inequality operator
         bool operator!=(const iterator& other) const {
-            return _node != other._node;
+            return (!(_node == other._node));
         }
         // Dereference operator
-        std::pair<const KeyType, ValueType>& operator*() const {
-            return std::make_pair(_node->key, _node->value);
+        ft::pair<const key_type, value_type>& operator*() const {
+            return (ft::make_pair(_node->key, _node->value));
         }
         // Arrow operator
-        std::pair<const KeyType, ValueType>* operator->() const {
+        ft::pair<const key_type, value_type>* operator->() const {
             return &(operator*());
         }
     };
