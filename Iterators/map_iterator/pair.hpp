@@ -9,7 +9,7 @@ namespace ft {
       ██║         ██║  ██║    ██║    ██║  ██║
       ╚═╝         ╚═╝  ╚═╝    ╚═╝    ╚═╝  ╚═*/
     // --> https://cplusplus.com/reference/utility/pair/
-    template <class T1, class T2>
+    template <typename T1, typename T2>
     struct pair {
         // --> https://www.oreilly.com/library/view/c-in-a/059600298X/re854.html
         typedef T1 first_type;
@@ -20,12 +20,31 @@ namespace ft {
         pair(const T1& x, const T2& y) : first(x), second(y) {}
         template<typename U, typename V>
         pair(const pair<U, V> &p) : first(p.first), second(p.second) {}
-        //-----------------------------------------
+        //----------------------------------------------------------------------
         // added to official
         pair& operator=(const pair &x) {
             this->first = x.first;
             this->second = x.second;
             return *this;
+        }
+        // Comparison operators
+        bool operator==(const pair<T1,T2>& rhs) const {
+            return (first == rhs.first && second == rhs.second);
+        }
+        bool operator!=(const pair<T1,T2>& rhs) const {
+            return !(*this == rhs);
+        }
+        bool operator<(const pair<T1,T2>& rhs) const {
+            return (first < rhs.first || (!(rhs.first < first) && second < rhs.second));
+        }
+        bool operator>(const pair<T1,T2>& rhs) const {
+            return (rhs < *this);
+        }
+        bool operator<=(const pair<T1,T2>& rhs) const {
+            return !(rhs < *this);
+        }
+        bool operator>=(const pair<T1,T2>& rhs) const {
+            return !(*this < rhs);
         }
     };
 

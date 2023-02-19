@@ -1,9 +1,8 @@
 #pragma once
 #include "ft_containers.hpp"
 #include "Iterators/map_iterator/AVL_tree.hpp"
-#include "Iterators/map_iterator/bidirectional_iterator.hpp"
+//#include "Iterators/map_iterator/bidirectional_iterator.hpp"
 #include "Iterators/map_iterator/pair.hpp"
-#include "Iterators/map_iterator/node.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
 // --> https://en.cppreference.com/w/cpp/container/map
@@ -36,7 +35,7 @@ namespace ft
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
         typedef std::size_t                                     size_type;
-		typedef AVL_tree<T, Key, Compare, alloc>              	BBST;
+		typedef AVL_tree<T, Key, Compare, Alloc>              	BBST;
 
         protected:
             key_compare     _comp;
@@ -96,7 +95,7 @@ namespace ft
                     typedef value_type first_argument_type; // useless
                     typedef value_type second_argument_type; // useless
                     bool operator() (const value_type& x, const value_type& y) const // takes 2 value_type (pairs)
-                        return comp(x.first, y.first);
+                        {return comp(x.first, y.first);}
                     //added to official
                     // bool operator() (const value_type& x, const key_type& y) const // take value_type & key_type
                     //     return comp(x.first, y);
@@ -127,9 +126,10 @@ namespace ft
             //================================================================//
             //                           C A P A C I T Y                      //
             //================================================================//
-            bool empty() const          {return (_tree.getSize() == 0);}
-            size_type size() const      {return (_tree.getSize());}
-            size_type max_size() const  {return (_tree.max_size());}
+            bool empty() const          {return (_tree.get_size() == 0);}
+            size_type size() const      {return (_tree.get_size());}
+            //size_type max_size() const  {return (_tree.max_size());}
+            size_type max_size() const  {return (allocator_type.max_size());}
             //================================================================//
             //                  E L E M E N T         A C C E S               //
             //================================================================//

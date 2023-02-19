@@ -1,113 +1,30 @@
 #pragma once
 #include "../../ft_containers.hpp"
 #include "pair.hpp"
+#include "node.hpp"
 
-namespace {
-template<typename Key, typename T>
-class AVL_tree {
-public:
-    class Node {
-    public:
-        Key key;
-        T value;
-        Node *left;
-        Node *right;
-        Node *parent;
-        int height;
-        Node(const Key& k, const T& v)
-            : key(k), value(v), left(nullptr), right(nullptr), parent(nullptr), height(1) {}
-    };
-//============================================================================//
-    class iterator {
-    public:
-        typedef ft::bidirectional_iterator_tag   iterator_category;
-        typedef std::ptrdiff_t difference_type;
-        typedef ft::pair<const Key, T>  value_type;
-        typedef value_type* pointer;
-        typedef value_type& reference;
-
-        Node* node;
-        AVL_tree* tree;
-
-        iterator(Node* n, AVL_tree* t) : node(n), tree(t) {}
-
-        bool operator==(const iterator& other) const {
-            return node == other.node && tree == other.tree;
-        }
-
-        bool operator!=(const iterator& other) const {
-            return !(*this == other);
-        }
-
-        reference operator*() const {
-            return std::make_pair(node->key, node->value);
-        }
-
-        pointer operator->() const {
-            return &std::make_pair(node->key, node->value);
-        }
-
-        iterator& operator++() {
-            if (node->right) {
-                // Find the leftmost node in the right subtree
-                node = node->right;
-                while (node->left)
-                    node = node->left;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node* parent = node->parent;
-                while (parent && node == parent->right) {
-                    node = parent;
-                    parent = parent->parent;
-                }
-                node = parent;
-            }
-            return *this;
-        }
-
-        iterator operator++(int) {
-            iterator tmp(*this);
-            ++(*this);
-            return tmp;
-        }
-
-        iterator& operator--() {
-            if (node == nullptr) {
-                // The tree is empty, so return the end iterator
-                node = tree->max_node(tree->_root);
-            } else if (node->left) {
-                // Find the rightmost node in the left subtree
-                node = node->left;
-                while (node->right)
-                    node = node->right;
-            } else {
-                // Go up the tree until we find a node whose right child we haven't visited yet
-                Node* parent = node->parent;
-                while (parent && node == parent->left) {
-                    node = parent;
-                    parent = parent->parent;
-                }
-                node = parent;
-            }
-            return *this;
-        }
-
-        iterator operator--(int) {
-            iterator tmp(*this);
-            --(*this);
-            return tmp;
-        }
-    };
-//============================================================================//
-    Node* _node;
-    Node* _root;
+namespace ft {
+    /*
+  █████╗     ██╗   ██╗    ██╗             ████████╗    ██████╗     ███████╗    ███████╗
+ ██╔══██╗    ██║   ██║    ██║             ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝
+ ███████║    ██║   ██║    ██║                ██║       ██████╔╝    █████╗      █████╗  
+ ██╔══██║    ╚██╗ ██╔╝    ██║                ██║       ██╔══██╗    ██╔══╝      ██╔══╝  
+ ██║  ██║     ╚████╔╝     ███████╗           ██║       ██║  ██║    ███████╗    ███████╗
+ ╚═╝  ╚═╝      ╚═══╝      ╚══════╝           ╚═╝       ╚═╝  ╚═╝    ╚══════╝    ╚══════*/
+    template<class Key, class T, class Compare, class Alloc>
+    class AVL_tree {
+        typedef Node<Key, T> Node;
+        private :     
+            Node* _node;
+            Node* _root;
         //====================================================================//
         //       C O N S T R U C T O R S      &      D E S T R U C T O R      //
         //====================================================================//
-    AVL_tree() :            _node(NULL), _root(NULL) {}
-    AVL_tree(Node &n) :     _node(n), _root(n) {}
-    // AVL_tree(Node &cpy) :   _node(cpy._node) {}
-    ~AVL_tree() {destroy(_root);}
+        public :
+            AVL_tree() :            _node(NULL), _root(NULL) {}
+            AVL_tree(Node &n) :     _node(n), _root(n) {}
+            // AVL_tree(Node &cpy) :   _node(cpy._node) {}
+            ~AVL_tree() {destroy(_root);}
         //===========================================================//
         int get_height(Node* node) {
             if (node == NULL)
@@ -262,5 +179,102 @@ public:
             else
                 return search(root->right, val);
         }
+        //====================================================================//
+        // iterator begin() {
+        //     Node* current = _root;
+        //     while (current && current->left)
+        //         current = current->left;
+        //     return iterator(current);
+        // }
+        // //====================================================================//
+        // iterator end() {return iterator(NULL);}
+        // //====================================================================//
+        // iterator rbegin() {
+        //     Node* current = _root;
+        //     while (current && current->right)
+        //         current = current->right;
+        //     return iterator(current);
+        // }
+        // //====================================================================//
+        // iterator rend() {return iterator(NULL);}
+        // //====================================================================//
+        // //std::size_t max_size() const {_alloc.max_size();}
+        // void swap(map& other) {
+        //     std::swap(_root, other._root);
+        //     std::swap(get_size(), other.get_size());
+        //     std::swap(_height, other._height);
+        // }
+        // //====================================================================//
+        // void clear(Node* node) {
+        //     if (node != nullptr) {
+        //         clear(node->left);
+        //         clear(node->right);
+        //         delete node;
+        //     }
+        // }
+        // void clear() {
+        //     clear(_root);
+        //     _root = nullptr;
+        // }
+        // //====================================================================//
+        // iterator find(const key_type& k) {
+        //     Node* current = _root;
+        //     while (current != nullptr) {
+        //         if (k == current->first)
+        //             return iterator(current);
+        //         else if (k < current->first)
+        //             current = current->left;
+        //         else
+        //             current = current->right;
+        //     }
+        //     return end();
+        // }
+        // //====================================================================//
+        // size_t count(const Key& key) const {
+        //     Node* current = _root;
+        //     while (current != nullptr) {
+        //         if (Compare(key, current->key))
+        //             current = current->left;
+        //         else if (Compare(current->key, key))
+        //             current = current->right;
+        //         else
+        //             return 1;
+        //     }
+        //     return 0;
+        // }
+        // //====================================================================//
+        // iterator lower_bound(const key_type& k) {
+        //     Node* current = _root;
+        //     Node* lower = nullptr;
+
+        //     while (current) {
+        //         if (current->first < k)
+        //             current = current->right;
+        //         else {
+        //             lower = current;
+        //             current = current->left;
+        //         }
+        //     }
+        //     if (!lower)
+        //         return end();
+        //     return iterator(lower);
+        // }
+        // //====================================================================//
+        // iterator upper_bound(const key_type& k) {
+        //     Node* current = _root;
+        //     Node* upper = nullptr;
+
+        //     while (current) {
+        //         if (current->first <= k)
+        //             current = current->right;
+        //         else {
+        //             upper = current;
+        //             current = current->left;
+        //         }
+        //     }
+        //     if (!upper)
+        //         return end();
+        //     return iterator(upper);
+        // }
     };
 }
