@@ -1,7 +1,8 @@
 #pragma once
 #include "ft_containers.hpp"
+#include "Iterators/vector_iterator/reverse_iterator.hpp"
+#include "Iterators/vector_iterator/type_traits.hpp"
 #include "Iterators/map_iterator/AVL_tree.hpp"
-//#include "Iterators/map_iterator/bidirectional_iterator.hpp"
 #include "Iterators/map_iterator/pair.hpp"
 
 // --> https://legacy.cplusplus.com/reference/map/map/
@@ -9,7 +10,6 @@
 
 namespace ft
 {
-    typedef std::bidirectional_iterator_tag   bidirectional_iterator; 
     template < class Key,                                               // map::key_type
            class T,                                                     // map::mapped_type
            class Compare = std::less<Key>,                              // map::key_compare
@@ -31,13 +31,13 @@ namespace ft
         typedef typename allocator_type::pointer                pointer; 
         typedef typename allocator_type::const_pointer           const_pointer;
 	            
-        typedef ft::iterator<value_type>                        iterator;
-        typedef ft::iterator<const value_type>                  const_iterator;
-        // typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
-        // typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
+        typedef ft::biterator<Key, T, Compare, Alloc>                        iterator;
+        typedef ft::biterator<const Key, T, Compare, Alloc>                  const_iterator;
+        typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
+        typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
         typedef std::size_t                                     size_type;
-		typedef AVL_tree<T, Key, Compare, Alloc>              	BBST;
+		typedef AVL_tree<Key, T, Compare, Alloc>              	BBST;
 
         protected:
             key_compare     _comp;
@@ -54,12 +54,12 @@ namespace ft
         public:
             // --> https://legacy.cplusplus.com/reference/map/map/map/
             //empty (2)
-            explicit map (const key_compare& comp = key_comp(), const allocator_type& alloc = allocator_type())
-            {_comp = comp;
-            _alloc = alloc;}
+            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+            {this->_comp = comp;
+            this->_alloc = alloc;}
             //range (4)
             template <class InputIterator> 
-            map (InputIterator first, InputIterator last, const key_compare& comp = key_comp(), const allocator_type& alloc = allocator_type())
+            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
             {
                 _comp = comp;
                 _alloc = alloc;
@@ -129,8 +129,8 @@ namespace ft
             //================================================================//
             bool empty() const          {return (_tree.get_size() == 0);}
             size_type size() const      {return (_tree.get_size());}
-            //size_type max_size() const  {return (_tree.max_size());}
-            size_type max_size() const  {return (allocator_type.max_size());}
+            // size_type max_size() const  {return (_tree.max_size());}
+            size_type max_size() const  {return (_alloc.max_size());}
             //================================================================//
             //                  E L E M E N T         A C C E S               //
             //================================================================//
@@ -169,8 +169,8 @@ namespace ft
             //================================================================//
             //                           O B S E R V E R S                    //
             //================================================================//
-            key_compare key_comp() const                {return (_key_comp);}
-            value_compare value_comp() const            {return (_value_comp);}
+            key_compare key_comp() const                {return (_comp);}
+            value_compare value_comp() const            {return (value_compare(key_comp()));}
             //================================================================//
             //                         O P E R A T I O N S                    //
             //================================================================//
@@ -200,6 +200,7 @@ namespace ft
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator==(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
         return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));}
+
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator!=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
         return (!(lhs == rhs));}

@@ -16,9 +16,9 @@ namespace ft {
         int             height;
         Node*           left;
         Node*           right;
-        static Node*           nil = NULL;            
+        //Node*           nil;            
         // CONSTRUCTOR    
-        Node(type_value v) : val(v), height(1), left(nil), right(nil) {}
+        Node(type_value v) : val(v), height(1),/* nil(NULL),*/ left(NULL), right(NULL) {}
     };
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
@@ -28,15 +28,17 @@ namespace ft {
     ╚═╝  ╚═╝      ╚═══╝      ╚══════╝               ╚═╝       ╚═╝  ╚═╝    ╚══════╝    ╚══════*/
     template <class K, class T, class Compare, class Alloc>
     class AVL_tree {
+        public:
         typedef Node<K, T>  Node;
         Node* _current_node;
         Node* _root;
+        A
         //====================================================================//
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-        AVL_tree() :            _current_node(NULL), _root(NULL) {}
+        AVL_tree() :            _current_node(NULL), _root(NULL), {}
         AVL_tree(Node &n) :     _current_node(n), _root(n) {}
-        ~AVL_tree() {destroy(_root);}
+        ~AVL_tree() {Alloc.destroy(_root);}
         //====================================================================//
         int get_height(Node* node) {
             if (node == NULL)
@@ -228,7 +230,7 @@ namespace ft {
     ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║
     ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
     template <typename K, typename T, class Compare, class Alloc>
-    class iterator {
+    class biterator {
         typedef std::bidirectional_iterator_tag     iterator_category;
         typedef std::ptrdiff_t                      difference_type;
         typedef ft::pair<K, T>                      value_type;
@@ -241,12 +243,12 @@ namespace ft {
         Node*                 _node;
         AVL_tree*             _tree;
 
-        iterator(Node* n, AVL_tree* t) : _node(n), _tree(t) {}
+        biterator(Node* n, AVL_tree* t) : _node(n), _tree(t) {}
 
-        bool operator==(const iterator& other) const 
+        bool operator==(const biterator& other) const 
         {return _node == other._node && _tree == other._tree;}
 
-        bool operator!=(const iterator& other) const 
+        bool operator!=(const biterator& other) const 
         {return !(*this == other);}
 
         reference operator*() const
@@ -255,7 +257,7 @@ namespace ft {
         pointer operator->() const
         {return &ft::make_pair(_node->first, _node->second);}
 
-        iterator& operator++() {
+        biterator& operator++() {
             if (_node->right) {
                 // Find the leftmost node in the right subtree
                 _node = _node->right;
@@ -273,13 +275,13 @@ namespace ft {
             return *this;
         }
 
-        iterator operator++(int) {
-            iterator tmp(*this);
+        biterator operator++(int) {
+            biterator tmp(*this);
             ++(*this);
             return tmp;
         }
 
-        iterator& operator--() {
+        biterator& operator--() {
             if (_node == nullptr) {
                 // The tree is empty, so return the end iterator
                 _node = _tree->max_node(_tree->_root);
@@ -300,8 +302,8 @@ namespace ft {
             return *this;
         }
 
-        iterator operator--(int) {
-            iterator tmp(*this);
+        biterator operator--(int) {
+            biterator tmp(*this);
             --(*this);
             return tmp;
         }
