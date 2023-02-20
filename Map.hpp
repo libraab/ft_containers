@@ -9,6 +9,7 @@
 
 namespace ft
 {
+    typedef std::bidirectional_iterator_tag   bidirectional_iterator; 
     template < class Key,                                               // map::key_type
            class T,                                                     // map::mapped_type
            class Compare = std::less<Key>,                              // map::key_compare
@@ -28,11 +29,12 @@ namespace ft
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef typename allocator_type::pointer                pointer; 
-        typedef typename allocator_type::const_pointer           const_pointer; 	            
-        typedef ft::bidirectional_iterator_tag<value_type>       iterator;
-        typedef ft::bidirectional_iterator_tag<const value_type> const_iterator;
-        typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
-        typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
+        typedef typename allocator_type::const_pointer           const_pointer;
+	            
+        typedef ft::iterator<value_type>                        iterator;
+        typedef ft::iterator<const value_type>                  const_iterator;
+        // typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
+        // typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
         typedef std::size_t                                     size_type;
 		typedef AVL_tree<T, Key, Compare, Alloc>              	BBST;
@@ -42,7 +44,6 @@ namespace ft
             allocator_type  _alloc;
             size_type       _size;
             BBST            _tree;
-            Node *root;
         //====================================================================//
         //                   M E M B E R          F U N C T I O N S           //
         //====================================================================//
@@ -71,10 +72,10 @@ namespace ft
 
 
                 if (*this != cpy){
-					this->_key_compare = x.key_comp();
-					this->_allocator = x.get_allocator();
-					this->_tree = x._tree;
-					this->_size = x.size();
+					this->_key_compare = cpy.key_comp();
+					this->_allocator = cpy.get_allocator();
+					this->_tree = cpy._tree;
+					this->_size = cpy.size();
 				}
             }
             //destructor

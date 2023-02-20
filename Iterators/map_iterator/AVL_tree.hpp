@@ -2,139 +2,83 @@
 #include "../../ft_containers.hpp"
 #include "pair.hpp"
 
-namespace {
-template<typename Key, typename T>
-class AVL_tree {
-public:
+namespace ft {
+  /*███╗   ██╗     ██████╗     ██████╗     ███████╗
+    ████╗  ██║    ██╔═══██╗    ██╔══██╗    ██╔════╝
+    ██╔██╗ ██║    ██║   ██║    ██║  ██║    █████╗  
+    ██║╚██╗██║    ██║   ██║    ██║  ██║    ██╔══╝  
+    ██║ ╚████║    ╚██████╔╝    ██████╔╝    ███████╗
+    ╚═╝  ╚═══╝     ╚═════╝     ╚═════╝     ╚══════*/
+    template <typename K, typename T>
     class Node {
-    public:
-        Key key;
-        T value;
-        Node *left;
-        Node *right;
-        Node *parent;
-        int height;
-        Node(const Key& k, const T& v)
-            : key(k), value(v), left(nullptr), right(nullptr), parent(nullptr), height(1) {}
+        typedef ft::pair<K, T>       type_value;
+        type_value      val;
+        int             height;
+        Node*           left;
+        Node*           right;
+        static Node*           nil = NULL;            
+        // CONSTRUCTOR    
+        Node(type_value v) : val(v), height(1), left(nil), right(nil) {}
     };
-//============================================================================//
-    class iterator {
-    public:
-        typedef ft::bidirectional_iterator_tag   iterator_category;
-        typedef std::ptrdiff_t difference_type;
-        typedef ft::pair<const Key, T>  value_type;
-        typedef value_type* pointer;
-        typedef value_type& reference;
-
-        Node* node;
-        AVL_tree* tree;
-
-        iterator(Node* n, AVL_tree* t) : node(n), tree(t) {}
-
-        bool operator==(const iterator& other) const {
-            return node == other.node && tree == other.tree;
-        }
-
-        bool operator!=(const iterator& other) const {
-            return !(*this == other);
-        }
-
-        reference operator*() const {
-            return std::make_pair(node->key, node->value);
-        }
-
-        pointer operator->() const {
-            return &std::make_pair(node->key, node->value);
-        }
-
-        iterator& operator++() {
-            if (node->right) {
-                // Find the leftmost node in the right subtree
-                node = node->right;
-                while (node->left)
-                    node = node->left;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node* parent = node->parent;
-                while (parent && node == parent->right) {
-                    node = parent;
-                    parent = parent->parent;
-                }
-                node = parent;
-            }
-            return *this;
-        }
-
-        iterator operator++(int) {
-            iterator tmp(*this);
-            ++(*this);
-            return tmp;
-        }
-
-        iterator& operator--() {
-            if (node == nullptr) {
-                // The tree is empty, so return the end iterator
-                node = tree->max_node(tree->_root);
-            } else if (node->left) {
-                // Find the rightmost node in the left subtree
-                node = node->left;
-                while (node->right)
-                    node = node->right;
-            } else {
-                // Go up the tree until we find a node whose right child we haven't visited yet
-                Node* parent = node->parent;
-                while (parent && node == parent->left) {
-                    node = parent;
-                    parent = parent->parent;
-                }
-                node = parent;
-            }
-            return *this;
-        }
-
-        iterator operator--(int) {
-            iterator tmp(*this);
-            --(*this);
-            return tmp;
-        }
-    };
-//============================================================================//
-    Node* _node;
-    Node* _root;
+   /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
+    ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
+    ███████║    ██║   ██║    ██║                    ██║       ██████╔╝    █████╗      █████╗      
+    ██╔══██║    ╚██╗ ██╔╝    ██║                    ██║       ██╔══██╗    ██╔══╝      ██╔══╝      
+    ██║  ██║     ╚████╔╝     ███████╗               ██║       ██║  ██║    ███████╗    ███████╗    
+    ╚═╝  ╚═╝      ╚═══╝      ╚══════╝               ╚═╝       ╚═╝  ╚═╝    ╚══════╝    ╚══════*/
+    template <class K, class T, class Compare, class Alloc>
+    class AVL_tree {
+        typedef Node<K, T>  Node;
+        Node* _current_node;
+        Node* _root;
         //====================================================================//
-        //       C O N S T R U C T O R S      &      D E S T R U C T O R      //
+        //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-    AVL_tree() :            _node(NULL), _root(NULL) {}
-    AVL_tree(Node &n) :     _node(n), _root(n) {}
-    // AVL_tree(Node &cpy) :   _node(cpy._node) {}
-    ~AVL_tree() {destroy(_root);}
-        //===========================================================//
+        AVL_tree() :            _current_node(NULL), _root(NULL) {}
+        AVL_tree(Node &n) :     _current_node(n), _root(n) {}
+        ~AVL_tree() {destroy(_root);}
+        //====================================================================//
         int get_height(Node* node) {
             if (node == NULL)
                 return 0;
             return node->height;
         }
-        //===========================================================//
+        //====================================================================//
         int get_size() {
             if (_root == NULL)
                 return 0;
-            return (1 + size(_root->left) + size(_root->right));
+            return (1 + _root->left.size() + _root->right.size());
             // adds 1 for each recursive call to count the current node that the function is operating on
         }
-        //===========================================================//
+        //====================================================================//
         int get_balance_factor(Node* node) {
             if (node == NULL)
                 return 0;
             return get_height(node->left) - get_height(node->right);
         }
-        //===========================================================//
+        //====================================================================//
+        Node* get_parent(Node* root, int key) {
+            Node* previous = NULL;
+            Node* current = root;
+
+            while (current != NULL) {
+                if (current->first >= key) {
+                    current = current->left;
+                } else {
+                    previous = current;
+                    current = current->right;
+                }
+            }
+            return previous;
+        }
+        //====================================================================//
         void update_height(Node* node) {
             int left_height = get_height(node->left);
             int right_height = get_height(node->right);
             // --> https://www.youtube.com/watch?v=vRwi_UcZGjU
             node->height = std::max(left_height, right_height) + 1;
         }
-        //===========================================================//
+        //====================================================================//
         Node* rotate_right(Node* node) {
             // not possible if the left node is null
             Node* new_root = node->left;
@@ -145,7 +89,7 @@ public:
             update_height(new_root);
             return new_root;
         }
-        //===========================================================//
+        //====================================================================//
         Node* rotate_left(Node* node) {
             // not possible if the right node is null
             Node* new_root = node->right;
@@ -156,7 +100,7 @@ public:
             update_height(new_root);
             return new_root;
         }
-        //===========================================================//
+        //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* node, int val) {
             // If the current node is null, create a new node with the given value and return it
@@ -187,7 +131,7 @@ public:
             }
             return node;
         }
-        //===========================================================//
+        //====================================================================//
         Node* delete_node(Node* node, int val) {
             if (node == NULL)
                 return node;
@@ -237,30 +181,129 @@ public:
             return node;
         }
         //====================================================================//
-        Node* find_min(Node* node) {
-            while (node->left != NULL)
-                node = node->left;
-            return node;
+        Node* find_min() {
+            Node* n = _root;
+            while (n->left != NULL)
+                n = n->left;
+            return n;
         }
         //====================================================================//
-        bool tree_contains_val(Node* node, int val) {
-            if (node == NULL)
+        Node* find_max() {
+            Node* n = _root;
+            while (n->right != NULL)
+                n = n->right;
+            return n;
+        }
+        //====================================================================//
+        bool tree_contains_val(Node* node, int val) { // TO DO change it
+            (void)node;
+            Node* n = _root;
+            if (n == NULL)
                 return false;
-            if (node->val == val)
+            if (n->second == val)
                 return true;
-            if (val < node->val)
-                return tree_contains_val(node->left, val);
-            else 
-                return tree_contains_val(node->right, val);
+            while ((n && n->left) || (n && n->right)) {
+                if (!tree_contains_val(n->left, val))
+                    return (tree_contains_val(n->right, val));
+            }
         }
         //====================================================================//
         Node* search(Node* root, int val) {
-            if (root == NULL || root->val == val)
-                return root;
-            if (val < root->val)
-                return search(root->left, val);
-            else
-                return search(root->right, val);
+            Node* n = root;
+            if (n == NULL)
+                return false;
+            if (n->second == val)
+                return true;
+            while ((n && n->left) || (n && n->right)) {
+                if (!tree_contains_val(n->left, val))
+                    return (tree_contains_val(n->right, val));
+            }
+        }
+        //====================================================================//
+    };
+  /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
+    ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
+    ██║       ██║       █████╗      ██████╔╝    ███████║       ██║       ██║   ██║    ██████╔╝
+    ██║       ██║       ██╔══╝      ██╔══██╗    ██╔══██║       ██║       ██║   ██║    ██╔══██╗
+    ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║
+    ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
+    template <typename K, typename T, class Compare, class Alloc>
+    class iterator {
+        typedef std::bidirectional_iterator_tag     iterator_category;
+        typedef std::ptrdiff_t                      difference_type;
+        typedef ft::pair<K, T>                      value_type;
+        typedef value_type*                         pointer;
+        typedef value_type&                         reference;
+
+        typedef Node<K, T> Node;
+        typedef AVL_tree<K, T, Compare, Alloc>      AVL_tree;
+
+        Node*                 _node;
+        AVL_tree*             _tree;
+
+        iterator(Node* n, AVL_tree* t) : _node(n), _tree(t) {}
+
+        bool operator==(const iterator& other) const 
+        {return _node == other._node && _tree == other._tree;}
+
+        bool operator!=(const iterator& other) const 
+        {return !(*this == other);}
+
+        reference operator*() const
+        {return ft::make_pair(_node->first, _node->second);}
+
+        pointer operator->() const
+        {return &ft::make_pair(_node->first, _node->second);}
+
+        iterator& operator++() {
+            if (_node->right) {
+                // Find the leftmost node in the right subtree
+                _node = _node->right;
+                while (_node->left)
+                    _node = _node->left;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node* parent = _node->parent;
+                while (parent && _node == parent->right) {
+                    _node = parent;
+                    parent = parent->parent;
+                }
+                _node = parent;
+            }
+            return *this;
+        }
+
+        iterator operator++(int) {
+            iterator tmp(*this);
+            ++(*this);
+            return tmp;
+        }
+
+        iterator& operator--() {
+            if (_node == nullptr) {
+                // The tree is empty, so return the end iterator
+                _node = _tree->max_node(_tree->_root);
+            } else if (_node->left) {
+                // Find the rightmost node in the left subtree
+                _node = _node->left;
+                while (_node->right)
+                    _node = _node->right;
+            } else {
+                // Go up the tree until we find a node whose right child we haven't visited yet
+                Node* parent = _node->parent;
+                while (parent && _node == parent->left) {
+                    _node = parent;
+                    parent = parent->parent;
+                }
+                _node = parent;
+            }
+            return *this;
+        }
+
+        iterator operator--(int) {
+            iterator tmp(*this);
+            --(*this);
+            return tmp;
         }
     };
 }
