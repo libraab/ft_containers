@@ -12,14 +12,99 @@ namespace ft {
     template <typename P>
     class Node {
         public:
-        
         P               pair;
         int             height;
         Node*           left;
         Node*           right;
+        Node*           root;
         //Node*           nil;          
         // CONSTRUCTOR    
-        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL) {}
+        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), root(NULL) {}
+    };
+  /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
+    ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
+    ██║       ██║       █████╗      ██████╔╝    ███████║       ██║       ██║   ██║    ██████╔╝
+    ██║       ██║       ██╔══╝      ██╔══██╗    ██╔══██║       ██║       ██║   ██║    ██╔══██╗
+    ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║
+    ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
+
+    template <typename K, typename T, class Compare, class Alloc>
+    class biterator {
+        public :
+        typedef std::bidirectional_iterator_tag     iterator_category;
+        typedef std::ptrdiff_t                      difference_type;
+        typedef ft::pair<K, T>                      value_type;
+        typedef value_type*                         pointer;
+        typedef value_type&                         reference;
+
+        typedef Node<value_type> Node;
+
+        Node*                 _node;
+
+        biterator(Node* n) : _node(n) {}
+
+        bool operator==(const biterator& other) const 
+        {return _node == other._node; }
+
+        bool operator!=(const biterator& other) const 
+        {return !(*this == other);}
+
+        reference operator*() const
+        {return (*(operator->()));}
+
+        pointer operator->() const
+        {return (ft::pair<K, T> *)(&this->_node->pair);}
+
+        biterator& operator++() {
+            if (_node->right) {
+                // Find the leftmost node in the right subtree
+                _node = _node->right;
+                while (_node->left)
+                    _node = _node->left;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node* parent = _node->parent;
+                while (parent && _node == parent->right) {
+                    _node = parent;
+                    parent = parent->parent;
+                }
+                _node = parent;
+            }
+            return *this;
+        }
+
+        biterator operator++(int) {
+            biterator tmp(*this);
+            ++(*this);
+            return tmp;
+        }
+
+        biterator& operator--() {
+            if (_node == nullptr) {
+                // The tree is empty, so return the end iterator
+                //_node = max_node();
+            } else if (_node->left) {
+                // Find the rightmost node in the left subtree
+                _node = _node->left;
+                while (_node->right)
+                    _node = _node->right;
+            } else {
+                // Go up the tree until we find a node whose right child we haven't visited yet
+                Node* parent = _node->parent;
+                while (parent && _node == parent->left) {
+                    _node = parent;
+                    parent = parent->parent;
+                }
+                _node = parent;
+            }
+            return *this;
+        }
+
+        biterator operator--(int) {
+            biterator tmp(*this);
+            --(*this);
+            return tmp;
+        }
     };
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
@@ -30,18 +115,21 @@ namespace ft {
     template <class K, class T, class Compare, class Alloc>
     class AVL_tree {
         public:
-        typedef Node<K>  Node;
-        typedef ft::pair<K, T>  value_type;
-        typedef Alloc       allocator_type;
+        typedef ft::pair<K, T>          value_type;
+        typedef Node<value_type>        Node;
+        typedef Alloc                   allocator_type;
+        typedef ft::biterator<K, T, Compare, Alloc> iterator;
+        typedef K   key_type;
 
         Node*               _current_node;
         Node*               _root;
+        size_t              _size;
         allocator_type      _alloc;
         //====================================================================//
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-        AVL_tree() :            _current_node(NULL), _root(NULL), _alloc(allocator_type()) {}
-        AVL_tree(Node &n) :     _current_node(n), _root(n), _alloc(allocator_type()) {}
+        AVL_tree() :            _current_node(NULL), _root(NULL), _size(0), _alloc(allocator_type()) {}
+        AVL_tree(Node &n) :     _current_node(n), _root(n), _size(0), _alloc(allocator_type()) {}
         ~AVL_tree() {clear(_root);}
         //====================================================================//
         int get_height(Node* node) {
@@ -50,12 +138,7 @@ namespace ft {
             return node->height;
         }
         //====================================================================//
-        int get_size() {
-            if (_root == NULL)
-                return 0;
-            return (1 + _root->left.size() + _root->right.size());
-            // adds 1 for each recursive call to count the current node that the function is operating on
-        }
+        int get_size() const {return _size;}
         //====================================================================//
         int get_balance_factor(Node* node) {
             if (node == NULL)
@@ -110,30 +193,34 @@ namespace ft {
         }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
-        Node* insert_node(Node* cur, const value_type& new_node) {
+        Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
             // If the current _root is null, create a new node with the given value and return it
-            if (cur == NULL)
-                return new Node(new_node); // which _root is new_node
+            if (cur == NULL) {
+                Node* x = new Node(new_node); // which _root is new_node
+                _size++;
+                x->root = (! root ) ? x : root;
+                return (x);
+            }
             // Insert the new node in the left or right subtree depending on its value
-            if (new_node->first < cur->first)
-                cur->left = insert_node(cur->left, new_node);
+            if (new_node.first < cur->pair.first)
+                cur->left = insert_node(cur->left, new_node, root);
             else
-                cur->right = insert_node(cur->right, new_node);
+                cur->right = insert_node(cur->right, new_node, root);
             update_height(cur);
             int balance_factor = get_balance_factor(cur);
             // if the balance is more than 1 => left heavy => rotate right
-            if (balance_factor > 1 && cur->first < cur->left->first)
+            if (balance_factor > 1 && cur->pair.first < cur->left->pair.first)
                 return rotate_right(cur);
             // If the new node is in the right subtree of the left child of the current node, perform a left-right double rotation
-            if (balance_factor > 1 && cur->first > cur->left->first) {
+            if (balance_factor > 1 && cur->pair.first > cur->left->pair.first) {
                 cur->left = rotate_left(cur->left);
                 return rotate_right(cur);
             }
             // if the balance is more than 1 => right heavy => rotate left
-            if (balance_factor < -1 && cur->first > cur->right->first)
+            if (balance_factor < -1 && cur->pair.first > cur->right->pair.first)
                 return rotate_left(cur);
             // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
-            if (balance_factor < -1 && cur->first < cur->right->first) {
+            if (balance_factor < -1 && cur->pair.first < cur->right->pair.first) {
                 cur->right = rotate_right(cur->right);
                 return rotate_left(cur);
             }
@@ -150,21 +237,25 @@ namespace ft {
             else { // if found 
                 if (node->left == NULL && node->right == NULL) { // if no children => delete the node
                     delete node;
+                    _size--;
                     node = NULL;
                 } else if (node->left == NULL) { // if one child => move it to the node 
                     Node* temp = node;
                     node = node->right; 
                     delete temp; 
+                    _size--;
                 } else if (node->right == NULL) {
                     Node* temp = node;
                     node = node->left;
                     delete temp;
+                    _size--;
                 } else { // if it has 2 children
                     Node* temp = find_min(node->right);
                     node->val = temp->val;
                     node->right = delete_node(node->right, temp->val);
                 }
             }
+            
             if (node == NULL)
                 return node;
             update_height(node);
@@ -189,14 +280,14 @@ namespace ft {
             return node;
         }
         //====================================================================//
-        Node* find_min() {
+        Node* begin() {
             Node* n = _root;
             while (n->left != NULL)
                 n = n->left;
             return n;
         }
         //====================================================================//
-        Node* find_max() {
+        Node* end() {
             Node* n = _root;
             while (n->right != NULL)
                 n = n->right;
@@ -206,9 +297,9 @@ namespace ft {
         bool contains_key(Node* curr, const value_type& node) { 
             if (curr == NULL)
                 return false; // no doublon
-            if (curr.pair->first == node->first)
+            if (curr->pair.first == node.first)
                 return true; // Key doublon ⛔️ 
-            if (node->first < curr->first)
+            if (node.first < curr->pair.first)
                 return contains_key(curr->left, node);
             else 
                 return contains_key(curr->right, node);
@@ -238,91 +329,19 @@ namespace ft {
             _root = nullptr;
         }
         //====================================================================//
-    };
-  /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
-    ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
-    ██║       ██║       █████╗      ██████╔╝    ███████║       ██║       ██║   ██║    ██████╔╝
-    ██║       ██║       ██╔══╝      ██╔══██╗    ██╔══██║       ██║       ██║   ██║    ██╔══██╗
-    ██║       ██║       ███████╗    ██║  ██║    ██║  ██║       ██║       ╚██████╔╝    ██║  ██║
-    ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
-    template <typename K, typename T, class Compare, class Alloc>
-    class biterator {
-        public :
-        typedef std::bidirectional_iterator_tag     iterator_category;
-        typedef std::ptrdiff_t                      difference_type;
-        typedef ft::pair<K, T>                      value_type;
-        typedef value_type*                         pointer;
-        typedef value_type&                         reference;
-
-        typedef Node<K> Node;
-        typedef AVL_tree<K, T, Compare, Alloc>      AVL_tree;
-
-        Node*                 _node;
-        AVL_tree*             _tree;
-
-        biterator(Node* n, AVL_tree* t) : _node(n), _tree(t) {}
-
-        bool operator==(const biterator& other) const 
-        {return _node == other._node && _tree == other._tree;}
-
-        bool operator!=(const biterator& other) const 
-        {return !(*this == other);}
-
-        reference operator*() const
-        {return ft::make_pair(_node->first, _node->second);}
-
-        pointer operator->() const
-        {return &ft::make_pair(_node->first, _node->second);}
-
-        biterator& operator++() {
-            if (_node->right) {
-                // Find the leftmost node in the right subtree
-                _node = _node->right;
-                while (_node->left)
-                    _node = _node->left;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node* parent = _node->parent;
-                while (parent && _node == parent->right) {
-                    _node = parent;
-                    parent = parent->parent;
-                }
-                _node = parent;
+        iterator find(const key_type& k) {
+            Node* curr = _root;
+            // Traverse the tree until we find the key or reach a null node
+            while (curr != nullptr) {
+                if (k == curr->pair.first)
+                    return iterator(curr);
+                else if (k < curr->pair.first)
+                    curr = curr->left;
+                else
+                    curr = curr->right;
             }
-            return *this;
+            return this->end();
         }
-
-        biterator operator++(int) {
-            biterator tmp(*this);
-            ++(*this);
-            return tmp;
-        }
-
-        biterator& operator--() {
-            if (_node == nullptr) {
-                // The tree is empty, so return the end iterator
-                _node = _tree->max_node(_tree->_root);
-            } else if (_node->left) {
-                // Find the rightmost node in the left subtree
-                _node = _node->left;
-                while (_node->right)
-                    _node = _node->right;
-            } else {
-                // Go up the tree until we find a node whose right child we haven't visited yet
-                Node* parent = _node->parent;
-                while (parent && _node == parent->left) {
-                    _node = parent;
-                    parent = parent->parent;
-                }
-                _node = parent;
-            }
-            return *this;
-        }
-
-        biterator operator--(int) {
-            biterator tmp(*this);
-            --(*this);
-            return tmp;
-        }
+        //====================================================================//
     };
 }

@@ -146,8 +146,9 @@ namespace ft
                 // returned : iterator of the node 
                 // true is insertion was done and false if it existed already and insertion didn't happen
                 if (_tree.contains_key(_tree.get_root(), val))
-                    return ft::make_pair(val, false);
-                return (ft::make_pair(_tree.insert_node(_tree.get_root(), val), true));
+                    return (ft::pair<iterator, bool>(find(val.first), false));
+                _tree.insert_node(_tree.get_root(), val, _tree.get_root());
+                return (ft::pair<iterator, bool>(find(val.first), true));
             }
             iterator insert (iterator position, const value_type& val) {
                 ft::pair<iterator,bool> ret = _tree.insert_node(val.first, val.second, position.base());
