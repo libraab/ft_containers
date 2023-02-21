@@ -29,10 +29,10 @@ namespace ft
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef typename allocator_type::pointer                pointer; 
-        typedef typename allocator_type::const_pointer           const_pointer;
+        typedef typename allocator_type::const_pointer          const_pointer;
 	            
-        typedef ft::biterator<Key, T, Compare, Alloc>                        iterator;
-        typedef ft::biterator<const Key, T, Compare, Alloc>                  const_iterator;
+        typedef ft::biterator<Key, T, Compare, Alloc>           iterator;
+        typedef ft::biterator<const Key, T, Compare, Alloc>     const_iterator;
         typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
@@ -142,8 +142,12 @@ namespace ft
             //================================================================//
             //                      M O D I F I E R S                         //
             //================================================================//
-            pair<iterator,bool> insert (const value_type& val) {
-                return (_tree.insert_node(val.first, val.second));
+            pair<iterator, bool> insert(const value_type& val) {
+                // returned : iterator of the node 
+                // true is insertion was done and false if it existed already and insertion didn't happen
+                if (_tree.contains_key(_tree.get_root(), val))
+                    return ft::make_pair(val, false);
+                return (ft::make_pair(_tree.insert_node(_tree.get_root(), val), true));
             }
             iterator insert (iterator position, const value_type& val) {
                 ft::pair<iterator,bool> ret = _tree.insert_node(val.first, val.second, position.base());

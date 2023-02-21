@@ -9,16 +9,17 @@ namespace ft {
     ██║╚██╗██║    ██║   ██║    ██║  ██║    ██╔══╝  
     ██║ ╚████║    ╚██████╔╝    ██████╔╝    ███████╗
     ╚═╝  ╚═══╝     ╚═════╝     ╚═════╝     ╚══════*/
-    template <typename K, typename T>
+    template <typename P>
     class Node {
-        typedef ft::pair<K, T>       type_value;
-        type_value      val;
+        public:
+        
+        P               pair;
         int             height;
         Node*           left;
         Node*           right;
-        //Node*           nil;            
+        //Node*           nil;          
         // CONSTRUCTOR    
-        Node(type_value v) : val(v), height(1),/* nil(NULL),*/ left(NULL), right(NULL) {}
+        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL) {}
     };
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
@@ -29,16 +30,19 @@ namespace ft {
     template <class K, class T, class Compare, class Alloc>
     class AVL_tree {
         public:
-        typedef Node<K, T>  Node;
-        Node* _current_node;
-        Node* _root;
-        A
+        typedef Node<K>  Node;
+        typedef ft::pair<K, T>  value_type;
+        typedef Alloc       allocator_type;
+
+        Node*               _current_node;
+        Node*               _root;
+        allocator_type      _alloc;
         //====================================================================//
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-        AVL_tree() :            _current_node(NULL), _root(NULL), {}
-        AVL_tree(Node &n) :     _current_node(n), _root(n) {}
-        ~AVL_tree() {Alloc.destroy(_root);}
+        AVL_tree() :            _current_node(NULL), _root(NULL), _alloc(allocator_type()) {}
+        AVL_tree(Node &n) :     _current_node(n), _root(n), _alloc(allocator_type()) {}
+        ~AVL_tree() {clear(_root);}
         //====================================================================//
         int get_height(Node* node) {
             if (node == NULL)
@@ -74,6 +78,8 @@ namespace ft {
             return previous;
         }
         //====================================================================//
+        Node* get_root() {return _root;}
+        //====================================================================//
         void update_height(Node* node) {
             int left_height = get_height(node->left);
             int right_height = get_height(node->right);
@@ -104,34 +110,34 @@ namespace ft {
         }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
-        Node* insert_node(Node* node, int val) {
-            // If the current node is null, create a new node with the given value and return it
-            if (node == NULL) 
-                return new Node(val);
+        Node* insert_node(Node* cur, const value_type& new_node) {
+            // If the current _root is null, create a new node with the given value and return it
+            if (cur == NULL)
+                return new Node(new_node); // which _root is new_node
             // Insert the new node in the left or right subtree depending on its value
-            if (val < node->val)
-                node->left = insert_node(node->left, val);
+            if (new_node->first < cur->first)
+                cur->left = insert_node(cur->left, new_node);
             else
-                node->right = insert_node(node->right, val);
-            update_height(node);
-            int balance_factor = get_balance_factor(node);
+                cur->right = insert_node(cur->right, new_node);
+            update_height(cur);
+            int balance_factor = get_balance_factor(cur);
             // if the balance is more than 1 => left heavy => rotate right
-            if (balance_factor > 1 && val < node->left->val)
-                return rotate_right(node);
+            if (balance_factor > 1 && cur->first < cur->left->first)
+                return rotate_right(cur);
             // If the new node is in the right subtree of the left child of the current node, perform a left-right double rotation
-            if (balance_factor > 1 && val > node->left->val) {
-                node->left = rotate_left(node->left);
-                return rotate_right(node);
+            if (balance_factor > 1 && cur->first > cur->left->first) {
+                cur->left = rotate_left(cur->left);
+                return rotate_right(cur);
             }
             // if the balance is more than 1 => right heavy => rotate left
-            if (balance_factor < -1 && val > node->right->val)
-                return rotate_left(node);
+            if (balance_factor < -1 && cur->first > cur->right->first)
+                return rotate_left(cur);
             // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
-            if (balance_factor < -1 && val < node->right->val) {
-                node->right = rotate_right(node->right);
-                return rotate_left(node);
+            if (balance_factor < -1 && cur->first < cur->right->first) {
+                cur->right = rotate_right(cur->right);
+                return rotate_left(cur);
             }
-            return node;
+            return cur;
         }
         //====================================================================//
         Node* delete_node(Node* node, int val) {
@@ -197,17 +203,15 @@ namespace ft {
             return n;
         }
         //====================================================================//
-        bool tree_contains_val(Node* node, int val) { // TO DO change it
-            (void)node;
-            Node* n = _root;
-            if (n == NULL)
-                return false;
-            if (n->second == val)
-                return true;
-            while ((n && n->left) || (n && n->right)) {
-                if (!tree_contains_val(n->left, val))
-                    return (tree_contains_val(n->right, val));
-            }
+        bool contains_key(Node* curr, const value_type& node) { 
+            if (curr == NULL)
+                return false; // no doublon
+            if (curr.pair->first == node->first)
+                return true; // Key doublon ⛔️ 
+            if (node->first < curr->first)
+                return contains_key(curr->left, node);
+            else 
+                return contains_key(curr->right, node);
         }
         //====================================================================//
         Node* search(Node* root, int val) {
@@ -222,6 +226,18 @@ namespace ft {
             }
         }
         //====================================================================//
+        void clear(Node* node) {
+                if (node != nullptr) {
+                    clear(node->left);
+                    clear(node->right);
+                    delete node;
+                }
+        }
+        void clear() {
+            clear(_root);
+            _root = nullptr;
+        }
+        //====================================================================//
     };
   /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
     ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
@@ -231,13 +247,14 @@ namespace ft {
     ╚═╝       ╚═╝       ╚══════╝    ╚═╝  ╚═╝    ╚═╝  ╚═╝       ╚═╝        ╚═════╝     ╚═╝  ╚═*/
     template <typename K, typename T, class Compare, class Alloc>
     class biterator {
+        public :
         typedef std::bidirectional_iterator_tag     iterator_category;
         typedef std::ptrdiff_t                      difference_type;
         typedef ft::pair<K, T>                      value_type;
         typedef value_type*                         pointer;
         typedef value_type&                         reference;
 
-        typedef Node<K, T> Node;
+        typedef Node<K> Node;
         typedef AVL_tree<K, T, Compare, Alloc>      AVL_tree;
 
         Node*                 _node;
