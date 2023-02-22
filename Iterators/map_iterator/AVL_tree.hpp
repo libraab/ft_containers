@@ -268,7 +268,7 @@ namespace ft {
                     delete temp;
                     _size--;
                 } else { // if it has 2 children
-                    Node* temp = find_min(node->right);
+                    Node* temp = begin(node->right);
                     node->val = temp->val;
                     node->right = delete_node(node->right, temp->val);
                 }
@@ -408,6 +408,20 @@ namespace ft {
             return this->end();
         }
         //====================================================================//
+        const_iterator find(const key_type& k) const {
+            Node* curr = _root;
+            // Traverse the tree until we find the key or reach a null node
+            while (curr != nullptr) {
+                if (k == curr->pair.first)
+                    return (ft::Node<ft::pair<const K, T> > *)curr;
+                else if (k < curr->pair.first)
+                    curr = curr->left;
+                else
+                    curr = curr->right;
+            }
+            return (ft::Node<ft::pair<const K, T> > *)end();
+        }
+        //====================================================================//
         iterator lower_bound(const key_type& k) {
             Node* current = _root;
             Node* lower = nullptr;
@@ -476,16 +490,28 @@ namespace ft {
             return (ft::Node<ft::pair<const K, T> > *)upper;
         }
         //====================================================================//
-        template <typename Key, typename Value>
-        ft::pair<typename AVL_tree<Key, Value>::iterator, typename AVL_tree<Key, Value>::iterator>
-        AVL_tree<Key, Value>::equal_range(const Key& key) {
-            iterator lower = find(key);
+        pair<iterator, iterator>   equal_range (const key_type& k) {
+            iterator lower = find(k);
             iterator upper = lower;
 
-            if (lower != end() && lower->first == key) {
+            if (lower != end() && lower->first == k) {
                 // If we found the key, move upper to the next node with a different key.
                 ++upper;
-                while (upper != end() && upper->first == key) {
+                while (upper != end() && upper->first == k) {
+                ++upper;
+                }
+            }
+            return ft::make_pair(lower, upper);
+        }
+        //--------------------------------------------------------------------//
+        pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
+            const_iterator lower = find(k);
+            const_iterator upper = lower;
+
+            if (lower != end() && lower->first == k) {
+                // If we found the key, move upper to the next node with a different key.
+                ++upper;
+                while (upper != end() && upper->first == k) {
                 ++upper;
                 }
             }
