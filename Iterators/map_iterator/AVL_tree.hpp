@@ -17,9 +17,10 @@ namespace ft {
         Node*           left;
         Node*           right;
         Node*           root;
+        Node*           parent;
         //Node*           nil;          
         // CONSTRUCTOR    
-        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), root(NULL) {}
+        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), root(NULL), parent(NULL) {}
     };
   /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
     ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
@@ -36,12 +37,14 @@ namespace ft {
         typedef ft::pair<K, T>                      value_type;
         typedef value_type*                         pointer;
         typedef value_type&                         reference;
-
-        typedef Node<value_type> Node;
+        typedef Node<value_type>                    Node;
 
         Node*                 _node;
 
+        biterator() : _node(NULL) {}
         biterator(Node* n) : _node(n) {}
+        biterator(biterator const & x) : _node(x._node) {}
+        ~biterator() {};
 
         bool operator==(const biterator& other) const 
         {return _node == other._node; }
@@ -115,20 +118,20 @@ namespace ft {
     template <class K, class T, class Compare, class Alloc>
     class AVL_tree {
         public:
-        typedef ft::pair<K, T>          value_type;
-        typedef Node<value_type>        Node;
-        typedef Alloc                   allocator_type;
-        typedef ft::biterator<K, T, Compare, Alloc> iterator;
-        typedef K   key_type;
+        typedef ft::pair<K, T>                                  value_type;
+        typedef Node<value_type>                                Node;
+        typedef Alloc                                           allocator_type;
+        typedef ft::biterator<K, T, Compare, Alloc>             iterator;
+        typedef ft::biterator<const K, T, Compare, Alloc>       const_iterator;
+        typedef K                                               key_type;
 
-        Node*               _current_node;
         Node*               _root;
         size_t              _size;
         allocator_type      _alloc;
         //====================================================================//
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-        AVL_tree() :            _current_node(NULL), _root(NULL), _size(0), _alloc(allocator_type()) {}
+        AVL_tree() :            _root(NULL), _size(0), _alloc(allocator_type()) {}
         AVL_tree(Node &n) :     _current_node(n), _root(n), _size(0), _alloc(allocator_type()) {}
         ~AVL_tree() {clear(_root);}
         //====================================================================//
@@ -163,6 +166,8 @@ namespace ft {
         //====================================================================//
         Node* get_root() {return _root;}
         //====================================================================//
+        allocator_type get_allocator() {return _alloc;}
+        //====================================================================//
         void update_height(Node* node) {
             int left_height = get_height(node->left);
             int right_height = get_height(node->right);
@@ -170,24 +175,32 @@ namespace ft {
             node->height = std::max(left_height, right_height) + 1;
         }
         //====================================================================//
-        Node* rotate_right(Node* node) {
-            // not possible if the left node is null
-            Node* new_root = node->left;
-            Node* new_right = new_root->right;
-            new_root->right = node;
-            node->left = new_right;
-            update_height(node);
+        Node* rotate_right(Node* cur) {
+            // TODO not possible if the left node is null (not sure)
+            Node* new_root = cur->left;
+            cur->left = new_root->right;
+            new_root->right = cur;
+            // Update the parent pointers
+            new_root->parent = cur->parent;
+            cur->parent = new_root;
+            if (cur->left != NULL)
+                cur->left->parent = cur;
+            update_height(cur);
             update_height(new_root);
             return new_root;
         }
         //====================================================================//
-        Node* rotate_left(Node* node) {
-            // not possible if the right node is null
-            Node* new_root = node->right;
-            Node* new_left = new_root->left;
-            new_root->left = node;
-            node->right = new_left;
-            update_height(node);
+        Node* rotate_left(Node* cur) {
+            // TODO not possible if the right node is null (not sure)
+            Node* new_root = cur->right;
+            cur->right = new_root->left;
+            new_root->left = cur;
+            // Update the parent pointers
+            new_root->parent = cur->parent;
+            cur->parent = new_root;
+            if (cur->right != NULL)
+                cur->right->parent = cur;
+            update_height(cur);
             update_height(new_root);
             return new_root;
         }
@@ -199,14 +212,18 @@ namespace ft {
             if (cur == NULL) {
                 Node* x = new Node(new_node); // which _root is new_node
                 _size++;
-                x->root = (! root ) ? x : root;
+                x->root = (! root ) ? x : root; // new root
                 return (x);
             }
             // Insert the new node in the left or right subtree depending on its value
-            if (new_node.first < cur->pair.first)
+            if (new_node.first < cur->pair.first) {
                 cur->left = insert_node(cur->left, new_node, root);
-            else
+                cur->left->parent = cur; // new parent
+            }
+            else {
                 cur->right = insert_node(cur->right, new_node, root);
+                cur->right->parent = cur; // new parent
+            }
             update_height(cur);
             int balance_factor = get_balance_factor(cur);
             // if the balance is more than 1 => left heavy => rotate right
@@ -256,7 +273,6 @@ namespace ft {
                     node->right = delete_node(node->right, temp->val);
                 }
             }
-            
             if (node == NULL)
                 return node;
             update_height(node);
@@ -289,6 +305,15 @@ namespace ft {
                 n = n->left;
             return n;
         }
+        //--------------------------------------------------------------------//
+        ft::Node<ft::pair<const K, T> > * begin() const {
+            Node* n = _root;
+            if (_root == NULL)
+                return NULL;
+            while (n->left != NULL)
+                n = n->left;
+            return (ft::Node<ft::pair<const K, T> > *)n;
+        }
         //====================================================================//
         Node* end() {
             Node* n = _root;
@@ -297,6 +322,41 @@ namespace ft {
             while (n->right != NULL)
                 n = n->right;
             return n;
+        }
+        //--------------------------------------------------------------------//
+        ft::Node<ft::pair<const K, T> > * end() const{
+            Node* n = _root;
+            if (_root == NULL)
+                return NULL;
+            while (n->right != NULL)
+                n = n->right;
+            return (ft::Node<ft::pair<const K, T> > *)n;
+        }
+        //====================================================================//
+        iterator rbegin() {
+            Node* current = _root;
+            while (current && current->right)
+                current = current->right;
+            return iterator(current);
+        }
+        //--------------------------------------------------------------------//
+        const_iterator rbegin() const {
+            Node* current = _root;
+            while (current && current->right)
+                current = current->right;
+            return const_iterator(current);
+        }
+        //====================================================================//
+        iterator rend() {return iterator(NULL);}
+        //--------------------------------------------------------------------//
+        iterator rend() const {return const_iterator(NULL);}
+        //====================================================================//
+        std::size_t max_size() const {_alloc.max_size();}
+        //====================================================================//
+        void swap(AVL_tree& other) {
+            std::swap(_root, other._root);
+            std::swap(get_size(), other.get_size());
+            std::swap(_height, other._height);
         }
         //====================================================================//
         bool contains_key(Node* curr, const value_type& node) { 
@@ -348,5 +408,38 @@ namespace ft {
             return this->end();
         }
         //====================================================================//
+        iterator lower_bound(const key_type& k) {
+            Node* current = _root;
+            Node* lower = nullptr;
+
+            while (current) {
+                if (current->first < k)
+                    current = current->right;
+                else {
+                    lower = current;
+                    current = current->left;
+                }
+            }
+            if (!lower)
+                return end();
+            return iterator(lower);
+        }
+        //====================================================================//
+        iterator upper_bound(const key_type& k) {
+            Node* current = _root;
+            Node* upper = nullptr;
+
+            while (current) {
+                if (current->first <= k)
+                    current = current->right;
+                else {
+                    upper = current;
+                    current = current->left;
+                }
+            }
+            if (!upper)
+                return end();
+            return iterator(upper);
+        }
     };
 }

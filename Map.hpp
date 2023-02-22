@@ -97,11 +97,6 @@ namespace ft
                     typedef value_type second_argument_type; // useless
                     bool operator() (const value_type& x, const value_type& y) const // takes 2 value_type (pairs)
                         {return comp(x.first, y.first);}
-                    //added to official
-                    // bool operator() (const value_type& x, const key_type& y) const // take value_type & key_type
-                    //     return comp(x.first, y);
-                    // bool operator() (const value_type& x, const value_type& y) const // takes key_type & value_type
-                    //     return comp(x, y.first);
             };
             //------------------------------------------------------------------
             map& operator= (const map& x) {
@@ -129,24 +124,13 @@ namespace ft
             //================================================================//
             bool empty() const          {return (_tree.get_size() == 0);}
             size_type size() const      {return (_tree.get_size());}
-            // size_type max_size() const  {return (_tree.max_size());}
             size_type max_size() const  {return (_alloc.max_size());}
             //================================================================//
             //                  E L E M E N T         A C C E S               //
             //================================================================//
             mapped_type& operator[] (const key_type& k) {
-                // ft::pair<K, T> ret = ft::make_pair<k, mapped_type()>;
-                // ft::pair<iterator, bool> ret1 = insert(ret);
-
-
-                // //return(this->_tree.insert(k, mapped_type()).first->second);
-                // ft::pair<iterator, bool> op = insert(ft::make_pair(k, mapped_type()));
-				// return (op.first->second);
-
-
                 // --> https://cplusplus.com/reference/map/map/operator[]/
                 return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
-
             }
             //================================================================//
             //                      M O D I F I E R S                         //
@@ -165,7 +149,7 @@ namespace ft
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last) {
                 while (first != last){
-					_tree.insert_node(first->first, first->second);
+					insert(ft::make_pair(first->first, first->second));
 					first++;
 				}
             }
@@ -178,6 +162,7 @@ namespace ft
             }
             //------------------------------------------------------------------
             void swap (map& x)  {_tree.swap(x._tree);}
+            //------------------------------------------------------------------
             void clear()        {_tree.clear();}
             //================================================================//
             //                           O B S E R V E R S                    //
@@ -192,6 +177,7 @@ namespace ft
             //------------------------------------------------------------------
             size_type count (const key_type& k) const               {return (_tree.count(k));}
             //------------------------------------------------------------------
+            // TODO recode these 👇🏻
             iterator lower_bound (const key_type& k)                {return (_tree.lower_bound(k));}
             const_iterator lower_bound (const key_type& k) const    {return (_tree.lower_bound(k));}
             //------------------------------------------------------------------
