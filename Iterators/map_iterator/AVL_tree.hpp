@@ -132,7 +132,7 @@ namespace ft {
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
         AVL_tree() :            _root(NULL), _size(0), _alloc(allocator_type()) {}
-        AVL_tree(Node &n) :     _current_node(n), _root(n), _size(0), _alloc(allocator_type()) {}
+        AVL_tree(Node &n) :     _root(n), _size(0), _alloc(allocator_type()) {}
         ~AVL_tree() {clear(_root);}
         //====================================================================//
         int get_height(Node* node) {
@@ -356,7 +356,7 @@ namespace ft {
         void swap(AVL_tree& other) {
             std::swap(_root, other._root);
             std::swap(get_size(), other.get_size());
-            std::swap(_height, other._height);
+            std::swap(_alloc, other._alloc);
         }
         //====================================================================//
         bool contains_key(Node* curr, const value_type& node) { 
@@ -413,7 +413,7 @@ namespace ft {
             Node* lower = nullptr;
 
             while (current) {
-                if (current->first < k)
+                if (current->pair.first < k)
                     current = current->right;
                 else {
                     lower = current;
@@ -424,13 +424,30 @@ namespace ft {
                 return end();
             return iterator(lower);
         }
+        //--------------------------------------------------------------------//
+        const_iterator lower_bound(const key_type& k) const {
+            Node* current = _root;
+            Node* lower = nullptr;
+
+            while (current) {
+                if (current->pair.first < k)
+                    current = current->right;
+                else {
+                    lower = current;
+                    current = current->left;
+                }
+            }
+            if (!lower)
+                return end();
+            return (ft::Node<ft::pair<const K, T> > *)lower;
+        }
         //====================================================================//
         iterator upper_bound(const key_type& k) {
             Node* current = _root;
             Node* upper = nullptr;
 
             while (current) {
-                if (current->first <= k)
+                if (current->pair.first <= k)
                     current = current->right;
                 else {
                     upper = current;
@@ -440,6 +457,39 @@ namespace ft {
             if (!upper)
                 return end();
             return iterator(upper);
+        }
+        //--------------------------------------------------------------------//
+        const_iterator upper_bound(const key_type& k) const {
+            Node* current = _root;
+            Node* upper = nullptr;
+
+            while (current) {
+                if (current->pair.first <= k)
+                    current = current->right;
+                else {
+                    upper = current;
+                    current = current->left;
+                }
+            }
+            if (!upper)
+                return end();
+            return (ft::Node<ft::pair<const K, T> > *)upper;
+        }
+        //====================================================================//
+        template <typename Key, typename Value>
+        ft::pair<typename AVL_tree<Key, Value>::iterator, typename AVL_tree<Key, Value>::iterator>
+        AVL_tree<Key, Value>::equal_range(const Key& key) {
+            iterator lower = find(key);
+            iterator upper = lower;
+
+            if (lower != end() && lower->first == key) {
+                // If we found the key, move upper to the next node with a different key.
+                ++upper;
+                while (upper != end() && upper->first == key) {
+                ++upper;
+                }
+            }
+            return ft::make_pair(lower, upper);
         }
     };
 }
