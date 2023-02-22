@@ -135,9 +135,18 @@ namespace ft
             //                  E L E M E N T         A C C E S               //
             //================================================================//
             mapped_type& operator[] (const key_type& k) {
-                //return(this->_tree.insert(k, mapped_type()).first->second);
-                ft::pair<iterator, bool> op = insert(ft::make_pair(k, mapped_type()));
-				return (op.first->second);
+                // ft::pair<K, T> ret = ft::make_pair<k, mapped_type()>;
+                // ft::pair<iterator, bool> ret1 = insert(ret);
+
+
+                // //return(this->_tree.insert(k, mapped_type()).first->second);
+                // ft::pair<iterator, bool> op = insert(ft::make_pair(k, mapped_type()));
+				// return (op.first->second);
+
+
+                // --> https://cplusplus.com/reference/map/map/operator[]/
+                return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
+
             }
             //================================================================//
             //                      M O D I F I E R S                         //
@@ -147,8 +156,7 @@ namespace ft
                 // true is insertion was done and false if it existed already and insertion didn't happen
                 if (_tree.contains_key(_tree.get_root(), val))
                     return (ft::pair<iterator, bool>(find(val.first), false));
-                _tree.insert_node(_tree.get_root(), val, _tree.get_root());
-                return (ft::pair<iterator, bool>(find(val.first), true));
+                return (ft::pair<iterator, bool>((_tree.insert_node(_tree.get_root(), val, _tree.get_root())), true));
             }
             iterator insert (iterator position, const value_type& val) {
                 ft::pair<iterator,bool> ret = _tree.insert_node(val.first, val.second, position.base());

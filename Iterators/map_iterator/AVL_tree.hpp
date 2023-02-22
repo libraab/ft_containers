@@ -195,6 +195,7 @@ namespace ft {
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
             // If the current _root is null, create a new node with the given value and return it
+            //std::cout << "here" << std::endl;
             if (cur == NULL) {
                 Node* x = new Node(new_node); // which _root is new_node
                 _size++;
@@ -282,6 +283,8 @@ namespace ft {
         //====================================================================//
         Node* begin() {
             Node* n = _root;
+            if (_root == NULL)
+                return NULL;
             while (n->left != NULL)
                 n = n->left;
             return n;
@@ -289,6 +292,8 @@ namespace ft {
         //====================================================================//
         Node* end() {
             Node* n = _root;
+            if (_root == NULL)
+                return NULL;
             while (n->right != NULL)
                 n = n->right;
             return n;
