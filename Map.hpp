@@ -108,8 +108,12 @@ namespace ft
             //                      I T E R A T O R S                         //
             //================================================================//
             // --> wwhttps://en.cppreference.com/w/cpp/iterator/begin
-            iterator begin()                {return (_tree.begin());}
-            const_iterator begin() const    {return (_tree.begin());}
+            iterator begin()                {
+                
+                return (_tree.begin());}
+            const_iterator begin() const    {
+                
+                return (_tree.begin());}
             //------------------------------------------------------------------
             iterator end()                  {return (_tree.end());}
             const_iterator end() const      {return (_tree.end());}
@@ -124,7 +128,7 @@ namespace ft
             //================================================================//
             bool empty() const          {return (_tree.get_size() == 0);}
             size_type size() const      {return (_tree.get_size());}
-            size_type max_size() const  {return (_alloc.max_size());}
+            size_type max_size() const  {return (_tree.max_size());}
             //================================================================//
             //                  E L E M E N T         A C C E S               //
             //================================================================//

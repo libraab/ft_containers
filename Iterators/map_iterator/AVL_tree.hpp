@@ -16,11 +16,11 @@ namespace ft {
         int             height;
         Node*           left;
         Node*           right;
-        Node*           root;
         Node*           parent;
+        Node*           ancestor;
         //Node*           nil;          
         // CONSTRUCTOR    
-        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), root(NULL), parent(NULL) {}
+        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), parent(NULL), ancestor(NULL) {}
     };
   /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
     ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
@@ -149,21 +149,6 @@ namespace ft {
             return get_height(node->left) - get_height(node->right);
         }
         //====================================================================//
-        Node* get_parent(Node* root, int key) {
-            Node* previous = NULL;
-            Node* current = root;
-
-            while (current != NULL) {
-                if (current->first >= key) {
-                    current = current->left;
-                } else {
-                    previous = current;
-                    current = current->right;
-                }
-            }
-            return previous;
-        }
-        //====================================================================//
         Node* get_root() {return _root;}
         //====================================================================//
         allocator_type get_allocator() {return _alloc;}
@@ -196,6 +181,8 @@ namespace ft {
             cur->right = new_root->left;
             new_root->left = cur;
             // Update the parent pointers
+            if (cur->parent == NULL)
+
             new_root->parent = cur->parent;
             cur->parent = new_root;
             if (cur->right != NULL)
@@ -209,10 +196,15 @@ namespace ft {
         Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
             // If the current _root is null, create a new node with the given value and return it
             //std::cout << "here" << std::endl;
+            std::cout << "* inserting ---------->" << new_node.second << std::endl;
+            std::cout << "" << std::endl;               
             if (cur == NULL) {
                 Node* x = new Node(new_node); // which _root is new_node
+                x->ancestor = (! root ) ? x : root; // new root
+                std::cout << "ancestor is "<< x->ancestor << std::endl;               
+
                 _size++;
-                x->root = (! root ) ? x : root; // new root
+                // std::cout << "in" << std::endl;
                 return (x);
             }
             // Insert the new node in the left or right subtree depending on its value
@@ -351,7 +343,7 @@ namespace ft {
         //--------------------------------------------------------------------//
         iterator rend() const {return const_iterator(NULL);}
         //====================================================================//
-        std::size_t max_size() const {_alloc.max_size();}
+        std::size_t max_size() const {return (_alloc.max_size());}
         //====================================================================//
         void swap(AVL_tree& other) {
             std::swap(_root, other._root);

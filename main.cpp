@@ -1,7 +1,9 @@
 
 
-
+// #include <map>
+// #  define TESTED_NAMESPACE std
 #  define TESTED_NAMESPACE ft
+# include "map.hpp"
 
 
 # include <iostream>
@@ -78,7 +80,6 @@ T	dec(T it, int n)
 
 
 
-# include "map.hpp"
 
 
 #define _pair TESTED_NAMESPACE::pair
@@ -101,10 +102,13 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	{
 		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
 		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
+		for (; it != ite; ++it) {
+            std::cout << "here" << std::endl;
 			std::cout << "- " << printPair(it, false) << std::endl;
+            }
 	}
 	std::cout << "###############################################" << std::endl;
+   
 }
 
 template <typename T1, typename T2>
@@ -165,14 +169,13 @@ void	ft_const_bound(const MAP &mp, const T1 &param)
 
 int		main(void)
 {
-    std::cout << "herreeee" << std::endl;
 	std::list<T3> lst;
 	unsigned int lst_size = 10;
 	for (unsigned int i = 0; i < lst_size; ++i)
 		lst.push_back(T3(i + 1, (i + 1) * 3));
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
+    
 	printSize(mp);
-
 	ft_const_bound(mp, -10);
 	ft_const_bound(mp, 1);
 	ft_const_bound(mp, 5);
