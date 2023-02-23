@@ -38,75 +38,82 @@ namespace ft {
         typedef value_type&                         reference;
         typedef Node<value_type>                    Node;
 
-        Node*                 _node;
+        Node*                               _node;
 
-        biterator() : _node(NULL) {}
-        biterator(Node* n) : _node(n) {}
-        biterator(biterator const & x) : _node(x._node) {}
+        biterator() :                       _node(NULL) {}
+        biterator(Node* n) :                _node(n) {}
+        biterator(biterator const & x) :    _node(x._node) {}
         ~biterator() {};
-
-        bool operator==(const biterator& other) const 
-        {return _node == other._node; }
-
-        bool operator!=(const biterator& other) const 
-        {return !(*this == other);}
-
-        reference operator*() const
-        {return (*(operator->()));}
-
-        pointer operator->() const
-        {return (ft::pair<K, T> *)(&this->_node->pair);}
-
-        biterator& operator++() {
-            if (_node->right) {
-                // Find the leftmost node in the right subtree
+        //--------------------------------------------------------------------//
+        // Assignment operator
+        biterator & operator=(biterator const & rhs) {
+            if (this != &rhs) {
+                this->_node = rhs._node;
+            }
+            return (*this);
+        }
+        //--------------------------------------------------------------------//
+        // Comparison operators
+        bool operator==(biterator const & rhs) const { return (this->_node == rhs._node); }
+        bool operator!=(biterator const & rhs) const { return (this->_node != rhs._node); }
+        //--------------------------------------------------------------------//
+        // Dereference operators
+        reference operator*() const { return (this->_node->pair); }
+        pointer operator->() const { return &(this->_node->pair); }
+        //--------------------------------------------------------------------//
+        // reference operator*() const {return (*(operator->()));}
+        // pointer operator->() const {return (ft::pair<K, T> *)(&this->_node->pair);}
+        //--------------------------------------------------------------------//
+        // Increment/decrement operators
+        biterator & operator++() {
+            if (_node->right != NULL) {
                 _node = _node->right;
-                while (_node->left)
+                // Find the leftmost node in the right subtree
+                while (_node->left != NULL)
                     _node = _node->left;
             } else {
                 // Go up the tree until we find a node whose left child we haven't visited yet
-                Node* parent = _node->parent;
-                while (parent && _node == parent->right) {
-                    _node = parent;
-                    parent = parent->parent;
+                Node *tmp = _node->parent;
+                while (_node == tmp->right) {
+                    _node = tmp;
+                    tmp = tmp->parent;
                 }
-                _node = parent;
+                if (_node->right != tmp)
+                    _node = tmp;
             }
             return *this;
         }
-
+        //--------------------------------------------------------------------//
         biterator operator++(int) {
             biterator tmp(*this);
-            ++(*this);
-            return tmp;
+            operator++();
+            return (tmp);
         }
-
-        biterator& operator--() {
-            if (_node == nullptr) {
-                // The tree is empty, so return the end iterator
-                //_node = max_node();
-            } else if (_node->left) {
-                // Find the rightmost node in the left subtree
+        //--------------------------------------------------------------------//
+        biterator & operator--() {
+            if (_node->left != NULL) {
                 _node = _node->left;
-                while (_node->right)
+                // Find the rightmost node in the left subtree
+                while (_node->right != NULL)
                     _node = _node->right;
             } else {
-                // Go up the tree until we find a node whose right child we haven't visited yet
-                Node* parent = _node->parent;
-                while (parent && _node == parent->left) {
-                    _node = parent;
-                    parent = parent->parent;
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node *tmp = _node->parent;
+                while (_node == tmp->left) {
+                    _node = tmp;
+                    tmp = tmp->parent;
                 }
-                _node = parent;
+                _node = tmp;
             }
-            return *this;
+            return (*this);
         }
-
+        //--------------------------------------------------------------------//
         biterator operator--(int) {
             biterator tmp(*this);
-            --(*this);
+            operator--();
             return tmp;
         }
+        //--------------------------------------------------------------------//
     };
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
@@ -160,47 +167,61 @@ namespace ft {
         }
         //====================================================================//
         Node* rotate_right(Node* cur) {
-            // TODO not possible if the left node is null (not sure)
-            std::cout << "before right" << std::endl;
-            print_tree();
+         if (cur->left == NULL)
+                return cur;
+
+            // std::cout << "before left" << std::endl;
+            // print_tree();
 
             Node* new_root = cur->left;
             cur->left = new_root->right;
-            new_root->right = cur;
-            // Update the parent pointers
-            new_root->parent = cur->parent;
-            cur->parent = new_root;
             if (cur->left != NULL)
                 cur->left->parent = cur;
+            new_root->right = cur;
+            new_root->parent = cur->parent;
+            cur->parent = new_root;
+
+            if (new_root->parent == NULL)
+                _root = new_root;
+            else if (new_root->parent->right == cur)
+                new_root->parent->right = new_root;
+            else 
+                new_root->parent->left = new_root;
             update_height(cur);
             update_height(new_root);
-            std::cout << "after" << std::endl;
-            print_tree();
+
+            // std::cout << "after" << std::endl;
+            // std::cout << "(" << cur->pair.first << ")" << std::endl;
+            // print_tree();
 
             return new_root;
         }
         //====================================================================//
         Node* rotate_left(Node* cur) {
-            // TODO not possible if the right node is null (not sure)
-            std::cout << "before left" << std::endl;
-            print_tree();
+            if (cur->right == NULL)
+                return cur;
+
+            // std::cout << "before left" << std::endl;
+            // print_tree();
 
             Node* new_root = cur->right;
-            if (cur == _root)
-                _root = cur->right;
-   
             cur->right = new_root->left;
+            if (cur->right != NULL)
+                cur->right->parent = cur;
             new_root->left = cur;
-
+            new_root->parent = cur->parent;
             cur->parent = new_root;
-            // if (cur->right != NULL)
-            //     cur->right->parent = cur;
+
+            if (new_root->parent == NULL)
+                _root = new_root;
+            else if (new_root->parent->left == cur)
+                new_root->parent->left = new_root;
+            else 
+                new_root->parent->right = new_root;
             update_height(cur);
             update_height(new_root);
 
-            std::cout << "after" << std::endl;
-            std::cout << "(" << cur->pair.first << ")" << std::endl;
-            print_tree();
+            // print_tree();
 
             return new_root;
         }
@@ -230,16 +251,16 @@ namespace ft {
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
             // If the current _root is null, create a new node with the given value and return it
-            std::cout << "* inserting (" << new_node.first << ")" << std::endl;
+            // std::cout << "* inserting (" << new_node.first << ")" << std::endl;
             // std::cout << "" << std::endl;               
             if (cur == NULL) {
                 Node* x = new Node(new_node); // which _root is new_node
                 if (_size == 0) {
-                std::cout << "new tree created" << std::endl;
+                // std::cout << "new tree created" << std::endl;
                     _root = x;
                 }
-                else
-                    std::cout << "new node created" << std::endl;
+                // else
+                //     std::cout << "new node created" << std::endl;
                 _size++;
                 return (x);
             }

@@ -108,12 +108,8 @@ namespace ft
             //                      I T E R A T O R S                         //
             //================================================================//
             // --> wwhttps://en.cppreference.com/w/cpp/iterator/begin
-            iterator begin()                {
-                
-                return (_tree.begin());}
-            const_iterator begin() const    {
-                
-                return (_tree.begin());}
+            iterator begin()                {return (_tree.begin());}
+            const_iterator begin() const    {return (_tree.begin());}
             //------------------------------------------------------------------
             iterator end()                  {return (_tree.end());}
             const_iterator end() const      {return (_tree.end());}
@@ -145,7 +141,6 @@ namespace ft
                 if (_tree.contains_key(_tree.get_root(), val))
                     return (ft::pair<iterator, bool>(find(val.first), false));                           
                 return (ft::pair<iterator, bool>((_tree.insert_node(_tree.get_root(), val, _tree.get_root())), true));
-
             }
             iterator insert (iterator position, const value_type& val) {
                 ft::pair<iterator,bool> ret = _tree.insert_node(val.first, val.second, position.base());
