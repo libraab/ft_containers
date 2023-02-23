@@ -191,6 +191,16 @@ namespace ft {
             update_height(new_root);
             return new_root;
         }
+        void print_tree(Node* node, std::string prefix = "", bool is_left = true) {
+            if (node != nullptr) {
+                std::cout << prefix;
+                std::cout << (is_left ? "├──" : "└──" );
+                std::cout << node->_data.first << std::endl;
+
+                print_tree(node->_left, prefix + (is_left ? "│   " : "    "), true);
+                print_tree(node->_right, prefix + (is_left ? "│   " : "    "), false);
+            }
+        }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
