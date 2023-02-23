@@ -17,10 +17,9 @@ namespace ft {
         Node*           left;
         Node*           right;
         Node*           parent;
-        Node*           ancestor;
         //Node*           nil;          
         // CONSTRUCTOR    
-        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), parent(NULL), ancestor(NULL) {}
+        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), parent(NULL) {}
     };
   /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
     ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
@@ -162,6 +161,9 @@ namespace ft {
         //====================================================================//
         Node* rotate_right(Node* cur) {
             // TODO not possible if the left node is null (not sure)
+            std::cout << "before right" << std::endl;
+            print_tree();
+
             Node* new_root = cur->left;
             cur->left = new_root->right;
             new_root->right = cur;
@@ -172,78 +174,122 @@ namespace ft {
                 cur->left->parent = cur;
             update_height(cur);
             update_height(new_root);
+            std::cout << "after" << std::endl;
+            print_tree();
+
             return new_root;
         }
         //====================================================================//
         Node* rotate_left(Node* cur) {
             // TODO not possible if the right node is null (not sure)
+            std::cout << "before left" << std::endl;
+            print_tree();
+
             Node* new_root = cur->right;
+            if (cur == _root)
+                _root = cur->right;
+   
             cur->right = new_root->left;
             new_root->left = cur;
-            // Update the parent pointers
-            if (cur->parent == NULL)
 
-            new_root->parent = cur->parent;
             cur->parent = new_root;
-            if (cur->right != NULL)
-                cur->right->parent = cur;
+            // if (cur->right != NULL)
+            //     cur->right->parent = cur;
             update_height(cur);
             update_height(new_root);
+
+            std::cout << "after" << std::endl;
+            std::cout << "(" << cur->pair.first << ")" << std::endl;
+            print_tree();
+
             return new_root;
         }
-        void print_tree(Node* node, std::string prefix = "", bool is_left = true) {
+        void print_tree() {print_tree(_root);}
+        void print_tree(Node* node, std::string indent = "", bool right = false) {
+             
             if (node != nullptr) {
-                std::cout << prefix;
-                std::cout << (is_left ? "├──" : "└──" );
-                std::cout << node->_data.first << std::endl;
-
-                print_tree(node->_left, prefix + (is_left ? "│   " : "    "), true);
-                print_tree(node->_right, prefix + (is_left ? "│   " : "    "), false);
+                std::cout << indent;
+                if (right)
+                {
+                    std::cout << "R----";
+                    indent += "   ";
+                }
+                else
+                {
+                    std::cout << "L----";
+                    indent += "|  ";
+                }
+                std::cout << node->pair.first << std::endl;
+                print_tree(node->left, indent, false);
+                print_tree(node->right, indent, true);
             }
+            // else
+            //     std::cout << "|                    empty                       |" << std::endl;
         }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
         Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
             // If the current _root is null, create a new node with the given value and return it
-            //std::cout << "here" << std::endl;
-            std::cout << "* inserting ---------->" << new_node.second << std::endl;
-            std::cout << "" << std::endl;               
+            std::cout << "* inserting (" << new_node.first << ")" << std::endl;
+            // std::cout << "" << std::endl;               
             if (cur == NULL) {
                 Node* x = new Node(new_node); // which _root is new_node
-                x->ancestor = (! root ) ? x : root; // new root
-                std::cout << "ancestor is "<< x->ancestor << std::endl;               
-
+                if (_size == 0) {
+                std::cout << "new tree created" << std::endl;
+                    _root = x;
+                }
+                else
+                    std::cout << "new node created" << std::endl;
                 _size++;
-                // std::cout << "in" << std::endl;
                 return (x);
             }
+            // std::cout << "adding " << new_node.first <<" to existant tree" << std::endl;
             // Insert the new node in the left or right subtree depending on its value
             if (new_node.first < cur->pair.first) {
+                // std::cout << "(" << new_node.first << ")" << "is less than" << "(" << cur->pair.first << ")" << std::endl;
+                // std::cout << "going left" << std::endl;
                 cur->left = insert_node(cur->left, new_node, root);
                 cur->left->parent = cur; // new parent
             }
             else {
+                // std::cout << "(" << new_node.first << ")" << "is more than" << "(" << cur->pair.first << ")" << std::endl;
+                // std::cout << "going right" << std::endl;
                 cur->right = insert_node(cur->right, new_node, root);
                 cur->right->parent = cur; // new parent
             }
             update_height(cur);
+            // std::cout << "height update --> (" << cur->pair.first << ")-->" << cur->height << std::endl;
             int balance_factor = get_balance_factor(cur);
+            // std::cout << "balance now --->(" << cur->pair.first << ") " << balance_factor << std::endl;
+
             // if the balance is more than 1 => left heavy => rotate right
-            if (balance_factor > 1 && cur->pair.first < cur->left->pair.first)
+            if (balance_factor > 1 && cur->pair.first < cur->left->pair.first) {
+                // std::cout << "left heavy" << std::endl;
+                // std::cout << "(" << cur->pair.first << ")" << "is less than" << "(" << cur->left->pair.second << ")" << std::endl;
                 return rotate_right(cur);
+            }
             // If the new node is in the right subtree of the left child of the current node, perform a left-right double rotation
             if (balance_factor > 1 && cur->pair.first > cur->left->pair.first) {
+                // std::cout << "left heavy" << std::endl;
+                // std::cout << "(" << cur->pair.first << ")" << "is more than" << "(" << cur->left->pair.first << ")" << std::endl;
                 cur->left = rotate_left(cur->left);
                 return rotate_right(cur);
             }
             // if the balance is more than 1 => right heavy => rotate left
-            if (balance_factor < -1 && cur->pair.first > cur->right->pair.first)
-                return rotate_left(cur);
-            // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
             if (balance_factor < -1 && cur->pair.first < cur->right->pair.first) {
+                // std::cout << "right heavy" << std::endl;
+                // std::cout << "(" << cur->pair.first << ")" << "is less than" << "(" << cur->right->pair.first << ")" << std::endl;
+                return rotate_left(cur);
+            }
+            // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
+            if (balance_factor < -1 && cur->pair.first > cur->right->pair.first ) {
+                // std::cout << "right heavy" << std::endl;
+                // std::cout << "(" << cur->pair.first << ")" << "is more than" << "(" << cur->right->pair.first << ")" << std::endl;
                 cur->right = rotate_right(cur->right);
                 return rotate_left(cur);
             }
+            // std::cout << "returning " << cur->pair.first << std::endl;
+
             return cur;
         }
         //====================================================================//
