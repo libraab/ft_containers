@@ -314,56 +314,53 @@ namespace ft {
             return cur;
         }
         //====================================================================//
-        Node* delete_node(Node* node, int val) {
-            if (node == NULL)
-                return node;
-            if (val < node->val) // move to the left subtree
-                node->left = delete_node(node->left, val);
-            else if (val > node->val) // move to the right subtree
-                node->right = delete_node(node->right, val);
-            else { // if found 
-                if (node->left == NULL && node->right == NULL) { // if no children => delete the node
-                    delete node;
-                    _size--;
-                    node = NULL;
-                } else if (node->left == NULL) { // if one child => move it to the node 
-                    Node* temp = node;
-                    node = node->right; 
-                    delete temp; 
-                    _size--;
-                } else if (node->right == NULL) {
-                    Node* temp = node;
-                    node = node->left;
-                    delete temp;
-                    _size--;
-                } else { // if it has 2 children
-                    Node* temp = begin(node->right);
-                    node->val = temp->val;
-                    node->right = delete_node(node->right, temp->val);
+        bool delete_node(Node* cur, Node* to_delete, Node* root) {
+            if (cur == NULL)
+                return false;
+            if (to_delete->pair.first < cur->pair.first)  // move to the left subtree
+                return (delete_node(cur->left, to_delete, root));
+            else if (to_delete->pair.first > cur->pair.first) // move to the right subtree
+                return (delete_node(cur->right, to_delete, root));
+            else { // found the node to delete
+                if (cur->left == nullptr || cur->right == nullptr) { // node has at most one child (or nothing)
+                    Node* child = cur->left != nullptr ? cur->left : cur->right;
+                    if (child != nullptr)
+                        child->parent = cur->parent;
+                    if (cur == root)
+                        root = child;
+                    else if (cur == cur->parent->left)
+                        cur->parent->left = child;
+                    else
+                        cur->parent->right = child;
+                    delete cur;
+                    return true;
+                }
+                else { // node has two children
+                    Node* successor = cur->right;
+                    while (successor->left != NULL)
+                        successor = successor->left;
+                    cur->pair = successor->pair;
+                    return delete_node(cur->right, successor, root);
                 }
             }
-            if (node == NULL)
-                return node;
-            update_height(node);
             // re equilibrage
-            int balance_factor = get_balance_factor(node);
-            if (balance_factor > 1) { // if left-heavy
-                if (get_balance_factor(node->left) >= 0) // if left is also heavy
-                    return rotate_right(node);
-                else {
-                    node->left = rotate_left(node->left); // else double rotation
-                    return rotate_right(node);
-                }
+            update_height(cur);
+            int balance = get_balance(cur);
+            if (balance > 1 && get_balance(cur->left) >= 0) { // left-left case
+                return rotate_right(cur, root);
             }
-            if (balance_factor < -1) { // if right-heavy
-                if (get_balance_factor(node->right) <= 0)// if right heavy too
-                    return rotate_left(node);
-                else {
-                    node->right = rotate_right(node->right);
-                    return rotate_left(node);
-                }
+            if (balance > 1 && get_balance(cur->left) < 0) { // left-right case
+                rotate_left(cur->left, root);
+                return rotate_right(cur, root);
             }
-            return node;
+            if (balance < -1 && get_balance(cur->right) <= 0) { // right-right case
+                return rotate_left(cur, root);
+            }
+            if (balance < -1 && get_balance(cur->right) > 0) { // right-left case
+                rotate_right(cur->right, root);
+                return rotate_left(cur, root);
+            }
+            return true;
         }
         //====================================================================//
         Node* begin() {
