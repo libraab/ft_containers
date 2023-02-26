@@ -98,13 +98,16 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 {
 	std::cout << "size: " << mp.size() << std::endl;
 	std::cout << "max_size: " << mp.max_size() << std::endl;
+	
 	if (print_content)
 	{
 		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
-        std::cout << "begin is " << mp.begin()->second << std::endl;
-        std::cout << "end is " << mp.end()->second << std::endl;
+        // std::cout << "begin is " << mp.begin()->second << std::endl;
+        // std::cout << "end is " << mp.end()->second << std::endl;
 		std::cout << std::endl << "Content is:" << std::endl;
 		for (; it != ite; ++it) {
+			//sleep (1);
+			
 			std::cout << "- " << printPair(it, false) << std::endl;
             }
 	}
@@ -165,6 +168,10 @@ void	ft_const_bound(const MAP &mp, const T1 &param)
 	ft_range = mp.equal_range(param);
 	std::cout << "lower_bound: " << (it[0] == ite ? "end()" : printPair(it[0], false)) << std::endl;
 	std::cout << "upper_bound: " << (it[1] == ite ? "end()" : printPair(it[1], false)) << std::endl;
+	(ft_range.first).testos();
+	it[0].testos();
+	ft_range.second.testos();
+	it[1].testos();
 	std::cout << "equal_range: " << (ft_range.first == it[0] && ft_range.second == it[1]) << std::endl;
 }
 
@@ -175,14 +182,14 @@ int		main(void)
 	for (unsigned int i = 0; i < lst_size; ++i)
 		lst.push_back(T3(i + 1, (i + 1) * 3));
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
-    
+    // mp.print_map();
 	printSize(mp);
 	ft_const_bound(mp, -10);
 	ft_const_bound(mp, 1);
 	ft_const_bound(mp, 5);
 	ft_const_bound(mp, 10);
 	ft_const_bound(mp, 50);
-
+	// mp.print_map() ;
 	printSize(mp);
 
 	mp.lower_bound(3)->second = 404;

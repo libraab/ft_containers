@@ -39,10 +39,11 @@ namespace ft {
         typedef Node<value_type>                    Node;
 
         Node*                               _node;
+        Compare _comp;
 
-        biterator() :                       _node(NULL) {}
-        biterator(Node* n) :                _node(n) {}
-        biterator(biterator const & x) :    _node(x._node) {}
+        biterator(Compare comp = Compare()) :                       _node(NULL), _comp(comp) {}
+        biterator(Node* n, Compare comp = Compare()) :                _node(n), _comp(comp) {}
+        biterator(biterator const & x) :    _node(x._node), _comp(x._comp) {}
         ~biterator() {};
         //--------------------------------------------------------------------//
         // Assignment operator
@@ -73,13 +74,35 @@ namespace ft {
                     _node = _node->left;
             } else {
                 // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = _node->parent;
-                while (_node == tmp->right) {
-                    _node = tmp;
+                Node *tmp = _node;
+                while (tmp->parent != NULL) 
                     tmp = tmp->parent;
-                }
-                if (_node->right != tmp)
+                K key = _node->pair.first;
+                while (tmp->left && _comp(key, tmp->left->pair.first)) 
+                    tmp = tmp->left;
+                if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
                     _node = tmp;
+                    return *this;
+                }
+                if (tmp->right)
+                    tmp = tmp->right;
+                while (tmp->right && _comp(tmp->right->pair.first, key)) {
+                    tmp = tmp->right;}
+                while (tmp->left && _comp(key, tmp->left->pair.first))
+                    tmp = tmp->left;
+                if (key == tmp->pair.first) {
+                    _node =  NULL;
+                }
+                else if (_comp(key, tmp->pair.first)) {
+                    _node = tmp;
+                }
+                else{
+
+                    //std::cout << "parent is "<< tmp->parent->pair.first << std::endl;
+                    // std::cout << "left is "<< tmp->left->pair.first << std::endl;
+                    // std::cout << "right is "<< tmp->right->pair.first << std::endl;
+                    _node = NULL;
+                }
             }
             return *this;
         }
@@ -114,6 +137,10 @@ namespace ft {
             return tmp;
         }
         //--------------------------------------------------------------------//
+        void testos() {
+            std::cout << _node->pair.first << std::endl;
+            std::cout << _node->pair.second << std::endl;
+        }
     };
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
@@ -500,8 +527,11 @@ namespace ft {
                     current = current->left;
                 }
             }
-            if (!lower)
-                return end();
+            if (!lower) {
+                iterator x = end();
+                x++;
+                return x;
+            }
             return iterator(lower);
         }
         //--------------------------------------------------------------------//
@@ -517,8 +547,11 @@ namespace ft {
                     current = current->left;
                 }
             }
-            if (!lower)
-                return end();
+            if (!lower) {
+                const_iterator x = end();
+                x++;
+                return x;
+            }
             return (ft::Node<ft::pair<const K, T> > *)lower;
         }
         //====================================================================//
@@ -534,8 +567,11 @@ namespace ft {
                     current = current->left;
                 }
             }
-            if (!upper)
-                return end();
+            if (!upper) {
+                iterator x = end();
+                x++;
+                return x;
+            }
             return iterator(upper);
         }
         //--------------------------------------------------------------------//
@@ -551,37 +587,19 @@ namespace ft {
                     current = current->left;
                 }
             }
-            if (!upper)
-                return end();
+            if (!upper) {
+                const_iterator x = end();
+                x++;
+                return x;
+            }
             return (ft::Node<ft::pair<const K, T> > *)upper;
         }
         //====================================================================//
         pair<iterator, iterator>   equal_range (const key_type& k) {
-            iterator lower = find(k);
-            iterator upper = lower;
-
-            if (lower != end() && lower->first == k) {
-                // If we found the key, move upper to the next node with a different key.
-                ++upper;
-                while (upper != end() && upper->first == k) {
-                ++upper;
-                }
-            }
-            return ft::make_pair(lower, upper);
+return (ft::make_pair(lower_bound(k), upper_bound(k)));
         }
         //--------------------------------------------------------------------//
         pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
-            const_iterator lower = find(k);
-            const_iterator upper = lower;
-
-            if (lower != end() && lower->first == k) {
-                // If we found the key, move upper to the next node with a different key.
-                ++upper;
-                while (upper != end() && upper->first == k) {
-                ++upper;
-                }
-            }
-            return ft::make_pair(lower, upper);
-        }
+            return (ft::make_pair(lower_bound(k), upper_bound(k)));}
     };
 }

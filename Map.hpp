@@ -81,6 +81,7 @@ namespace ft
             //destructor
             ~map() { }
             //-----------------------------------------------------------------
+            // void print_map()  {_tree.print_tree();}
             // V A L U E _ C O M P A R E 
             // --> https://cplusplus.com/reference/map/map/value_comp/
             // basically it compares the keys (first arg) of a pair, the same as key_comp who takes 2 keys instead of 2 pairs
@@ -112,7 +113,11 @@ namespace ft
             const_iterator begin() const    {return (_tree.begin());}
             //------------------------------------------------------------------
             iterator end()                  {return (_tree.end());}
-            const_iterator end() const      {return (_tree.end());}
+            const_iterator end() const      {
+                const_iterator x = _tree.end();
+                x++;
+                return x;
+            }
             //------------------------------------------------------------------
             reverse_iterator rbegin()               {return (_tree.rbegin());}
             const_reverse_iterator rbegin() const   {return (_tree.rbegin());}
