@@ -16,10 +16,9 @@ namespace ft {
         int             height;
         Node*           left;
         Node*           right;
-        Node*           parent;
-        //Node*           nil;          
+        Node*           parent;        
         // CONSTRUCTOR    
-        Node(P p) : pair(p), height(1),/* nil(NULL),*/ left(NULL), right(NULL), parent(NULL) {}
+        Node(P p) : pair(p), height(1), left(NULL), right(NULL), parent(NULL) {}
     };
   /*██╗    ████████╗    ███████╗    ██████╗      █████╗     ████████╗     ██████╗     ██████╗ 
     ██║    ╚══██╔══╝    ██╔════╝    ██╔══██╗    ██╔══██╗    ╚══██╔══╝    ██╔═══██╗    ██╔══██╗
@@ -39,20 +38,20 @@ namespace ft {
         typedef Node<value_type>                    Node;
 
         Node*                               _node;
-        Compare _comp;
+        Compare                             _comp;
 
         biterator(Compare comp = Compare()) :                       _node(NULL), _comp(comp) {}
-        biterator(Node* n, Compare comp = Compare()) :                _node(n), _comp(comp) {}
-        biterator(biterator const & x) :    _node(x._node), _comp(x._comp) {}
+        biterator(Node* n, Compare comp = Compare()) :              _node(n), _comp(comp) {}
+        biterator(biterator const & x) :                            _node(x._node), _comp(x._comp) {}
         ~biterator() {};
         //--------------------------------------------------------------------//
-        // Assignment operator
-        biterator & operator=(biterator const & rhs) {
-            if (this != &rhs) {
-                this->_node = rhs._node;
-            }
-            return (*this);
-        }
+        // // Assignment operator
+        // biterator & operator=(biterator const & rhs) {
+        //     if (this != &rhs) {
+        //         this->_node = rhs._node;
+        //     }
+        //     return (*this);
+        // }
         //--------------------------------------------------------------------//
         // Comparison operators
         bool operator==(biterator const & rhs) const { return (this->_node == rhs._node); }
@@ -61,9 +60,6 @@ namespace ft {
         // Dereference operators
         reference operator*() const { return (this->_node->pair); }
         pointer operator->() const { return &(this->_node->pair); }
-        //--------------------------------------------------------------------//
-        // reference operator*() const {return (*(operator->()));}
-        // pointer operator->() const {return (ft::pair<K, T> *)(&this->_node->pair);}
         //--------------------------------------------------------------------//
         // Increment/decrement operators
         biterator & operator++() {
@@ -86,23 +82,16 @@ namespace ft {
                 }
                 if (tmp->right)
                     tmp = tmp->right;
-                while (tmp->right && _comp(tmp->right->pair.first, key)) {
-                    tmp = tmp->right;}
+                while (tmp->right && _comp(tmp->right->pair.first, key))
+                    tmp = tmp->right;
                 while (tmp->left && _comp(key, tmp->left->pair.first))
                     tmp = tmp->left;
-                if (key == tmp->pair.first) {
+                if (key == tmp->pair.first)
                     _node =  NULL;
-                }
-                else if (_comp(key, tmp->pair.first)) {
+                else if (_comp(key, tmp->pair.first))
                     _node = tmp;
-                }
-                else{
-
-                    //std::cout << "parent is "<< tmp->parent->pair.first << std::endl;
-                    // std::cout << "left is "<< tmp->left->pair.first << std::endl;
-                    // std::cout << "right is "<< tmp->right->pair.first << std::endl;
+                else
                     _node = NULL;
-                }
             }
             return *this;
         }
@@ -110,8 +99,7 @@ namespace ft {
         biterator operator++(int) {
             biterator tmp(*this);
             operator++();
-            return (tmp);
-        }
+            return (tmp);}
         //--------------------------------------------------------------------//
         biterator & operator--() {
             if (_node->left != NULL) {
@@ -134,14 +122,111 @@ namespace ft {
         biterator operator--(int) {
             biterator tmp(*this);
             operator--();
-            return tmp;
-        }
+            return tmp;}
         //--------------------------------------------------------------------//
         void testos() {
             std::cout << _node->pair.first << std::endl;
-            std::cout << _node->pair.second << std::endl;
+            std::cout << _node->pair.second << std::endl;}
+    };
+//==========================================================================//
+//                      C O N S T                                           //
+//==========================================================================//
+    template <typename K, typename T, class Compare, class Alloc>
+    class const_biterator {
+        public :
+        typedef std::bidirectional_iterator_tag             iterator_category;
+        typedef std::ptrdiff_t                              difference_type;
+        typedef ft::pair<K, T>                        value_type;
+        typedef value_type const *                           pointer;
+        typedef value_type const &                           reference;
+        typedef Node<value_type>                      Node;
+
+        Node*                               _node;
+        Compare                             _comp;
+
+        const_biterator(Compare comp = Compare()) :            _node(NULL), _comp(comp) {}
+        const_biterator(Node* n, Compare comp = Compare()) :   _node(n), _comp(comp) {}
+        const_biterator(const_biterator const& x) :            _node(x._node), _comp(x._comp) {}
+        const_biterator(biterator<K,T,Compare,Alloc> x) {
+            _node = x._node;
+            _comp = x._comp;
+        }
+        ~const_biterator() {};
+        //--------------------------------------------------------------------//
+        // Comparison operators
+        bool operator==(const_biterator const & rhs) const { return (this->_node == rhs._node); }
+        bool operator!=(const_biterator const & rhs) const { return (this->_node != rhs._node); }
+        //--------------------------------------------------------------------//
+        // Dereference operators
+        reference operator*() const { return (this->_node->pair); }
+        pointer operator->() const { return &(this->_node->pair); }
+        //--------------------------------------------------------------------//
+        // Increment/decrement operators
+        const_biterator & operator++() {
+            if (_node->right != NULL) {
+                _node = _node->right;
+                // Find the leftmost node in the right subtree
+                while (_node->left != NULL)
+                    _node = _node->left;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node *tmp = _node;
+                while (tmp->parent != NULL) 
+                    tmp = tmp->parent;
+                K key = _node->pair.first;
+                while (tmp->left && _comp(key, tmp->left->pair.first)) 
+                    tmp = tmp->left;
+                if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
+                    _node = tmp;
+                    return *this;
+                }
+                if (tmp->right)
+                    tmp = tmp->right;
+                while (tmp->right && _comp(tmp->right->pair.first, key))
+                    tmp = tmp->right;
+                while (tmp->left && _comp(key, tmp->left->pair.first))
+                    tmp = tmp->left;
+                if (key == tmp->pair.first)
+                    _node =  NULL;
+                else if (_comp(key, tmp->pair.first))
+                    _node = tmp;
+                else
+                    _node = NULL;
+            }
+            return *this;
+        }
+        //--------------------------------------------------------------------//
+        const_biterator operator++(int) {
+            const_biterator tmp(*this);
+            operator++();
+            return (tmp);
+        }
+        //--------------------------------------------------------------------//
+        const_biterator & operator--() {
+            if (_node->left != NULL) {
+                _node = _node->left;
+                // Find the rightmost node in the left subtree
+                while (_node->right != NULL)
+                    _node = _node->right;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node *tmp = _node->parent;
+                while (_node == tmp->left) {
+                    _node = tmp;
+                    tmp = tmp->parent;
+                }
+                _node = tmp;
+            }
+            return (*this);
+        }
+        //--------------------------------------------------------------------//
+        const_biterator operator--(int) {
+            const_biterator tmp(*this);
+            operator--();
+            return tmp;
         }
     };
+
    /*█████╗     ██╗   ██╗    ██╗                 ████████╗    ██████╗     ███████╗    ███████╗    
     ██╔══██╗    ██║   ██║    ██║                 ╚══██╔══╝    ██╔══██╗    ██╔════╝    ██╔════╝    
     ███████║    ██║   ██║    ██║                    ██║       ██████╔╝    █████╗      █████╗      
@@ -155,7 +240,7 @@ namespace ft {
         typedef Node<value_type>                                Node;
         typedef Alloc                                           allocator_type;
         typedef ft::biterator<K, T, Compare, Alloc>             iterator;
-        typedef ft::biterator<const K, T, Compare, Alloc>       const_iterator;
+        typedef ft::const_biterator<K, T, Compare, Alloc>       const_iterator;
         typedef K                                               key_type;
 
         Node*               _root;
@@ -399,13 +484,13 @@ namespace ft {
             return n;
         }
         //--------------------------------------------------------------------//
-        ft::Node<ft::pair<const K, T> > * begin() const {
+        const_iterator begin() const {
             Node* n = _root;
             if (_root == NULL)
                 return NULL;
             while (n->left != NULL)
                 n = n->left;
-            return (ft::Node<ft::pair<const K, T> > *)n;
+            return const_iterator(n);
         }
         //====================================================================//
         Node* end() {
@@ -417,13 +502,13 @@ namespace ft {
             return n;
         }
         //--------------------------------------------------------------------//
-        ft::Node<ft::pair<const K, T> > * end() const{
+        const_iterator end() const{
             Node* n = _root;
             if (_root == NULL)
                 return NULL;
             while (n->right != NULL)
                 n = n->right;
-            return (ft::Node<ft::pair<const K, T> > *)n;
+            return const_iterator(n);
         }
         //====================================================================//
         iterator rbegin() {

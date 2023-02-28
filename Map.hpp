@@ -32,7 +32,8 @@ namespace ft
         typedef typename allocator_type::const_pointer          const_pointer;
 	            
         typedef ft::biterator<Key, T, Compare, Alloc>           iterator;
-        typedef ft::biterator<const Key, T, Compare, Alloc>     const_iterator;
+        typedef ft::const_biterator<Key, T, Compare, Alloc>     const_iterator;
+        
         typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
@@ -182,7 +183,6 @@ namespace ft
             //------------------------------------------------------------------
             size_type count (const key_type& k) const               {return (_tree.count(k));}
             //------------------------------------------------------------------
-            // TODO recode these 👇🏻
             iterator lower_bound (const key_type& k)                {return (_tree.lower_bound(k));}
             const_iterator lower_bound (const key_type& k) const    {return (_tree.lower_bound(k));}
             //------------------------------------------------------------------
