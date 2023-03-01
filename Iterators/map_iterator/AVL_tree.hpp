@@ -269,7 +269,7 @@ namespace ft {
         //====================================================================//
         Node* get_root() {return _root;}
         //====================================================================//
-        allocator_type get_allocator() {return _alloc;}
+        allocator_type get_allocator() const {return _alloc;}
         //====================================================================//
         void update_height(Node* node) {
             int left_height = get_height(node->left);
@@ -426,12 +426,12 @@ namespace ft {
             return cur;
         }
         //====================================================================//
-        bool delete_node(Node* cur, Node* to_delete, Node* root) {
+        bool delete_node(Node* cur, iterator to_delete, Node* root) {
             if (cur == NULL)
                 return false;
-            if (to_delete->pair.first < cur->pair.first)  // move to the left subtree
+            if (to_delete._node->pair.first < cur->pair.first)  // move to the left subtree
                 return (delete_node(cur->left, to_delete, root));
-            else if (to_delete->pair.first > cur->pair.first) // move to the right subtree
+            else if (to_delete._node->pair.first > cur->pair.first) // move to the right subtree
                 return (delete_node(cur->right, to_delete, root));
             else { // found the node to delete
                 if (cur->left == nullptr || cur->right == nullptr) { // node has at most one child (or nothing)
@@ -457,20 +457,20 @@ namespace ft {
             }
             // re equilibrage
             update_height(cur);
-            int balance = get_balance(cur);
-            if (balance > 1 && get_balance(cur->left) >= 0) { // left-left case
-                return rotate_right(cur, root);
+            int balance = get_balance_factor(cur);
+            if (balance > 1 && get_balance_factor(cur->left) >= 0) { // left-left case
+                return rotate_right(cur);
             }
-            if (balance > 1 && get_balance(cur->left) < 0) { // left-right case
-                rotate_left(cur->left, root);
-                return rotate_right(cur, root);
+            if (balance > 1 && get_balance_factor(cur->left) < 0) { // left-right case
+                rotate_left(cur->left);
+                return rotate_right(cur);
             }
-            if (balance < -1 && get_balance(cur->right) <= 0) { // right-right case
-                return rotate_left(cur, root);
+            if (balance < -1 && get_balance_factor(cur->right) <= 0) { // right-right case
+                return rotate_left(cur);
             }
-            if (balance < -1 && get_balance(cur->right) > 0) { // right-left case
-                rotate_right(cur->right, root);
-                return rotate_left(cur, root);
+            if (balance < -1 && get_balance_factor(cur->right) > 0) { // right-left case
+                rotate_right(cur->right);
+                return rotate_left(cur);
             }
             return true;
         }
@@ -533,7 +533,7 @@ namespace ft {
         //====================================================================//
         void swap(AVL_tree& other) {
             std::swap(_root, other._root);
-            std::swap(get_size(), other.get_size());
+            std::swap(_size, other._size);
             std::swap(_alloc, other._alloc);
         }
         //====================================================================//
@@ -547,6 +547,10 @@ namespace ft {
             else 
                 return contains_key(curr->right, node);
         }
+        bool contains_key(iterator curr, const value_type& node) {
+            if (curr._node->pair.first == node.first)
+                return true;
+            return false;}
         //====================================================================//
         Node* search(Node* root, int val) {
             Node* n = root;
@@ -591,13 +595,26 @@ namespace ft {
             // Traverse the tree until we find the key or reach a null node
             while (curr != nullptr) {
                 if (k == curr->pair.first)
-                    return (ft::Node<ft::pair<const K, T> > *)curr;
+                    return (ft::Node<ft::pair<K, T> > *)curr;
                 else if (k < curr->pair.first)
                     curr = curr->left;
                 else
                     curr = curr->right;
             }
-            return (ft::Node<ft::pair<const K, T> > *)end();
+            return const_iterator(end());
+        }
+        //====================================================================//
+        Node* find_node(const key_type& k) const {
+            Node* current = _root;
+            while (current != nullptr) {
+                if (k < current->pair.first)
+                    current = current->left;
+                else if (k > current->pair.first)
+                    current = current->right;
+                else
+                    return current;
+            }
+            return nullptr;
         }
         //====================================================================//
         iterator lower_bound(const key_type& k) {
@@ -637,7 +654,7 @@ namespace ft {
                 x++;
                 return x;
             }
-            return (ft::Node<ft::pair<const K, T> > *)lower;
+            return (ft::Node<ft::pair<K, T> > *)lower;
         }
         //====================================================================//
         iterator upper_bound(const key_type& k) {
@@ -677,7 +694,7 @@ namespace ft {
                 x++;
                 return x;
             }
-            return (ft::Node<ft::pair<const K, T> > *)upper;
+            return (ft::Node<ft::pair<K, T> > *)upper;
         }
         //====================================================================//
         pair<iterator, iterator>   equal_range (const key_type& k) {

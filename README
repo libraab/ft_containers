@@ -287,6 +287,8 @@ starting by building a balanced binary tree
 search and traversing doesn't affect it 
 but inserting and deleting DOES ⛔️
 
-from returned value of type 
-ft::AVL_tree<char, foo<float>, std::less<char>, std::allocator<ft::pair<const char, foo<float> > > >::const_iterator
-biterator<const char, foo<float>, std::less<char>, std::allocator<ft::pair<const char, foo<float> > > >') to function return type 'ft::map<char, foo<float> >::const_iterator' (aka 'const_biterator<char, foo<float>, std::less<char>, std::allocator<ft::pair<const char, foo<float> > > >
+
+
+from
+ft::AVL_tree<char, int, std::less<char>, std::allocator<ft::pair<const char, int> > >::iterator -> biterator<char, int, std::less<char>, std::allocator<ft::pair<const char, int> > >
+ft::map<char, int>::reverse_iterator                                           -> reverse_iterator<biterator<char, int, std::less<char>, std::allocator<ft::pair<const char, int> > > >

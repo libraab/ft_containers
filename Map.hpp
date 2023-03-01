@@ -33,7 +33,7 @@ namespace ft
 	            
         typedef ft::biterator<Key, T, Compare, Alloc>           iterator;
         typedef ft::const_biterator<Key, T, Compare, Alloc>     const_iterator;
-        
+
         typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  
@@ -73,8 +73,8 @@ namespace ft
 
 
                 if (*this != cpy){
-					this->_key_compare = cpy.key_comp();
-					this->_allocator = cpy.get_allocator();
+					this->_comp = cpy.key_comp();
+					this->_alloc = cpy.get_allocator();
 					this->_tree = cpy._tree;
 					this->_size = cpy.size();
 				}
@@ -120,11 +120,11 @@ namespace ft
                 return x;
             }
             //------------------------------------------------------------------
-            reverse_iterator rbegin()               {return (_tree.rbegin());}
-            const_reverse_iterator rbegin() const   {return (_tree.rbegin());}
+            reverse_iterator rbegin()               {return reverse_iterator(_tree.rbegin());}
+            const_reverse_iterator rbegin() const   {return const_reverse_iterator(_tree.rbegin());}
             //------------------------------------------------------------------
-            reverse_iterator rend()                 {return (_tree.rend());}
-            const_reverse_iterator rend() const     {return (_tree.rend());}
+            reverse_iterator rend()                 {return reverse_iterator(_tree.rend());}
+            const_reverse_iterator rend() const     {return const_reverse_iterator(_tree.rend());}
             //================================================================//
             //                           C A P A C I T Y                      //
             //================================================================//
@@ -149,8 +149,8 @@ namespace ft
                 return (ft::pair<iterator, bool>((_tree.insert_node(_tree.get_root(), val, _tree.get_root())), true));
             }
             iterator insert (iterator position, const value_type& val) {
-                ft::pair<iterator,bool> ret = _tree.insert_node(val.first, val.second, position.base());
-				return (ret.first);
+                insert(val);
+                return position;
             }
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last) {
@@ -160,11 +160,11 @@ namespace ft
 				}
             }
             //------------------------------------------------------------------
-            void erase (iterator position)              {_tree.delete_node(position);}
-            size_type erase (const key_type& k)         {return (_tree.delete_node(k));}
+            void erase (iterator position)              {_tree.delete_node(_tree.get_root(), position, _tree.get_root());}
+            size_type erase (const key_type& k)         {return (_tree.delete_node(_tree.get_root(), _tree.find(k), _tree.get_root()));}
             void erase (iterator first, iterator last)  {
                 while (first != last)
-				delete_node(first++);
+				_tree.delete_node(_tree.get_root(), first++, _tree.get_root());
             }
             //------------------------------------------------------------------
             void swap (map& x)  {_tree.swap(x._tree);}
@@ -181,7 +181,7 @@ namespace ft
             iterator find (const key_type& k)                       {return (_tree.find(k));}
             const_iterator find (const key_type& k) const           {return (_tree.find(k));}
             //------------------------------------------------------------------
-            size_type count (const key_type& k) const               {return (_tree.count(k));}
+            size_type count (const key_type& k) const               {return (_tree.find_node(k) != nullptr ? 1 : 0);}
             //------------------------------------------------------------------
             iterator lower_bound (const key_type& k)                {return (_tree.lower_bound(k));}
             const_iterator lower_bound (const key_type& k) const    {return (_tree.lower_bound(k));}
