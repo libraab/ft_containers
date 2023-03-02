@@ -246,12 +246,36 @@ namespace ft {
         Node*               _root;
         size_t              _size;
         allocator_type      _alloc;
+        Compare             _comp;
         //====================================================================//
         //      C O N S T R U C T O R S       &      D E S T R U C T O R      //
         //====================================================================//
-        AVL_tree() :            _root(NULL), _size(0), _alloc(allocator_type()) {}
-        AVL_tree(Node &n) :     _root(n), _size(0), _alloc(allocator_type()) {}
+        AVL_tree(Compare comp = Compare()) :            _root(NULL), _size(0), _alloc(allocator_type()), _comp(comp) {}
+        AVL_tree(Node &n, Compare comp = Compare()) :     _root(n), _size(0), _alloc(allocator_type()), _comp(comp) {}
         ~AVL_tree() {clear(_root);}
+        //====================================================================//
+        // // Assignment operator
+        // AVL_tree& operator=(const AVL_tree& other) {
+        //     if (this != &other) {
+        //         clear(_root);  // clear current tree
+        //         _alloc = other._alloc;
+        //         _comp = other._comp;
+        //         _root = copy_node(other._root);  // copy the other tree
+        //         _size = other._size;
+        //     }
+        //     return *this;
+        // }
+        // //====================================================================//
+        // // Helper function to recursively copy a node and its children
+        // Node* copy_node(const Node* node) {
+        //     if (node == NULL)
+        //         return NULL;
+        //     Node* new_node = new Node(node->value);
+        //     new_node->height = node->height;
+        //     new_node->left = copy_node(node->left);
+        //     new_node->right = copy_node(node->right);
+        //     return new_node;
+        // }
         //====================================================================//
         int get_height(Node* node) {
             if (node == NULL)
@@ -352,7 +376,7 @@ namespace ft {
                     std::cout << "L----";
                     indent += "|  ";
                 }
-                std::cout << node->pair.first << std::endl;
+                std::cout << node->pair.first << "(" << node->pair.second << ")" << std::endl;
                 print_tree(node->left, indent, false);
                 print_tree(node->right, indent, true);
             }
@@ -361,33 +385,25 @@ namespace ft {
         }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
-        Node* insert_node(Node* cur, const value_type& new_node, Node* root) {
-            // If the current _root is null, create a new node with the given value and return it
-            // std::cout << "* inserting (" << new_node.first << ")" << std::endl;
+        Node* insert_node(Node* cur, const value_type& new_node) {
             // std::cout << "" << std::endl;               
-            if (cur == NULL) {
-                Node* x = new Node(new_node); // which _root is new_node
-                if (_size == 0) {
-                // std::cout << "new tree created" << std::endl;
-                    _root = x;
-                }
-                // else
-                //     std::cout << "new node created" << std::endl;
+            if (cur == NULL) { // arriving at null node
+                Node* x = new Node(new_node); // creating the new node on it
                 _size++;
-                return (x);
+                return (x); // return this node (recursively)
             }
             // std::cout << "adding " << new_node.first <<" to existant tree" << std::endl;
             // Insert the new node in the left or right subtree depending on its value
             if (new_node.first < cur->pair.first) {
                 // std::cout << "(" << new_node.first << ")" << "is less than" << "(" << cur->pair.first << ")" << std::endl;
                 // std::cout << "going left" << std::endl;
-                cur->left = insert_node(cur->left, new_node, root);
+                cur->left = insert_node(cur->left, new_node);
                 cur->left->parent = cur; // new parent
             }
             else {
                 // std::cout << "(" << new_node.first << ")" << "is more than" << "(" << cur->pair.first << ")" << std::endl;
                 // std::cout << "going right" << std::endl;
-                cur->right = insert_node(cur->right, new_node, root);
+                cur->right = insert_node(cur->right, new_node);
                 cur->right->parent = cur; // new parent
             }
             update_height(cur);
@@ -421,9 +437,20 @@ namespace ft {
                 cur->right = rotate_right(cur->right);
                 return rotate_left(cur);
             }
-            // std::cout << "returning " << cur->pair.first << std::endl;
-
             return cur;
+        }
+        Node* insert(const value_type& new_node) {
+            Node* x;
+            if (get_root() == NULL) { // no existing tree 
+                x = new Node(new_node); // creating first node of the tree
+                _root = x; // which _root is itself
+                _size++; 
+            }
+            else { // existing tree
+                insert_node(get_root(), new_node);
+                x = find_node(new_node.first);
+            }
+            return x;
         }
         //====================================================================//
         bool delete_node(Node* cur, iterator to_delete, Node* root) {

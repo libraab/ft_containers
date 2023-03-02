@@ -82,7 +82,7 @@ namespace ft
             //destructor
             ~map() { }
             //-----------------------------------------------------------------
-            // void print_map()  {_tree.print_tree();}
+            void print_map()  {_tree.print_tree();}
             // V A L U E _ C O M P A R E 
             // --> https://cplusplus.com/reference/map/map/value_comp/
             // basically it compares the keys (first arg) of a pair, the same as key_comp who takes 2 keys instead of 2 pairs
@@ -102,9 +102,14 @@ namespace ft
             };
             //------------------------------------------------------------------
             map& operator= (const map& x) {
-                clear();
-                insert(x.begin(), x.end());
-                return *this;
+                if (this != &x)
+				{
+					_comp = x._comp;
+					_alloc = x._alloc;
+					_size = x._size;
+                    _tree = x._tree;
+				}
+				return (*this);
             }
             //================================================================//
             //                      I T E R A T O R S                         //
@@ -113,7 +118,11 @@ namespace ft
             iterator begin()                {return (_tree.begin());}
             const_iterator begin() const    {return (_tree.begin());}
             //------------------------------------------------------------------
-            iterator end()                  {return (_tree.end());}
+            iterator end()                  {
+                iterator x = _tree.end();
+                x++;
+                return x;
+            }
             const_iterator end() const      {
                 const_iterator x = _tree.end();
                 x++;
@@ -137,6 +146,10 @@ namespace ft
             mapped_type& operator[] (const key_type& k) {
                 // --> https://cplusplus.com/reference/map/map/operator[]/
                 return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
+                // ft::pair<Key,T> pair = ft::make_pair(k,mapped_type());
+                // ft::pair<iterator, bool> x = this->insert(pair);
+                // iterator y = x.first;
+                // return (y->second);
             }
             //================================================================//
             //                      M O D I F I E R S                         //
@@ -144,9 +157,17 @@ namespace ft
             pair<iterator, bool> insert(const value_type& val) {
                 // returned : iterator of the node 
                 // true is insertion was done and false if it existed already and insertion didn't happen
-                if (_tree.contains_key(_tree.get_root(), val))
-                    return (ft::pair<iterator, bool>(find(val.first), false));                           
-                return (ft::pair<iterator, bool>((_tree.insert_node(_tree.get_root(), val, _tree.get_root())), true));
+                if (_tree.contains_key(_tree.get_root(), val)) {
+                    return (ft::pair<iterator, bool>(find(val.first), false)); 
+                }                       
+                return (ft::pair<iterator, bool>((_tree.insert(val)), true));
+                // iterator it = _tree.insert(val);
+                // std::cout << it._node->pair.first << std::endl;
+                // ft::pair<iterator, bool> pair = ft::make_pair(it, true);
+                // std::cout << "after insert in map" << std::endl;
+                // std::cout << "returning this pair ";
+                // std::cout << "[" << pair.first._node->pair.first << "][" << pair.first._node->pair.second << "]" << std::endl; 
+                // return (pair);
             }
             iterator insert (iterator position, const value_type& val) {
                 insert(val);
