@@ -23,7 +23,7 @@ namespace ft
         //====================================================================//
         typedef Key                                             key_type;
         typedef T                                               mapped_type;
-        typedef ft::pair<const Key, T>                          value_type;
+        typedef ft::pair<Key, T>                          value_type;
         typedef Compare                                         key_compare;
         typedef Alloc                                           allocator_type;
         typedef typename allocator_type::reference              reference;
@@ -43,7 +43,6 @@ namespace ft
         protected:
             key_compare     _comp;
             allocator_type  _alloc;
-            size_type       _size;
             BBST            _tree;
         //====================================================================//
         //                   M E M B E R          F U N C T I O N S           //
@@ -64,25 +63,18 @@ namespace ft
             {
                 _comp = comp;
                 _alloc = alloc;
-                this->insert(first, last); 
+				for (; first != last; first++)
+					this->insert(*first);
+                std::cout << std::endl << "in constructor" << std::endl;
+                print_map();
+                std::cout << std::endl;
             }
             //copy (1)
-            map (const map& cpy) {
-                _comp = cpy._comp;
-                _alloc = cpy._alloc;
-
-
-                if (*this != cpy){
-					this->_comp = cpy.key_comp();
-					this->_alloc = cpy.get_allocator();
-					this->_tree = cpy._tree;
-					this->_size = cpy.size();
-				}
-            }
+            map (const map& cpy) {*this = cpy;}
             //destructor
             ~map() { }
             //-----------------------------------------------------------------
-            void print_map()  {_tree.print_tree();}
+            void print_map() const {_tree.print_tree();}
             // V A L U E _ C O M P A R E 
             // --> https://cplusplus.com/reference/map/map/value_comp/
             // basically it compares the keys (first arg) of a pair, the same as key_comp who takes 2 keys instead of 2 pairs
@@ -101,13 +93,15 @@ namespace ft
                         {return comp(x.first, y.first);}
             };
             //------------------------------------------------------------------
-            map& operator= (const map& x) {
-                if (this != &x)
-				{
-					_comp = x._comp;
-					_alloc = x._alloc;
-					_size = x._size;
-                    _tree = x._tree;
+            map& operator= (const map& cpy) {
+                if (*this != cpy){
+					this->_comp = cpy._comp;
+					this->_alloc = cpy._alloc;
+					this->_tree.clear();
+                    const_iterator it = cpy.begin();
+                    for (; it != cpy.end(); it++) {
+                        _tree.insert(ft::make_pair(it->first, it->second));
+                    }
 				}
 				return (*this);
             }
@@ -115,8 +109,14 @@ namespace ft
             //                      I T E R A T O R S                         //
             //================================================================//
             // --> wwhttps://en.cppreference.com/w/cpp/iterator/begin
-            iterator begin()                {return (_tree.begin());}
-            const_iterator begin() const    {return (_tree.begin());}
+            iterator begin()                {
+                iterator x = _tree.begin();
+                return x;
+            }
+            const_iterator begin() const    {
+                const_iterator x = _tree.begin();
+                return x;
+            }
             //------------------------------------------------------------------
             iterator end()                  {
                 iterator x = _tree.end();
@@ -160,14 +160,10 @@ namespace ft
                 if (_tree.contains_key(_tree.get_root(), val)) {
                     return (ft::pair<iterator, bool>(find(val.first), false)); 
                 }                       
-                return (ft::pair<iterator, bool>((_tree.insert(val)), true));
-                // iterator it = _tree.insert(val);
-                // std::cout << it._node->pair.first << std::endl;
-                // ft::pair<iterator, bool> pair = ft::make_pair(it, true);
-                // std::cout << "after insert in map" << std::endl;
-                // std::cout << "returning this pair ";
-                // std::cout << "[" << pair.first._node->pair.first << "][" << pair.first._node->pair.second << "]" << std::endl; 
-                // return (pair);
+                // return (ft::pair<iterator, bool>((_tree.insert(val)), true));
+                iterator it = _tree.insert(val);
+                ft::pair<iterator, bool> pair = ft::make_pair(it, true);
+                return (pair);
             }
             iterator insert (iterator position, const value_type& val) {
                 insert(val);
@@ -181,11 +177,20 @@ namespace ft
 				}
             }
             //------------------------------------------------------------------
-            void erase (iterator position)              {_tree.delete_node(_tree.get_root(), position, _tree.get_root());}
-            size_type erase (const key_type& k)         {return (_tree.delete_node(_tree.get_root(), _tree.find(k), _tree.get_root()));}
+            void erase (iterator position) {
+                if (position != NULL)
+                    _tree.delete_node(position);
+            }
+            size_type erase (const key_type& k)         {return (_tree.delete_node(_tree.find(k)));}
             void erase (iterator first, iterator last)  {
-                while (first != last)
-				_tree.delete_node(_tree.get_root(), first++, _tree.get_root());
+                iterator tmp = first;
+                    
+                while (first != last) {
+				    tmp = first;
+                    tmp++;
+                    erase(first);
+                    first = tmp;
+                }
             }
             //------------------------------------------------------------------
             void swap (map& x)  {_tree.swap(x._tree);}

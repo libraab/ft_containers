@@ -1,9 +1,9 @@
 
 
-#include <map>
-#  define TESTED_NAMESPACE std
-// #  define TESTED_NAMESPACE ft
-// # include "map.hpp"
+// #include <map>
+// #  define TESTED_NAMESPACE std
+#  define TESTED_NAMESPACE ft
+# include "map.hpp"
 
 
 # include <iostream>
@@ -98,10 +98,14 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 {
 	std::cout << "size: " << mp.size() << std::endl;
 	std::cout << "max_size: " << mp.max_size() << std::endl;
-	
+
+	// mp.print_map();
 	if (print_content)
 	{
-		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
+		
+		typename T_MAP::const_iterator it = mp.begin();
+		// std::cout << "here" << std::endl;
+		typename T_MAP::const_iterator ite = mp.end();
         // std::cout << "begin is " << mp.begin()->second << std::endl;
         // std::cout << "end is " << mp.end()->second << std::endl;
 		std::cout << std::endl << "Content is:" << std::endl;
@@ -137,49 +141,66 @@ void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 
 
 
-
-
-
 //---------------------------------------------------------------------------//
 // main //
 #include <list>
+#define T1 int
+#define T2 std::string
+typedef _pair<const T1, T2> T3;
 
-#define T1 char
-#define T2 foo<float>
-typedef TESTED_NAMESPACE::map<T1, T2> _map;
-typedef _map::const_iterator const_it;
+static int iter = 0;
 
-static unsigned int i = 0;
-
-void	ft_comp(const _map &mp, const const_it &it1, const const_it &it2)
+template <typename MAP, typename U>
+void	ft_erase(MAP &mp, U param)
 {
-	bool res[2];
+	
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	mp.erase(param);
+	printSize(mp);
+}
 
-	std::cout << "\t-- [" << ++i << "] --" << std::endl;
-	res[0] = mp.key_comp()(it1->first, it2->first);
-	res[1] = mp.value_comp()(*it1, *it2);
-	std::cout << "with [" << it1->first << " and " << it2->first << "]: ";
-	std::cout << "key_comp: " << res[0] << " | " << "value_comp: " << res[1] << std::endl;
+template <typename MAP, typename U, typename V>
+void	ft_erase(MAP &mp, U param, V param2)
+{
+	
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	mp.erase(param, param2);
+	
+	printSize(mp);
 }
 
 int		main(void)
 {
-	_map	mp;
-
-	mp['a'] = 2.3;
-	mp['b'] = 1.4;
-	mp['c'] = 0.3;
-	mp['d'] = 4.2;
+	std::list<T3> lst;
+	unsigned int lst_size = 10;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
+	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 	printSize(mp);
 
-	// std::cout << "start " << mp.begin()._node->pair.first << " " << mp.begin()._node->pair.second << std::endl;
-	// std::cout << "end " << mp.end()._node->pair.first << " " << mp.end()._node->pair.second << std::endl;
-	for (const_it it1 = mp.begin(); it1 != mp.end(); ++it1) {
-		for (const_it it2 = mp.begin(); it2 != mp.end(); ++it2) {
-			ft_comp(mp, it1, it2);
-		}
-	}
+	ft_erase(mp, ++mp.begin());
+
+	ft_erase(mp, mp.begin());
+	ft_erase(mp, --mp.end());
+
+	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
+	ft::map<T1, T2>::iterator x = mp.end();
+	// std::cout << mp.size() << std::endl;
+	ft_erase(mp, --(--(--mp.end())), --mp.end());
+
+	mp[10] = "Hello";
+	mp[11] = "Hi there";
+	printSize(mp);
+	
+	ft_erase(mp, --(--(--mp.end())), mp.end());
+
+	mp[12] = "ONE";
+	mp[13] = "TWO";
+	mp[14] = "THREE";
+	mp[15] = "FOUR";
 
 	printSize(mp);
+	ft_erase(mp, mp.begin(), mp.end());
+
 	return (0);
 }

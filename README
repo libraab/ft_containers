@@ -288,5 +288,7 @@ search and traversing doesn't affect it
 but inserting and deleting DOES ⛔️
 
 
-basic_ostream<char, std::char_traits<char> >
-ft::biterator<char, foo<float>, std::less<char>, std::allocator<ft::pair<const char, foo<float> > > >
+const ft::AVL_tree<int, std::string, std::less<int>, std::allocator<ft::pair<int, std::string> > >::value_type
+ft::AVL_tree<int, std::string, std::less<int>, std::allocator<ft::pair<int, std::string> > >::Node *
+const pair<int, std::string>
+Node<pair<int, std::string> > *

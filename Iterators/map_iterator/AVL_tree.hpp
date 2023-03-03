@@ -39,10 +39,13 @@ namespace ft {
 
         Node*                               _node;
         Compare                             _comp;
+        bool                _start;
+        bool                _end;
+        Node*               _save;
 
-        biterator(Compare comp = Compare()) :                       _node(NULL), _comp(comp) {}
-        biterator(Node* n, Compare comp = Compare()) :              _node(n), _comp(comp) {}
-        biterator(biterator const & x) :                            _node(x._node), _comp(x._comp) {}
+        biterator(Compare comp = Compare()) :                       _node(NULL), _comp(comp), _start(false), _end(false) {}
+        biterator(Node* n, Compare comp = Compare()) :              _node(n), _comp(comp), _start(false), _end(false) {}
+        biterator(biterator const & x) :                            _node(x._node), _comp(x._comp), _start(x._start), _end(x._end), _save(x._save) {}
         ~biterator() {};
         //--------------------------------------------------------------------//
         // // Assignment operator
@@ -61,24 +64,24 @@ namespace ft {
         reference operator*() const { return (this->_node->pair); }
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
-        // Increment/decrement operators
-        biterator & operator++() {
-            if (_node->right != NULL) {
-                _node = _node->right;
+        Node* get_next(Node* a) {
+            Node* cur = a;
+            if (cur->right != NULL) {
+                cur = cur->right;
                 // Find the leftmost node in the right subtree
-                while (_node->left != NULL)
-                    _node = _node->left;
+                while (cur->left != NULL)
+                    cur = cur->left;
             } else {
                 // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = _node;
+                Node *tmp = cur;
                 while (tmp->parent != NULL) 
                     tmp = tmp->parent;
-                K key = _node->pair.first;
+                K key = cur->pair.first;
                 while (tmp->left && _comp(key, tmp->left->pair.first)) 
                     tmp = tmp->left;
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
-                    _node = tmp;
-                    return *this;
+                    cur = tmp;
+                    return cur;
                 }
                 if (tmp->right)
                     tmp = tmp->right;
@@ -87,39 +90,82 @@ namespace ft {
                 while (tmp->left && _comp(key, tmp->left->pair.first))
                     tmp = tmp->left;
                 if (key == tmp->pair.first)
-                    _node =  NULL;
+                    cur =  NULL;
                 else if (_comp(key, tmp->pair.first))
-                    _node = tmp;
+                    cur = tmp;
                 else
-                    _node = NULL;
+                    cur = NULL;
             }
+            return cur;
+        }
+        Node* get_prev(Node* a) {
+            Node* cur = a;
+            if (cur->left != NULL) {
+                cur = cur->left;
+                // Find the rightmost node in the left subtree
+                while (cur->right != NULL)
+                    cur = cur->right;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node *tmp = cur->parent;
+                while (tmp && cur == tmp->left) {
+                    cur = tmp;
+                    tmp = tmp->parent;
+                }
+                cur = tmp;
+            }
+            return cur;
+        }
+        // Increment/decrement operators
+        biterator & operator++() {
+            if (_start == true) { // did a -- before and am on null currently, next value is save
+                _node = _save;
+                _start = false;
+                return *this;
+            }
+            if (_end == true) {
+                _node = NULL;
+                return *this;
+            }
+            Node* next = get_next(_node);
+            if (next == NULL) {
+                _save = _node;
+                _end = true;
+            }
+            _node = next;
             return *this;
         }
         //--------------------------------------------------------------------//
         biterator operator++(int) {
             biterator tmp(*this);
             operator++();
-            return (tmp);}
+            return (tmp);
+        }
         //--------------------------------------------------------------------//
         biterator & operator--() {
-            if (_node->left != NULL) {
-                _node = _node->left;
-                // Find the rightmost node in the left subtree
-                while (_node->right != NULL)
-                    _node = _node->right;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = _node->parent;
-                while (_node == tmp->left) {
-                    _node = tmp;
-                    tmp = tmp->parent;
-                }
-                _node = tmp;
+            if (_end == true) { // did a ++ before and am on null currently, next value is save
+                _node = _save;
+                _end = false;
+                return *this;
             }
-            return (*this);
+            if (_start == true) {
+                _node = NULL;
+                return *this;
+            }
+       
+            Node* next = get_prev(_node);
+                 
+            if (next == NULL) {
+                _save = _node;
+                _start = true;
+            }
+            _node = next;
+
+            return *this;
         }
         //--------------------------------------------------------------------//
         biterator operator--(int) {
+            
             biterator tmp(*this);
             operator--();
             return tmp;}
@@ -143,15 +189,20 @@ namespace ft {
 
         Node*                               _node;
         Compare                             _comp;
+        bool                _start;
+        bool                _end;
+        Node*               _save;
 
-        const_biterator(Compare comp = Compare()) :            _node(NULL), _comp(comp) {}
-        const_biterator(Node* n, Compare comp = Compare()) :   _node(n), _comp(comp) {}
-        const_biterator(const_biterator const& x) :            _node(x._node), _comp(x._comp) {}
+        const_biterator(Compare comp = Compare()) :             _node(NULL), _comp(comp), _start(false), _end(false) {}
+        const_biterator(Node* n, Compare comp = Compare()) :    _node(n), _comp(comp), _start(false), _end(false) {}
+        const_biterator(const_biterator const& x) : _node(x._node), _comp(x._comp), _start(x._start), _end(x._end), _save(x._save) {}
         const_biterator(biterator<K,T,Compare,Alloc> x) {
             _node = x._node;
             _comp = x._comp;
+            _start = false;
+            _end = false;
         }
-        ~const_biterator() {};
+        ~const_biterator() { };
         //--------------------------------------------------------------------//
         // Comparison operators
         bool operator==(const_biterator const & rhs) const { return (this->_node == rhs._node); }
@@ -161,24 +212,24 @@ namespace ft {
         reference operator*() const { return (this->_node->pair); }
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
-        // Increment/decrement operators
-        const_biterator & operator++() {
-            if (_node->right != NULL) {
-                _node = _node->right;
+        Node* get_next(Node* a) {
+            Node* cur = a;
+            if (cur->right != NULL) {
+                cur = cur->right;
                 // Find the leftmost node in the right subtree
-                while (_node->left != NULL)
-                    _node = _node->left;
+                while (cur->left != NULL)
+                    cur = cur->left;
             } else {
                 // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = _node;
+                Node *tmp = cur;
                 while (tmp->parent != NULL) 
                     tmp = tmp->parent;
-                K key = _node->pair.first;
+                K key = cur->pair.first;
                 while (tmp->left && _comp(key, tmp->left->pair.first)) 
                     tmp = tmp->left;
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
-                    _node = tmp;
-                    return *this;
+                    cur = tmp;
+                    return cur;
                 }
                 if (tmp->right)
                     tmp = tmp->right;
@@ -187,12 +238,49 @@ namespace ft {
                 while (tmp->left && _comp(key, tmp->left->pair.first))
                     tmp = tmp->left;
                 if (key == tmp->pair.first)
-                    _node =  NULL;
+                    cur =  NULL;
                 else if (_comp(key, tmp->pair.first))
-                    _node = tmp;
+                    cur = tmp;
                 else
-                    _node = NULL;
+                    cur = NULL;
             }
+            return cur;
+        }
+        Node* get_prev(Node* a) {
+            Node* cur = a;
+            if (cur->left != NULL) {
+                cur = cur->left;
+                // Find the rightmost node in the left subtree
+                while (cur->right != NULL)
+                    cur = cur->right;
+            } else {
+                // Go up the tree until we find a node whose left child we haven't visited yet
+                Node *tmp = cur->parent;
+                while (tmp && cur == tmp->left) {
+                    cur = tmp;
+                    tmp = tmp->parent;
+                }
+                cur = tmp;
+            }
+            return cur;
+        }
+        // Increment/decrement operators
+        const_biterator & operator++() {
+            if (_start == true) { // did a -- before and am on null currently, next value is save
+                _node = _save;
+                _start = false;
+                return *this;
+            }
+            if (_end == true) {
+                _node = NULL;
+                return *this;
+            }
+            Node* next = get_next(_node);
+            if (next == NULL) {
+                _save = _node;
+                _end = true;
+            }
+            _node = next;
             return *this;
         }
         //--------------------------------------------------------------------//
@@ -203,21 +291,23 @@ namespace ft {
         }
         //--------------------------------------------------------------------//
         const_biterator & operator--() {
-            if (_node->left != NULL) {
-                _node = _node->left;
-                // Find the rightmost node in the left subtree
-                while (_node->right != NULL)
-                    _node = _node->right;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = _node->parent;
-                while (_node == tmp->left) {
-                    _node = tmp;
-                    tmp = tmp->parent;
-                }
-                _node = tmp;
+           
+            if (_end == true) { // did a ++ before and am on null currently, next value is save
+                _node = _save;
+                _end = false;
+                return *this;
             }
-            return (*this);
+            if (_start == true) {
+                _node = NULL;
+                return *this;
+            }
+            Node* next = get_prev(_node);
+            if (next == NULL) {
+                _save = _node;
+                _start = true;
+            }
+            _node = next;
+            return *this;
         }
         //--------------------------------------------------------------------//
         const_biterator operator--(int) {
@@ -252,19 +342,7 @@ namespace ft {
         //====================================================================//
         AVL_tree(Compare comp = Compare()) :            _root(NULL), _size(0), _alloc(allocator_type()), _comp(comp) {}
         AVL_tree(Node &n, Compare comp = Compare()) :     _root(n), _size(0), _alloc(allocator_type()), _comp(comp) {}
-        ~AVL_tree() {clear(_root);}
-        //====================================================================//
-        // // Assignment operator
-        // AVL_tree& operator=(const AVL_tree& other) {
-        //     if (this != &other) {
-        //         clear(_root);  // clear current tree
-        //         _alloc = other._alloc;
-        //         _comp = other._comp;
-        //         _root = copy_node(other._root);  // copy the other tree
-        //         _size = other._size;
-        //     }
-        //     return *this;
-        // }
+        ~AVL_tree() {clear();}
         // //====================================================================//
         // // Helper function to recursively copy a node and its children
         // Node* copy_node(const Node* node) {
@@ -325,11 +403,9 @@ namespace ft {
                 new_root->parent->left = new_root;
             update_height(cur);
             update_height(new_root);
-
             // std::cout << "after" << std::endl;
             // std::cout << "(" << cur->pair.first << ")" << std::endl;
             // print_tree();
-
             return new_root;
         }
         //====================================================================//
@@ -361,9 +437,9 @@ namespace ft {
 
             return new_root;
         }
-        void print_tree() {print_tree(_root);}
-        void print_tree(Node* node, std::string indent = "", bool right = false) {
-             
+        //====================================================================//
+        void print_tree() const {print_tree(_root);}
+        void print_tree(Node* node, std::string indent = "", bool right = false) const {
             if (node != nullptr) {
                 std::cout << indent;
                 if (right)
@@ -380,8 +456,14 @@ namespace ft {
                 print_tree(node->left, indent, false);
                 print_tree(node->right, indent, true);
             }
-            // else
-            //     std::cout << "|                    empty                       |" << std::endl;
+        }
+        const_iterator begin() const {
+            Node* n = _root;
+            if (_root == NULL)
+                return (NULL);
+            while (n->left != NULL)
+                n = n->left;
+            return const_iterator(n);
         }
         //====================================================================//
         // Inserts a new node with the given value `val` into an AVL tree rooted at `node`
@@ -437,7 +519,31 @@ namespace ft {
                 cur->right = rotate_right(cur->right);
                 return rotate_left(cur);
             }
+            // print_tree();
             return cur;
+        }
+        //====================================================================//
+        void insert_real_node(Node* node) {
+            K key = node->pair.first;
+            Node* tmp = _root;
+            while (1) {
+                if (_comp(key, tmp->pair.first)) {
+                    if (tmp->left == NULL) {
+                        tmp->left = node;
+                        return;
+                    }
+                    tmp = tmp->left;
+                }
+                else {
+                    if (tmp->right == NULL) {
+                        tmp->right = node;
+                        return;
+                    }
+                    tmp = tmp->right;
+                }
+            }
+
+            return;
         }
         Node* insert(const value_type& new_node) {
             Node* x;
@@ -450,56 +556,88 @@ namespace ft {
                 insert_node(get_root(), new_node);
                 x = find_node(new_node.first);
             }
+            // print_tree();
             return x;
         }
         //====================================================================//
-        bool delete_node(Node* cur, iterator to_delete, Node* root) {
-            if (cur == NULL)
+        bool delete_node(iterator to_delete) {
+            if (!to_delete._node)
                 return false;
-            if (to_delete._node->pair.first < cur->pair.first)  // move to the left subtree
-                return (delete_node(cur->left, to_delete, root));
-            else if (to_delete._node->pair.first > cur->pair.first) // move to the right subtree
-                return (delete_node(cur->right, to_delete, root));
-            else { // found the node to delete
-                if (cur->left == nullptr || cur->right == nullptr) { // node has at most one child (or nothing)
-                    Node* child = cur->left != nullptr ? cur->left : cur->right;
-                    if (child != nullptr)
-                        child->parent = cur->parent;
-                    if (cur == root)
-                        root = child;
-                    else if (cur == cur->parent->left)
-                        cur->parent->left = child;
-                    else
-                        cur->parent->right = child;
-                    delete cur;
-                    return true;
+            Node *p = to_delete._node->parent; // if p == NULL that means it's the root
+            Node *l = to_delete._node->left;
+            Node *r = to_delete._node->right;
+            
+            if (!p) {
+                l->parent = NULL;
+                _root = l;
+                insert_real_node(r);
+            }
+            else {
+                if (p->left == to_delete._node) {
+                    p->left = NULL;
                 }
-                else { // node has two children
-                    Node* successor = cur->right;
-                    while (successor->left != NULL)
-                        successor = successor->left;
-                    cur->pair = successor->pair;
-                    return delete_node(cur->right, successor, root);
+                else {
+                    p->right = NULL;
                 }
+                insert_real_node(l);
+                insert_real_node(r);
             }
-            // re equilibrage
-            update_height(cur);
-            int balance = get_balance_factor(cur);
-            if (balance > 1 && get_balance_factor(cur->left) >= 0) { // left-left case
-                return rotate_right(cur);
-            }
-            if (balance > 1 && get_balance_factor(cur->left) < 0) { // left-right case
-                rotate_left(cur->left);
-                return rotate_right(cur);
-            }
-            if (balance < -1 && get_balance_factor(cur->right) <= 0) { // right-right case
-                return rotate_left(cur);
-            }
-            if (balance < -1 && get_balance_factor(cur->right) > 0) { // right-left case
-                rotate_right(cur->right);
-                return rotate_left(cur);
-            }
+            delete to_delete._node;
+            to_delete._node = NULL;
+            _size--;
             return true;
+            // if (cur == NULL || to_delete == NULL || to_delete._node == NULL)
+            //     return false;
+            // std::cout << "here" << std::endl;
+            // std::cout << to_delete._node->pair.first << std::endl;
+            // std::cout << cur->pair.first << std::endl;
+            // std::cout << "ici " << std::endl;
+            // if (to_delete._node->pair.first < cur->pair.first)  // move to the left subtree
+            //     return (delete_node(cur->left, to_delete, root));
+            // else if (to_delete._node->pair.first > cur->pair.first) // move to the right subtree
+            //     return (delete_node(cur->right, to_delete, root));
+            // else { // found the node to delete
+            //     if (cur->left == nullptr || cur->right == nullptr) { // node has at most one child (or nothing)
+            //         Node* child = cur->left != nullptr ? cur->left : cur->right;
+            //         if (child != nullptr)
+            //             child->parent = cur->parent;
+            //         if (cur == root)
+            //             root = child;
+            //         else if (cur == cur->parent->left)
+            //             cur->parent->left = child;
+            //         else
+            //             cur->parent->right = child;
+            //         delete cur;
+            //         cur = NULL;
+            //         _size--;
+            //         return true;
+            //     }
+            //     else { // node has two children
+            //         Node* successor = cur->right;
+            //         while (successor->left != NULL)
+            //             successor = successor->left;
+            //         cur->pair = successor->pair;
+            //         return delete_node(cur->right, successor, root);
+            //     }
+            // }
+            // // re equilibrage
+            // update_height(cur);
+            // int balance = get_balance_factor(cur);
+            // if (balance > 1 && get_balance_factor(cur->left) >= 0) { // left-left case
+            //     return rotate_right(cur);
+            // }
+            // if (balance > 1 && get_balance_factor(cur->left) < 0) { // left-right case
+            //     rotate_left(cur->left);
+            //     return rotate_right(cur);
+            // }
+            // if (balance < -1 && get_balance_factor(cur->right) <= 0) { // right-right case
+            //     return rotate_left(cur);
+            // }
+            // if (balance < -1 && get_balance_factor(cur->right) > 0) { // right-left case
+            //     rotate_right(cur->right);
+            //     return rotate_left(cur);
+            // }
+            // return true;
         }
         //====================================================================//
         Node* begin() {
@@ -511,14 +649,6 @@ namespace ft {
             return n;
         }
         //--------------------------------------------------------------------//
-        const_iterator begin() const {
-            Node* n = _root;
-            if (_root == NULL)
-                return NULL;
-            while (n->left != NULL)
-                n = n->left;
-            return const_iterator(n);
-        }
         //====================================================================//
         Node* end() {
             Node* n = _root;
@@ -592,15 +722,17 @@ namespace ft {
         }
         //====================================================================//
         void clear(Node* node) {
-                if (node != nullptr) {
-                    clear(node->left);
-                    clear(node->right);
-                    delete node;
-                }
+            if (node != NULL) {
+                clear(node->left);
+                clear(node->right);
+                delete node;
+                _size--;
+                node = NULL;
+            }
         }
         void clear() {
             clear(_root);
-            _root = nullptr;
+            _root = NULL;
         }
         //====================================================================//
         iterator find(const key_type& k) {
