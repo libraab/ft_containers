@@ -229,7 +229,6 @@ namespace ft {
                 
                 while ((tmp->left && _comp(key, tmp->left->pair.first))
                 || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
-
                     tmp = tmp->left;
                 }
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {

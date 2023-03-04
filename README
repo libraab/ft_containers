@@ -288,24 +288,4 @@ search and traversing doesn't affect it
 but inserting and deleting DOES ⛔️
 
 
-                while (1) {
-                        if (_comp(key, tmp->pair.first)) //
-                        tmp = tmp->left;
-                        else if (_comp(key, tmp->pair.first))
-                        tmp = tmp->right;
-                        else if (key == tmp->pair.first) { // back to my node
-                        if (tmp->right)
-                                tmp = tmp->right;
-                        else { // it's the end of the tree
-                                cur = NULL;
-                                return cur;    
-                        }
-                        }
-                        else { // if it's not less and not more and not itself -> it's the next node
-                        cur = tmp;
-                        return cur;
-                        }
-                }
-        } 
-        return cur;
             
