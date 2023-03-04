@@ -1,9 +1,9 @@
 
 
-// #include <map>
-// #  define TESTED_NAMESPACE std
-#  define TESTED_NAMESPACE ft
-# include "map.hpp"
+#include <map>
+#  define TESTED_NAMESPACE std
+// #  define TESTED_NAMESPACE ft
+// # include "map.hpp"
 
 
 # include <iostream>
@@ -99,11 +99,11 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	std::cout << "size: " << mp.size() << std::endl;
 	std::cout << "max_size: " << mp.max_size() << std::endl;
 
-	// mp.print_map();
 	if (print_content)
 	{
 		typename T_MAP::const_iterator it = mp.begin();
 		typename T_MAP::const_iterator ite = mp.end();
+		// mp.print_map();
 		
         // std::cout << "begin is " << mp.begin()->second << std::endl;
         // std::cout << "end is " << mp.end()->second << std::endl;
@@ -152,6 +152,7 @@ static int iter = 0;
 template <typename MAP, typename U>
 void	ft_erase(MAP &mp, U param)
 {
+	
 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
 	mp.erase(param);
 	printSize(mp);
@@ -163,7 +164,7 @@ void	ft_erase(MAP &mp, U param, V param2)
 	
 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
 	mp.erase(param, param2);
-	
+	// mp.print_map();
 	printSize(mp);
 }
 
@@ -175,12 +176,8 @@ int		main(void)
 		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 	printSize(mp);
-	std::cout << "---------------------" << std::endl;
-	std::cout << "---------------------" << std::endl;
 	ft_erase(mp, ++mp.begin());
 	ft_erase(mp, mp.begin());
-	std::cout << "---------------------" << std::endl;
-	std::cout << "---------------------" << std::endl;
 	ft_erase(mp, --mp.end());
 
 	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));

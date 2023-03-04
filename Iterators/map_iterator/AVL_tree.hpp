@@ -213,6 +213,7 @@ namespace ft {
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
         Node* get_next(Node* a) {
+            
             Node* cur = a;
             if (cur->right != NULL) {
                 cur = cur->right;
@@ -220,16 +221,17 @@ namespace ft {
                 while (cur->left != NULL)
                     cur = cur->left;
             } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = cur;
-                while (tmp->parent != NULL) {
-                    // std::cout << "tmp is (" << tmp->pair.first << ")" << std::endl;
-                    tmp = tmp->parent;
-                }
-                // std::cout << "--" << a->pair.first << std::endl;
                 K key = cur->pair.first;
-                while (tmp->left && _comp(key, tmp->left->pair.first)) 
+                Node *tmp = cur;
+                while (tmp->parent != NULL) // going up to the root
+                    tmp = tmp->parent;
+                // std::cout << "--" << a->pair.first << std::endl;
+                
+                while ((tmp->left && _comp(key, tmp->left->pair.first))
+                || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
+
                     tmp = tmp->left;
+                }
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
                     cur = tmp;
                     return cur;
@@ -594,6 +596,8 @@ namespace ft {
         }
         //====================================================================//
         bool delete_node(iterator to_delete) {
+            // std::cout << "about to delete -> " << to_delete._node->pair.first << std::endl;
+            // print_tree();
             if (!to_delete._node || _size == 0)
                 return false;
             
@@ -640,7 +644,8 @@ namespace ft {
             delete to_delete._node;
             to_delete._node = NULL;
             _size--;
-
+            // std::cout << "element is deleted " << std::endl;
+            // print_tree();
             return true;
         }
         //====================================================================//
