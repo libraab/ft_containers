@@ -102,10 +102,9 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	// mp.print_map();
 	if (print_content)
 	{
-		
 		typename T_MAP::const_iterator it = mp.begin();
-		// std::cout << "here" << std::endl;
 		typename T_MAP::const_iterator ite = mp.end();
+		
         // std::cout << "begin is " << mp.begin()->second << std::endl;
         // std::cout << "end is " << mp.end()->second << std::endl;
 		std::cout << std::endl << "Content is:" << std::endl;
@@ -153,7 +152,6 @@ static int iter = 0;
 template <typename MAP, typename U>
 void	ft_erase(MAP &mp, U param)
 {
-	
 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
 	mp.erase(param);
 	printSize(mp);
@@ -177,28 +175,26 @@ int		main(void)
 		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 	printSize(mp);
-
+	std::cout << "---------------------" << std::endl;
+	std::cout << "---------------------" << std::endl;
 	ft_erase(mp, ++mp.begin());
-
 	ft_erase(mp, mp.begin());
+	std::cout << "---------------------" << std::endl;
+	std::cout << "---------------------" << std::endl;
 	ft_erase(mp, --mp.end());
 
 	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
-	ft::map<T1, T2>::iterator x = mp.end();
-	// std::cout << mp.size() << std::endl;
 	ft_erase(mp, --(--(--mp.end())), --mp.end());
 
 	mp[10] = "Hello";
 	mp[11] = "Hi there";
 	printSize(mp);
-	
 	ft_erase(mp, --(--(--mp.end())), mp.end());
 
 	mp[12] = "ONE";
 	mp[13] = "TWO";
 	mp[14] = "THREE";
 	mp[15] = "FOUR";
-
 	printSize(mp);
 	ft_erase(mp, mp.begin(), mp.end());
 

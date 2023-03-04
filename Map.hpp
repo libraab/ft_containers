@@ -65,9 +65,9 @@ namespace ft
                 _alloc = alloc;
 				for (; first != last; first++)
 					this->insert(*first);
-                std::cout << std::endl << "in constructor" << std::endl;
-                print_map();
-                std::cout << std::endl;
+                // std::cout << std::endl << "in constructor" << std::endl;
+                // print_map();
+                // std::cout << std::endl;
             }
             //copy (1)
             map (const map& cpy) {*this = cpy;}
@@ -120,12 +120,14 @@ namespace ft
             //------------------------------------------------------------------
             iterator end()                  {
                 iterator x = _tree.end();
-                x++;
+                if (x != NULL)
+                    x++;
                 return x;
             }
             const_iterator end() const      {
                 const_iterator x = _tree.end();
-                x++;
+                if (x != NULL)
+                    x++;
                 return x;
             }
             //------------------------------------------------------------------
@@ -184,7 +186,6 @@ namespace ft
             size_type erase (const key_type& k)         {return (_tree.delete_node(_tree.find(k)));}
             void erase (iterator first, iterator last)  {
                 iterator tmp = first;
-                    
                 while (first != last) {
 				    tmp = first;
                     tmp++;

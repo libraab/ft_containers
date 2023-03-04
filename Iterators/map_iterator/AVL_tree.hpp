@@ -222,8 +222,11 @@ namespace ft {
             } else {
                 // Go up the tree until we find a node whose left child we haven't visited yet
                 Node *tmp = cur;
-                while (tmp->parent != NULL) 
+                while (tmp->parent != NULL) {
+                    // std::cout << "tmp is (" << tmp->pair.first << ")" << std::endl;
                     tmp = tmp->parent;
+                }
+                // std::cout << "--" << a->pair.first << std::endl;
                 K key = cur->pair.first;
                 while (tmp->left && _comp(key, tmp->left->pair.first)) 
                     tmp = tmp->left;
@@ -524,12 +527,15 @@ namespace ft {
         }
         //====================================================================//
         void insert_real_node(Node* node) {
+            if (node == NULL)
+                return;
             K key = node->pair.first;
             Node* tmp = _root;
             while (1) {
                 if (_comp(key, tmp->pair.first)) {
                     if (tmp->left == NULL) {
                         tmp->left = node;
+                        tmp->left->parent = tmp; 
                         return;
                     }
                     tmp = tmp->left;
@@ -537,14 +543,16 @@ namespace ft {
                 else {
                     if (tmp->right == NULL) {
                         tmp->right = node;
+                        tmp->right->parent = tmp;
                         return;
                     }
                     tmp = tmp->right;
                 }
             }
-
+            equilibrium(node);
             return;
         }
+        //====================================================================//
         Node* insert(const value_type& new_node) {
             Node* x;
             if (get_root() == NULL) { // no existing tree 
@@ -560,84 +568,80 @@ namespace ft {
             return x;
         }
         //====================================================================//
+        void equilibrium(Node* cur) {
+            while (cur) {
+                update_height(cur);
+                int balance = get_balance_factor(cur);
+                if (balance > 1 && get_balance_factor(cur->left) >= 0) { // left-left case
+                    rotate_right(cur);
+                }
+                else if (balance > 1 && get_balance_factor(cur->left) < 0) { // left-right case
+                    rotate_left(cur->left);
+                    rotate_right(cur);
+                }
+                else if (balance < -1 && get_balance_factor(cur->right) <= 0) { // right-right case
+                    rotate_left(cur);
+                }
+                else if (balance < -1 && get_balance_factor(cur->right) > 0) { // right-left case
+                    rotate_right(cur->right);
+                    rotate_left(cur);
+                }
+                cur = cur->parent; // to go up 
+            }
+            // When you delete a node from an AVL tree,
+            // you must balance the tree starting from the parent of the deleted node
+            //and work your way up the tree until you reach the root. 
+        }
+        //====================================================================//
         bool delete_node(iterator to_delete) {
-            if (!to_delete._node)
+            if (!to_delete._node || _size == 0)
                 return false;
+            
+            // std::cout << "root is " << _root->pair.first << _root->pair.second << std::endl;
+            // std::cout << "to delete is " << to_delete._node->pair.first << to_delete._node->pair.second << std::endl;
+            // print_tree();
             Node *p = to_delete._node->parent; // if p == NULL that means it's the root
             Node *l = to_delete._node->left;
             Node *r = to_delete._node->right;
-            
-            if (!p) {
-                l->parent = NULL;
-                _root = l;
-                insert_real_node(r);
-            }
-            else {
-                if (p->left == to_delete._node) {
+            // case 1 : delete root
+            if (!p || to_delete._node == _root) { // it has no parent -> it's the root
+                if (!r && !l) { // case 1a : root has no children
+                    _root = NULL;
+                }
+                else if (r && l) { // case 1b : root has 2 children
+                    l->parent = NULL; 
+                    _root = l; // left becomes root
+                    insert_real_node(r);
+                    equilibrium(_root);
+                }
+                else { // case 1c : root has just one child
+                    if (l) {
+                        l->parent = NULL;
+                        _root = l; // left becomes root
+                    }
+                    else {
+                        r->parent = NULL;
+                        _root = r; // right becomes root
+                    }
+                }
+            } // case 2 : node is not root so it has parent
+            else { // need to know if he's left or right
+                if (to_delete._node == p->left)
                     p->left = NULL;
-                }
-                else {
+                else
                     p->right = NULL;
-                }
-                insert_real_node(l);
-                insert_real_node(r);
+                if (l)
+                    insert_real_node(l);
+                if (r)
+                    insert_real_node(r);
+                equilibrium(p);
+
             }
             delete to_delete._node;
             to_delete._node = NULL;
             _size--;
+
             return true;
-            // if (cur == NULL || to_delete == NULL || to_delete._node == NULL)
-            //     return false;
-            // std::cout << "here" << std::endl;
-            // std::cout << to_delete._node->pair.first << std::endl;
-            // std::cout << cur->pair.first << std::endl;
-            // std::cout << "ici " << std::endl;
-            // if (to_delete._node->pair.first < cur->pair.first)  // move to the left subtree
-            //     return (delete_node(cur->left, to_delete, root));
-            // else if (to_delete._node->pair.first > cur->pair.first) // move to the right subtree
-            //     return (delete_node(cur->right, to_delete, root));
-            // else { // found the node to delete
-            //     if (cur->left == nullptr || cur->right == nullptr) { // node has at most one child (or nothing)
-            //         Node* child = cur->left != nullptr ? cur->left : cur->right;
-            //         if (child != nullptr)
-            //             child->parent = cur->parent;
-            //         if (cur == root)
-            //             root = child;
-            //         else if (cur == cur->parent->left)
-            //             cur->parent->left = child;
-            //         else
-            //             cur->parent->right = child;
-            //         delete cur;
-            //         cur = NULL;
-            //         _size--;
-            //         return true;
-            //     }
-            //     else { // node has two children
-            //         Node* successor = cur->right;
-            //         while (successor->left != NULL)
-            //             successor = successor->left;
-            //         cur->pair = successor->pair;
-            //         return delete_node(cur->right, successor, root);
-            //     }
-            // }
-            // // re equilibrage
-            // update_height(cur);
-            // int balance = get_balance_factor(cur);
-            // if (balance > 1 && get_balance_factor(cur->left) >= 0) { // left-left case
-            //     return rotate_right(cur);
-            // }
-            // if (balance > 1 && get_balance_factor(cur->left) < 0) { // left-right case
-            //     rotate_left(cur->left);
-            //     return rotate_right(cur);
-            // }
-            // if (balance < -1 && get_balance_factor(cur->right) <= 0) { // right-right case
-            //     return rotate_left(cur);
-            // }
-            // if (balance < -1 && get_balance_factor(cur->right) > 0) { // right-left case
-            //     rotate_right(cur->right);
-            //     return rotate_left(cur);
-            // }
-            // return true;
         }
         //====================================================================//
         Node* begin() {

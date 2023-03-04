@@ -288,7 +288,3 @@ search and traversing doesn't affect it
 but inserting and deleting DOES ⛔️
 
 
-const ft::AVL_tree<int, std::string, std::less<int>, std::allocator<ft::pair<int, std::string> > >::value_type
-ft::AVL_tree<int, std::string, std::less<int>, std::allocator<ft::pair<int, std::string> > >::Node *
-const pair<int, std::string>
-Node<pair<int, std::string> > *
