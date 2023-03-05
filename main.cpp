@@ -1,9 +1,9 @@
 
 
-#include <map>
-#  define TESTED_NAMESPACE std
-// #  define TESTED_NAMESPACE ft
-// # include "map.hpp"
+// #include <map>
+// #  define TESTED_NAMESPACE std
+#  define TESTED_NAMESPACE ft
+# include "map.hpp"
 
 
 # include <iostream>
@@ -105,8 +105,6 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 		typename T_MAP::const_iterator it = mp.begin();
 		typename T_MAP::const_iterator ite = mp.end();
 		// mp.print_map();
-        // std::cout << "begin is " << mp.begin()->second << std::endl;
-        // std::cout << "end is " << mp.end()->second << std::endl;
 		std::cout << std::endl << "Content is:" << std::endl;
 		for (; it != ite; ++it) {
 			//sleep (1);
@@ -143,58 +141,62 @@ void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 
 //---------------------------------------------------------------------------//
 // main //
+#include <list>
+
 #define T1 int
 #define T2 std::string
+typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
 
-TESTED_NAMESPACE::map<T1, T2> mp;
-TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.end();
+static int iter = 0;
 
-void	ft_find(T1 const &k)
+template <typename MAP, typename U>
+void	ft_insert(MAP &mp, U param, U param2)
 {
-	TESTED_NAMESPACE::map<T1, T2>::iterator ret = mp.find(k);
-
-	if (ret != it)
-		printPair(ret);
-	else
-		std::cout << "map::find(" << k << ") returned end()" << std::endl;
-}
-
-void	ft_count(T1 const &k)
-{
-	std::cout << "map::count(" << k << ")\treturned [" << mp.count(k) << "]" << std::endl;
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	mp.insert(param, param2);
+	
+	printSize(mp);
 }
 
 int		main(void)
 {
-	mp[42] = "fgzgxfn";
-	mp[25] = "funny";
-	mp[80] = "hey";
-	mp[12] = "no";
-	mp[27] = "bee";
-	mp[90] = "8";
-	printSize(mp);
+	std::list<T3> lst;
+	std::list<T3>::iterator itlst;
 
-	std::cout << "\t-- FIND --" << std::endl;
-	ft_find(12);
-	ft_find(3);
-	ft_find(35);
-	ft_find(90);
-	ft_find(100);
+	lst.push_back(T3(42, "lol"));
 
-	std::cout << "\t-- COUNT --" << std::endl;
-	ft_count(-3);
-	ft_count(12);
-	ft_count(3);
-	ft_count(35);
-	ft_count(90);
-	ft_count(100);
+	lst.push_back(T3(50, "mdr"));
+	lst.push_back(T3(35, "funny"));
 
-	mp.find(27)->second = "newly inserted mapped_value";
+	lst.push_back(T3(45, "bunny"));
+	lst.push_back(T3(21, "fizz"));
+	lst.push_back(T3(38, "buzz"));
+	lst.push_back(T3(55, "fuzzy"));
 
-	printSize(mp);
+	std::cout << "List contains:" << std::endl;
+	for (itlst = lst.begin(); itlst != lst.end(); ++itlst)
+		printPair(itlst);
 
-	TESTED_NAMESPACE::map<T1, T2> const c_map(mp.begin(), mp.end());
-	std::cout << "const map.find(" << 42 << ")->second: [" << c_map.find(42)->second << "]" << std::endl;
-	std::cout << "const map.count(" << 80 << "): [" << c_map.count(80) << "]" << std::endl;
+	TESTED_NAMESPACE::map<T1, T2> mp;
+	ft_insert(mp, lst.begin(), lst.end());
+
+	lst.clear();
+
+	lst.push_back(T3(87, "hey"));
+	lst.push_back(T3(47, "eqweqweq"));
+	lst.push_back(T3(35, "this key is already inside"));
+	lst.push_back(T3(23, "but not that one"));
+	lst.push_back(T3(1, "surprising isnt it?"));
+	lst.push_back(T3(100, "is it enough??"));
+	lst.push_back(T3(55, "inside map too"));
+
+	std::cout << "List contains:" << std::endl;
+	for (itlst = lst.begin(); itlst != lst.end(); ++itlst)
+		printPair(itlst);
+
+	ft_insert(mp, lst.begin(), lst.begin());
+	ft_insert(mp, lst.begin(), lst.end());
+	
+
 	return (0);
 }
