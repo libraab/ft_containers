@@ -778,7 +778,7 @@ namespace ft {
                 else
                     curr = curr->right;
             }
-            return this->end();
+            return iterator(NULL);
         }
         //====================================================================//
         const_iterator find(const key_type& k) const {
