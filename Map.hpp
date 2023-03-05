@@ -123,8 +123,9 @@ namespace ft
             }
             const_iterator end() const      {
                 const_iterator x = _tree.end();
-                if (x != NULL)
+                if (x != NULL) {
                     x++;
+                }
                 return x;
             }
             //------------------------------------------------------------------

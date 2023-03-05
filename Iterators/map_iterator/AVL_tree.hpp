@@ -152,20 +152,16 @@ namespace ft {
                 _node = NULL;
                 return *this;
             }
-       
             Node* next = get_prev(_node);
-                 
             if (next == NULL) {
                 _save = _node;
                 _start = true;
             }
             _node = next;
-
             return *this;
         }
         //--------------------------------------------------------------------//
         biterator operator--(int) {
-            
             biterator tmp(*this);
             operator--();
             return tmp;}
@@ -196,11 +192,11 @@ namespace ft {
         const_biterator(Compare comp = Compare()) :             _node(NULL), _comp(comp), _start(false), _end(false) {}
         const_biterator(Node* n, Compare comp = Compare()) :    _node(n), _comp(comp), _start(false), _end(false) {}
         const_biterator(const_biterator const& x) {
-         _node = x._node;
-         _comp = x._comp;
-         _start = x._start;
-         _end = x._end;
-         _save = x._save;
+            _node = x._node;
+            _comp = x._comp;
+            _start = x._start;
+            _end = x._end;
+            _save = x._save;
         }
         const_biterator(biterator<K,T,Compare,Alloc> x) {
             _node = x._node;
@@ -220,7 +216,6 @@ namespace ft {
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
         Node* get_next(Node* a) {
-            
             Node* cur = a;
             if (cur->right != NULL) {
                 cur = cur->right;
@@ -232,8 +227,6 @@ namespace ft {
                 Node *tmp = cur;
                 while (tmp->parent != NULL) // going up to the root
                     tmp = tmp->parent;
-                
-                
                 while ((tmp->left && _comp(key, tmp->left->pair.first))
                 || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
                     tmp = tmp->left;
@@ -245,6 +238,8 @@ namespace ft {
                 if (tmp->right)
                     tmp = tmp->right;
                 while (tmp->right && _comp(tmp->right->pair.first, key))
+                    tmp = tmp->right;
+                if (_comp(tmp->pair.first, key) && _comp(key, tmp->right->pair.first) && _comp(tmp->left->pair.first, key))
                     tmp = tmp->right;
                 while (tmp->left && _comp(key, tmp->left->pair.first))
                     tmp = tmp->left;
@@ -697,6 +692,7 @@ namespace ft {
                 return NULL;
             while (n->right != NULL)
                 n = n->right;
+            
             return const_iterator(n);
         }
         //====================================================================//
