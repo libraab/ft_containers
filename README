@@ -38,53 +38,6 @@ However, we can emulate a vector-like functionality by
 - & other common vector operations and stuff
 
 //==============================================================================
-Basic implementation of vector class in C++98
-
-class Vector {
-        public:
-        //---------------------------------------------
-        Vector() : _size(0), _capacity(8), _data(new int[_capacity] { }
-        //---------------------------------------------
-        ~Vector() {delete[] _data;}
-        //---------------------------------------------
-        void push_back(int value) {
-                if (_size == _capacity)
-                        resize();
-                _data[_size++] = value;
-        }
-        //---------------------------------------------
-        void pop_back() {
-                if (_size > 0)
-                        _size--;
-        }
-        //---------------------------------------------
-        int& operator[](int index) {return _data[index];}
-        //---------------------------------------------
-        int at(int index) {
-                if (index < 0 || index >= _size)
-                        throw "Index out of range";
-                return _data[index];
-        }
-        //---------------------------------------------
-        int getSize() {return _size;}
-        //---------------------------------------------
-        int getCapacity() {return _capacity;}
-        //---------------------------------------------
-        private:
-                int*    _data;
-                int     _size;
-                int     _capacity;
-                //---------------------------------------------
-                void resize() {
-                        _capacity *= 2;
-                        int* newData = new int[_capacity];
-                        for (int i = 0; i < _size; i++)
-                                newData[i] = _data[i];
-                        delete[] _data;
-                        _data = newData;
-                }
-};
-//==============================================================================
 This Vector class has basic functionality like :
 
 push_back()
