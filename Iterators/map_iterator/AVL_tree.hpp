@@ -227,10 +227,14 @@ namespace ft {
                 Node *tmp = cur;
                 while (tmp->parent != NULL) // going up to the root
                     tmp = tmp->parent;
+                
+                    // std::cout << "key is " << key << std::endl;
+                    // std::cout << "tmp is " << tmp->pair.first << std::endl;
                 while ((tmp->left && _comp(key, tmp->left->pair.first))
                 || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
                     tmp = tmp->left;
                 }
+                    // std::cout << "tmp after is " << tmp->pair.first << std::endl;
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
                     cur = tmp;
                     return cur;
@@ -239,8 +243,8 @@ namespace ft {
                     tmp = tmp->right;
                 while (tmp->right && _comp(tmp->right->pair.first, key))
                     tmp = tmp->right;
-                if (_comp(tmp->pair.first, key) && _comp(key, tmp->right->pair.first) && _comp(tmp->left->pair.first, key))
-                    tmp = tmp->right;
+                // if (_comp(tmp->pair.first, key) && _comp(key, tmp->right->pair.first) && _comp(tmp->left->pair.first, key))
+                //     tmp = tmp->right;
                 while (tmp->left && _comp(key, tmp->left->pair.first))
                     tmp = tmp->left;
                 if (key == tmp->pair.first)
@@ -250,6 +254,12 @@ namespace ft {
                 else
                     cur = NULL;
             }
+            // std::cout << "node is " << a->pair.first << std::endl;
+            // if (cur->pair.first)
+            //     std::cout << "returned value is " << cur->pair.first << std::endl;
+            // else 
+            //     std::cout << "null value " << std::endl;
+
             return cur;
         }
         Node* get_prev(Node* a) {
@@ -569,7 +579,8 @@ namespace ft {
                     tmp = tmp->right;
                 }
             }
-            equilibrium(node);
+            if (node->parent)
+                equilibrium(node->parent);
             return;
         }
         //====================================================================//
