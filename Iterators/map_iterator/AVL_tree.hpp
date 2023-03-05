@@ -64,40 +64,72 @@ namespace ft {
         reference operator*() const { return (this->_node->pair); }
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
-        Node* get_next(Node* a) {
-            Node* cur = a;
-            if (cur->right != NULL) {
-                cur = cur->right;
-                // Find the leftmost node in the right subtree
-                while (cur->left != NULL)
-                    cur = cur->left;
-            } else {
-                // Go up the tree until we find a node whose left child we haven't visited yet
-                Node *tmp = cur;
-                while (tmp->parent != NULL) 
-                    tmp = tmp->parent;
-                K key = cur->pair.first;
-                while (tmp->left && _comp(key, tmp->left->pair.first)) 
-                    tmp = tmp->left;
-                if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
-                    cur = tmp;
-                    return cur;
-                }
-                if (tmp->right)
-                    tmp = tmp->right;
-                while (tmp->right && _comp(tmp->right->pair.first, key))
-                    tmp = tmp->right;
-                while (tmp->left && _comp(key, tmp->left->pair.first))
-                    tmp = tmp->left;
-                if (key == tmp->pair.first)
-                    cur =  NULL;
-                else if (_comp(key, tmp->pair.first))
-                    cur = tmp;
-                else
-                    cur = NULL;
+        // Node* get_next(Node* a) {
+        //     Node* cur = a;
+        //     if (cur->right != NULL) {
+        //         cur = cur->right;
+        //         // Find the leftmost node in the right subtree
+        //         while (cur->left != NULL)
+        //             cur = cur->left;
+        //     } else {
+        //         // Go up the tree until we find a node whose left child we haven't visited yet
+        //         Node *tmp = cur;
+        //         while (tmp->parent != NULL) 
+        //             tmp = tmp->parent;
+        //         K key = cur->pair.first;
+        //         while (tmp->left && _comp(key, tmp->left->pair.first)) 
+        //             tmp = tmp->left;
+        //         if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
+        //             cur = tmp;
+        //             return cur;
+        //         }
+        //         if (tmp->right)
+        //             tmp = tmp->right;
+        //         while (tmp->right && _comp(tmp->right->pair.first, key))
+        //             tmp = tmp->right;
+        //         while (tmp->left && _comp(key, tmp->left->pair.first))
+        //             tmp = tmp->left;
+        //         if (key == tmp->pair.first)
+        //             cur =  NULL;
+        //         else if (_comp(key, tmp->pair.first))
+        //             cur = tmp;
+        //         else
+        //             cur = NULL;
+        //     }
+        //     return cur;
+        // }
+        Node* next(Node *begin, Node* search) {
+            if (begin == NULL)
+                return NULL;
+            // std::cout << "ENTRER: " << i << std::endl;
+            Node* tmp = NULL;
+            if (_comp(search->pair.first, begin->pair.first)) {
+                tmp = begin;
             }
-            return cur;
+            // std::cout << "WESH" << std::endl;
+            Node* left = next(begin->left, search);
+            Node* right = next(begin->right, search);
+            // std::cout << "WESH2" << std::endl;
+            if (left && _comp(search->pair.first, left->pair.first)) {
+                if ((tmp && _comp(left->pair.first, tmp->pair.first)) || tmp == NULL) {
+                    tmp = left;
+                }
+            }
+            if (right && _comp(search->pair.first, right->pair.first)) {
+                if ((tmp && _comp(right->pair.first, tmp->pair.first)) || tmp == NULL) {
+                    tmp = right;
+                }
+            }
+            return (tmp);
         }
+
+        Node* get_next(Node* a) {
+            Node* tmp = a;
+            while (tmp->parent != NULL)
+                tmp = tmp->parent;
+            return next(tmp, a);
+        }
+
         Node* get_prev(Node* a) {
             Node* cur = a;
             if (cur && cur->left != NULL) {
@@ -165,10 +197,6 @@ namespace ft {
             biterator tmp(*this);
             operator--();
             return tmp;}
-        //--------------------------------------------------------------------//
-        void testos() {
-            std::cout << _node->pair.first << std::endl;
-            std::cout << _node->pair.second << std::endl;}
     };
 //==========================================================================//
 //                      C O N S T                                           //
@@ -215,53 +243,38 @@ namespace ft {
         reference operator*() const { return (this->_node->pair); }
         pointer operator->() const { return &(this->_node->pair); }
         //--------------------------------------------------------------------//
-        Node* get_next(Node* a) {
-            Node* cur = a;
-            if (cur->right != NULL) {
-                cur = cur->right;
-                // Find the leftmost node in the right subtree
-                while (cur->left != NULL)
-                    cur = cur->left;
-            } else {
-                K key = cur->pair.first;
-                Node *tmp = cur;
-                while (tmp->parent != NULL) // going up to the root
-                    tmp = tmp->parent;
-                
-                    // std::cout << "key is " << key << std::endl;
-                    // std::cout << "tmp is " << tmp->pair.first << std::endl;
-                while ((tmp->left && _comp(key, tmp->left->pair.first))
-                || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
-                    tmp = tmp->left;
-                }
-                    // std::cout << "tmp after is " << tmp->pair.first << std::endl;
-                if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
-                    cur = tmp;
-                    return cur;
-                }
-                if (tmp->right)
-                    tmp = tmp->right;
-                while (tmp->right && _comp(tmp->right->pair.first, key))
-                    tmp = tmp->right;
-                // if (_comp(tmp->pair.first, key) && _comp(key, tmp->right->pair.first) && _comp(tmp->left->pair.first, key))
-                //     tmp = tmp->right;
-                while (tmp->left && _comp(key, tmp->left->pair.first))
-                    tmp = tmp->left;
-                if (key == tmp->pair.first)
-                    cur =  NULL;
-                else if (_comp(key, tmp->pair.first))
-                    cur = tmp;
-                else
-                    cur = NULL;
+        Node* next(Node *begin, Node* search) {
+            if (begin == NULL)
+                return NULL;
+            // std::cout << "ENTRER: " << i << std::endl;
+            Node* tmp = NULL;
+            if (_comp(search->pair.first, begin->pair.first)) {
+                tmp = begin;
             }
-            // std::cout << "node is " << a->pair.first << std::endl;
-            // if (cur->pair.first)
-            //     std::cout << "returned value is " << cur->pair.first << std::endl;
-            // else 
-            //     std::cout << "null value " << std::endl;
-
-            return cur;
+            // std::cout << "WESH" << std::endl;
+            Node* left = next(begin->left, search);
+            Node* right = next(begin->right, search);
+            // std::cout << "WESH2" << std::endl;
+            if (left && _comp(search->pair.first, left->pair.first)) {
+                if ((tmp && _comp(left->pair.first, tmp->pair.first)) || tmp == NULL) {
+                    tmp = left;
+                }
+            }
+            if (right && _comp(search->pair.first, right->pair.first)) {
+                if ((tmp && _comp(right->pair.first, tmp->pair.first)) || tmp == NULL) {
+                    tmp = right;
+                }
+            }
+            return (tmp);
         }
+
+        Node* get_next(Node* a) {
+            Node* tmp = a;
+            while (tmp->parent != NULL)
+                tmp = tmp->parent;
+            return next(tmp, a);
+        }
+
         Node* get_prev(Node* a) {
             // std::cout << "start get prev" << std::endl;
             Node* cur = a;
