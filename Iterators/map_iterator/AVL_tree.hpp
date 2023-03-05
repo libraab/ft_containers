@@ -236,7 +236,6 @@ namespace ft {
                 
                 while ((tmp->left && _comp(key, tmp->left->pair.first))
                 || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
-                    std::cout << "here " << std::endl;
                     tmp = tmp->left;
                 }
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
@@ -503,9 +502,9 @@ namespace ft {
                 _size++;
                 return (x); // return this node (recursively)
             }
-            // std::cout << "adding " << new_node.first <<" to existant tree" << std::endl;
             // Insert the new node in the left or right subtree depending on its value
-            if (new_node.first < cur->pair.first) {
+
+            if (_comp(new_node.first, cur->pair.first)) {
                 // std::cout << "(" << new_node.first << ")" << "is less than" << "(" << cur->pair.first << ")" << std::endl;
                 // std::cout << "going left" << std::endl;
                 cur->left = insert_node(cur->left, new_node);
@@ -523,26 +522,26 @@ namespace ft {
             // std::cout << "balance now --->(" << cur->pair.first << ") " << balance_factor << std::endl;
 
             // if the balance is more than 1 => left heavy => rotate right
-            if (balance_factor > 1 && cur->pair.first < cur->left->pair.first) {
+            if (balance_factor > 1 && (_comp(cur->pair.first, cur->left->pair.first))) {
                 // std::cout << "left heavy" << std::endl;
                 // std::cout << "(" << cur->pair.first << ")" << "is less than" << "(" << cur->left->pair.second << ")" << std::endl;
                 return rotate_right(cur);
             }
             // If the new node is in the right subtree of the left child of the current node, perform a left-right double rotation
-            if (balance_factor > 1 && cur->pair.first > cur->left->pair.first) {
+            if (balance_factor > 1 && (_comp(cur->pair.first, cur->left->pair.first))) {
                 // std::cout << "left heavy" << std::endl;
                 // std::cout << "(" << cur->pair.first << ")" << "is more than" << "(" << cur->left->pair.first << ")" << std::endl;
                 cur->left = rotate_left(cur->left);
                 return rotate_right(cur);
             }
             // if the balance is more than 1 => right heavy => rotate left
-            if (balance_factor < -1 && cur->pair.first < cur->right->pair.first) {
+            if (balance_factor < -1 && (_comp(cur->pair.first, cur->right->pair.first))) {
                 // std::cout << "right heavy" << std::endl;
                 // std::cout << "(" << cur->pair.first << ")" << "is less than" << "(" << cur->right->pair.first << ")" << std::endl;
                 return rotate_left(cur);
             }
             // If the new node is in the left subtree of the right child of the current node, perform a right-left double rotation
-            if (balance_factor < -1 && cur->pair.first > cur->right->pair.first ) {
+            if (balance_factor < -1 && (_comp(cur->pair.first, cur->right->pair.first))) {
                 // std::cout << "right heavy" << std::endl;
                 // std::cout << "(" << cur->pair.first << ")" << "is more than" << "(" << cur->right->pair.first << ")" << std::endl;
                 cur->right = rotate_right(cur->right);
@@ -732,7 +731,7 @@ namespace ft {
                 return false; // no doublon
             if (curr->pair.first == node.first)
                 return true; // Key doublon ⛔️ 
-            if (node.first < curr->pair.first)
+            if (_comp(node.first, curr->pair.first))
                 return contains_key(curr->left, node);
             else 
                 return contains_key(curr->right, node);
@@ -774,7 +773,7 @@ namespace ft {
             while (curr != nullptr) {
                 if (k == curr->pair.first)
                     return iterator(curr);
-                else if (k < curr->pair.first)
+                else if (_comp(k, curr->pair.first))
                     curr = curr->left;
                 else
                     curr = curr->right;
@@ -788,7 +787,7 @@ namespace ft {
             while (curr != nullptr) {
                 if (k == curr->pair.first)
                     return (ft::Node<ft::pair<K, T> > *)curr;
-                else if (k < curr->pair.first)
+                else if (_comp(k, curr->pair.first))
                     curr = curr->left;
                 else
                     curr = curr->right;
@@ -799,9 +798,9 @@ namespace ft {
         Node* find_node(const key_type& k) const {
             Node* current = _root;
             while (current != nullptr) {
-                if (k < current->pair.first)
+                if (_comp(k, current->pair.first))
                     current = current->left;
-                else if (k > current->pair.first)
+                else if (_comp(current->pair.first, k))
                     current = current->right;
                 else
                     return current;
@@ -814,7 +813,7 @@ namespace ft {
             Node* lower = nullptr;
 
             while (current) {
-                if (current->pair.first < k)
+                if (_comp(current->pair.first, k))
                     current = current->right;
                 else {
                     lower = current;
@@ -874,12 +873,12 @@ namespace ft {
             Node* upper = nullptr;
 
             while (current) {
-                if (current->pair.first <= k)
-                    current = current->right;
-                else {
+                if (_comp(k, current->pair.first)) {
                     upper = current;
                     current = current->left;
                 }
+                else
+                    current = current->right;
             }
             if (!upper) {
                 const_iterator x = end();
