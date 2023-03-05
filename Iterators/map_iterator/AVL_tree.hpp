@@ -232,10 +232,11 @@ namespace ft {
                 Node *tmp = cur;
                 while (tmp->parent != NULL) // going up to the root
                     tmp = tmp->parent;
-                // std::cout << "--" << a->pair.first << std::endl;
+                
                 
                 while ((tmp->left && _comp(key, tmp->left->pair.first))
                 || (tmp->left && tmp->left->right && _comp(key, tmp->left->right->pair.first))) {
+                    std::cout << "here " << std::endl;
                     tmp = tmp->left;
                 }
                 if (_comp(key, tmp->pair.first) && key != tmp->pair.first) {
