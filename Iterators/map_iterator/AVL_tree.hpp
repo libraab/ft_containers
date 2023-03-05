@@ -100,12 +100,12 @@ namespace ft {
         }
         Node* get_prev(Node* a) {
             Node* cur = a;
-            if (cur->left != NULL) {
+            if (cur && cur->left != NULL) {
                 cur = cur->left;
                 // Find the rightmost node in the left subtree
                 while (cur->right != NULL)
                     cur = cur->right;
-            } else {
+            } else if (cur) {
                 // Go up the tree until we find a node whose left child we haven't visited yet
                 Node *tmp = cur->parent;
                 while (tmp && cur == tmp->left) {
@@ -195,12 +195,19 @@ namespace ft {
 
         const_biterator(Compare comp = Compare()) :             _node(NULL), _comp(comp), _start(false), _end(false) {}
         const_biterator(Node* n, Compare comp = Compare()) :    _node(n), _comp(comp), _start(false), _end(false) {}
-        const_biterator(const_biterator const& x) : _node(x._node), _comp(x._comp), _start(x._start), _end(x._end), _save(x._save) {}
+        const_biterator(const_biterator const& x) {
+         _node = x._node;
+         _comp = x._comp;
+         _start = x._start;
+         _end = x._end;
+         _save = x._save;
+        }
         const_biterator(biterator<K,T,Compare,Alloc> x) {
             _node = x._node;
             _comp = x._comp;
-            _start = false;
-            _end = false;
+            _start = x._start;
+            _end = x._end;
+            _save = x._save;
         }
         ~const_biterator() { };
         //--------------------------------------------------------------------//
@@ -251,13 +258,16 @@ namespace ft {
             return cur;
         }
         Node* get_prev(Node* a) {
+            // std::cout << "start get prev" << std::endl;
             Node* cur = a;
-            if (cur->left != NULL) {
+            if (cur && cur->left != NULL) {
+            // std::cout << "first if" << std::endl;
                 cur = cur->left;
                 // Find the rightmost node in the left subtree
                 while (cur->right != NULL)
                     cur = cur->right;
-            } else {
+            } else if (cur) {
+            // std::cout << "in else" << std::endl;
                 // Go up the tree until we find a node whose left child we haven't visited yet
                 Node *tmp = cur->parent;
                 while (tmp && cur == tmp->left) {
@@ -266,24 +276,30 @@ namespace ft {
                 }
                 cur = tmp;
             }
+            // std::cout << "end get prev" << std::endl;
             return cur;
         }
         // Increment/decrement operators
         const_biterator & operator++() {
+            // std::cout << "const_it -- start ++" << std::endl;
             if (_start == true) { // did a -- before and am on null currently, next value is save
                 _node = _save;
                 _start = false;
+            // std::cout << "const_it -- start ++ start is false" << std::endl;
                 return *this;
             }
             if (_end == true) {
                 _node = NULL;
+            // std::cout << "const_it -- start ++ end true second if" << std::endl;
                 return *this;
             }
             Node* next = get_next(_node);
             if (next == NULL) {
                 _save = _node;
                 _end = true;
+            // std::cout << "const_it -- start ++ end tree third if" << std::endl;
             }
+            // std::cout << "const_it -- start ++ before return " << _start << " " <<_end << std::endl;
             _node = next;
             return *this;
         }
@@ -295,7 +311,6 @@ namespace ft {
         }
         //--------------------------------------------------------------------//
         const_biterator & operator--() {
-           
             if (_end == true) { // did a ++ before and am on null currently, next value is save
                 _node = _save;
                 _end = false;
@@ -303,14 +318,23 @@ namespace ft {
             }
             if (_start == true) {
                 _node = NULL;
+        //    std::cout << "after line 319 --" << std::endl;
                 return *this;
             }
+            // std::cout << "arrive here" << std::endl;
+         
+            // if (_node != NULL)
+            //     // std::cout << "NODE IS not NULLLLLL" << std::endl;
+            // else
+                // std::cout << "NODE IS NULLLLLL" << std::endl;
             Node* next = get_prev(_node);
+            // std::cout << "after get prev" << std::endl;
             if (next == NULL) {
                 _save = _node;
                 _start = true;
             }
             _node = next;
+        //    std::cout << "after line 328 --" << std::endl;
             return *this;
         }
         //--------------------------------------------------------------------//

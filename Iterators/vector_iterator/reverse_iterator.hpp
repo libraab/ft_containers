@@ -36,10 +36,14 @@ namespace ft
         //        C O N S T R U C T O R S     &   D E S T R U C T O R         //
         //====================================================================//
         reverse_iterator()                                  :_it(iterator_type()) {}
-        explicit reverse_iterator(iterator_type it)          :_it(it) {}
+        explicit reverse_iterator(iterator_type it)        {
+            _it = it;
+        }
         // 👆🏻 explicit = used for only direct initioalisation, no implicit conversion
         template <class Rev>
-        reverse_iterator(const reverse_iterator<Rev>& it)  :_it(it.base()) {}
+        reverse_iterator(const reverse_iterator<Rev>& it)  {
+            _it = it.base();
+        }
         // no destructor needed cause it doesn't own any resources that need to be cleaned up
         // (no dynamically allocated memory, nofile handles, no sockets ...)
         //====================================================================//
@@ -47,6 +51,7 @@ namespace ft
         //====================================================================//
         template <class A>
         reverse_iterator &operator= (const reverse_iterator<A>& rhs) { // same thing as general iterator l65
+       
             if (*this != rhs)
                 _it = rhs.base();
             return *this;
@@ -57,12 +62,12 @@ namespace ft
         //              I N C R E M E N T  &   D E C R E M E N T              //
         //====================================================================//
         reverse_iterator& operator++() {       
-            _it--;               
+            _it--;                 
             return *this;}
         reverse_iterator& operator--() { 
             _it++;
             return *this;}
-        reverse_iterator operator++(int) {     
+        reverse_iterator operator++(int) { 
             reverse_iterator old = *this;
             ++(*this);
             return old;}
@@ -112,14 +117,12 @@ namespace ft
     //     R E V E R S E   O P E R A T O R S    T E M P L A T E S             //
     //========================================================================//
     template <class T>
-	reverse_iterator<T> operator+ (typename reverse_iterator<T>::difference_type n, const reverse_iterator<T>& rhs) {
-		return (rhs + n);
-	}
+	reverse_iterator<T> operator+ (typename reverse_iterator<T>::difference_type n, const reverse_iterator<T>& rhs)
+    {return (rhs + n);}
 
 	template <class A, class B>
-	typename reverse_iterator<A>::difference_type operator-(const reverse_iterator<A>& lhs, const reverse_iterator<B>& rhs) {
-		return (rhs.base() - lhs.base());
-	}
+	typename reverse_iterator<A>::difference_type operator-(const reverse_iterator<A>& lhs, const reverse_iterator<B>& rhs)
+    {return (rhs.base() - lhs.base());}
     //========================================================================//
     //             C O M P A R I S O N   O P E R A T O R S                    //   
     //========================================================================//

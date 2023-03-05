@@ -1,9 +1,9 @@
 
 
-// #include <map>
-// #  define TESTED_NAMESPACE std
-#  define TESTED_NAMESPACE ft
-# include "map.hpp"
+#include <map>
+#  define TESTED_NAMESPACE std
+// #  define TESTED_NAMESPACE ft
+// # include "map.hpp"
 
 
 # include <iostream>
@@ -100,11 +100,11 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 	std::cout << "max_size: " << mp.max_size() << std::endl;
 
 	if (print_content)
-	{
+	{	
+		
 		typename T_MAP::const_iterator it = mp.begin();
 		typename T_MAP::const_iterator ite = mp.end();
 		// mp.print_map();
-		
         // std::cout << "begin is " << mp.begin()->second << std::endl;
         // std::cout << "end is " << mp.end()->second << std::endl;
 		std::cout << std::endl << "Content is:" << std::endl;
@@ -145,39 +145,47 @@ void	printReverse(TESTED_NAMESPACE::map<T1, T2> &mp)
 // main //
 #include <list>
 
-#define T1 char
-#define T2 int
+#define T1 float
+#define T2 foo<int>
 typedef _pair<const T1, T2> T3;
-
 int		main(void)
 {
 	std::list<T3> lst;
 	unsigned int lst_size = 5;
 	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3('a' + i, (i + 1) * 7));
+		lst.push_back(T3(2.5 - i, (i + 1) * 7));
 
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
-	TESTED_NAMESPACE::map<T1, T2>::iterator it_ = mp.begin();
-	TESTED_NAMESPACE::map<T1, T2>::reverse_iterator it(it_), ite;
+	TESTED_NAMESPACE::map<T1, T2>::reverse_iterator it(mp.rbegin());
 	printSize(mp);
 
-	std::cout << (it_ == it.base()) << std::endl;
-	std::cout << (it_ == dec(it, 3).base()) << std::endl;
+	TESTED_NAMESPACE::map<T1, T2>::const_reverse_iterator ite(mp.rbegin());
 
-	printPair(it.base());
-	printPair(inc(it.base(), 1));
+	printPair(++ite);
+	printPair(ite++);
+	printPair(ite++);
+	printPair(++ite);
 
-	std::cout << "TEST OFFSET" << std::endl;
-	--it;
-	// printPair(it);
-	printPair(it.base());
+	it->second.m();
+	ite->second.m();
 
-	it = mp.rbegin(); ite = mp.rend();
-	while (it != ite) {
+	printPair(++it);
+	printPair(it++);
+	printPair(it++);
+	printPair(++it);
 
-		std::cout << "[rev] " << printPair(it++, false) << std::endl;
-	}
-	printReverse(mp);
+	printPair(--ite);
+	printPair(ite--);
+	printPair(--ite);
+	printPair(ite--);
+
+	(*it).second.m();
+	(*ite).second.m();
+
+	printPair(--it);
+	printPair(it--);
+	printPair(it--);
+	printPair(--it);
 
 	return (0);
 }

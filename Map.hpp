@@ -65,9 +65,6 @@ namespace ft
                 _alloc = alloc;
 				for (; first != last; first++)
 					this->insert(*first);
-                // std::cout << std::endl << "in constructor" << std::endl;
-                // print_map();
-                // std::cout << std::endl;
             }
             //copy (1)
             map (const map& cpy) {*this = cpy;}
