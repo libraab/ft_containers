@@ -1,0 +1,1318 @@
+size: 10
+max_size: 1537228672809129301
+
+Content is:
+- key: 1 | value: 3
+- key: 2 | value: 6
+- key: 3 | value: 9
+- key: 4 | value: 12
+- key: 5 | value: 15
+- key: 6 | value: 18
+- key: 7 | value: 21
+- key: 8 | value: 24
+- key: 9 | value: 27
+- key: 10 | value: 30
+###############################################
+	-- [0] (const) --
+with key [-10]:
+lower_bound: key: 1 | value: 3
+upper_bound: key: 1 | value: 3
+equal_range: 1
+	-- [1] (const) --
+with key [1]:
+lower_bound: key: 1 | value: 3
+upper_bound: key: 2 | value: 6
+equal_range: 1
+	-- [2] (const) --
+with key [5]:
+lower_bound: key: 5 | value: 15
+upper_bound: key: 6 | value: 18
+equal_range: 1
+	-- [3] (const) --
+with key [10]:
+lower_bound: key: 10 | value: 30
+upper_bound: end()
+equal_range: 1
+	-- [4] (const) --
+with key [50]:
+lower_bound: end()
+upper_bound: end()
+equal_range: 1
+size: 10
+max_size: 1537228672809129301
+
+Content is:
+- key: 1 | value: 3
+- key: 2 | value: 6
+- key: 3 | value: 9
+- key: 4 | value: 12
+- key: 5 | value: 15
+- key: 6 | value: 18
+- key: 7 | value: 21
+- key: 8 | value: 24
+- key: 9 | value: 27
+- key: 10 | value: 30
+###############################################
+	-- [5] --
+with key [5]:
+lower_bound: key: 5 | value: 15
+upper_bound: key: 6 | value: 18
+equal_range: 1
+	-- [6] --
+with key [7]:
+lower_bound: key: 7 | value: 21
+upper_bound: key: 8 | value: 842
+equal_range: 1
+size: 10
+max_size: 1537228672809129301
+
+Content is:
+- key: 1 | value: 3
+- key: 2 | value: 6
+- key: 3 | value: 404
+- key: 4 | value: 12
+- key: 5 | value: 15
+- key: 6 | value: 18
+- key: 7 | value: 21
+- key: 8 | value: 842
+- key: 9 | value: 27
+- key: 10 | value: 30
+###############################################
+size: 4
+max_size: 1537228672809129301
+
+Content is:
+- key: a | value: 2.3
+- key: b | value: 1.4
+- key: c | value: 0.3
+- key: d | value: 4.2
+###############################################
+	-- [1] --
+with [a and a]: key_comp: 0 | value_comp: 0
+	-- [2] --
+with [a and b]: key_comp: 1 | value_comp: 1
+	-- [3] --
+with [a and c]: key_comp: 1 | value_comp: 1
+	-- [4] --
+with [a and d]: key_comp: 1 | value_comp: 1
+	-- [5] --
+with [b and a]: key_comp: 0 | value_comp: 0
+	-- [6] --
+with [b and b]: key_comp: 0 | value_comp: 0
+	-- [7] --
+with [b and c]: key_comp: 1 | value_comp: 1
+	-- [8] --
+with [b and d]: key_comp: 1 | value_comp: 1
+	-- [9] --
+with [c and a]: key_comp: 0 | value_comp: 0
+	-- [10] --
+with [c and b]: key_comp: 0 | value_comp: 0
+	-- [11] --
+with [c and c]: key_comp: 0 | value_comp: 0
+	-- [12] --
+with [c and d]: key_comp: 1 | value_comp: 1
+	-- [13] --
+with [d and a]: key_comp: 0 | value_comp: 0
+	-- [14] --
+with [d and b]: key_comp: 0 | value_comp: 0
+	-- [15] --
+with [d and c]: key_comp: 0 | value_comp: 0
+	-- [16] --
+with [d and d]: key_comp: 0 | value_comp: 0
+size: 4
+max_size: 1537228672809129301
+
+Content is:
+- key: a | value: 2.3
+- key: b | value: 1.4
+- key: c | value: 0.3
+- key: d | value: 4.2
+###############################################
+	-- PART ONE --
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: 1 | value: 7
+- key: 2 | value: 14
+- key: 3 | value: 21
+- key: 4 | value: 28
+- key: 5 | value: 35
+- key: 6 | value: 1
+- key: 7 | value: 0
+###############################################
+size: 5
+max_size: 2305843009213693951
+
+Content is:
+- key: 1 | value: 6
+- key: 2 | value: 5
+- key: 3 | value: 4
+- key: 4 | value: 3
+- key: 5 | value: 2
+###############################################
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: 1 | value: 5
+- key: 2 | value: 10
+- key: 3 | value: 15
+- key: 4 | value: 20
+- key: 5 | value: 25
+- key: 6 | value: 1
+- key: 7 | value: 0
+###############################################
+	-- PART TWO --
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: 1 | value: 5
+- key: 2 | value: 10
+- key: 3 | value: 15
+- key: 4 | value: 20
+- key: 5 | value: 25
+- key: 6 | value: 1
+- key: 7 | value: 0
+###############################################
+size: 0
+max_size: 2305843009213693951
+
+Content is:
+###############################################
+size: 5
+max_size: 2305843009213693951
+
+Content is:
+- key: 1 | value: 6
+- key: 2 | value: 5
+- key: 3 | value: 4
+- key: 4 | value: 3
+- key: 5 | value: 2
+###############################################
+is_empty: 0
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 7
+- key: b | value: 6
+- key: c | value: 5
+- key: d | value: 4
+- key: e | value: 3
+- key: f | value: 2
+- key: g | value: 1
+###############################################
+is_empty: 1
+is_empty: 0
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 21
+- key: b | value: 28
+- key: c | value: 35
+- key: d | value: 42
+- key: e | value: 3
+- key: f | value: 2
+- key: g | value: 1
+###############################################
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 7
+- key: b | value: 6
+- key: c | value: 5
+- key: d | value: 4
+- key: e | value: 3
+- key: f | value: 2
+- key: g | value: 1
+###############################################
+is_empty: 1
+size: 0
+max_size: 2305843009213693951
+
+Content is:
+###############################################
+size: 10
+max_size: 576460752303423487
+
+Content is:
+- key: 0 | value: AAAAAAAAAA
+- key: 1 | value: BBBBBBBBB
+- key: 2 | value: CCCCCCCC
+- key: 3 | value: DDDDDDD
+- key: 4 | value: EEEEEE
+- key: 5 | value: FFFFF
+- key: 6 | value: GGGG
+- key: 7 | value: HHH
+- key: 8 | value: II
+- key: 9 | value: J
+###############################################
+	-- [0] --
+size: 9
+max_size: 576460752303423487
+
+Content is:
+- key: 0 | value: AAAAAAAAAA
+- key: 2 | value: CCCCCCCC
+- key: 3 | value: DDDDDDD
+- key: 4 | value: EEEEEE
+- key: 5 | value: FFFFF
+- key: 6 | value: GGGG
+- key: 7 | value: HHH
+- key: 8 | value: II
+- key: 9 | value: J
+###############################################
+	-- [1] --
+size: 8
+max_size: 576460752303423487
+
+Content is:
+- key: 2 | value: CCCCCCCC
+- key: 3 | value: DDDDDDD
+- key: 4 | value: EEEEEE
+- key: 5 | value: FFFFF
+- key: 6 | value: GGGG
+- key: 7 | value: HHH
+- key: 8 | value: II
+- key: 9 | value: J
+###############################################
+	-- [2] --
+size: 7
+max_size: 576460752303423487
+
+Content is:
+- key: 2 | value: CCCCCCCC
+- key: 3 | value: DDDDDDD
+- key: 4 | value: EEEEEE
+- key: 5 | value: FFFFF
+- key: 6 | value: GGGG
+- key: 7 | value: HHH
+- key: 8 | value: II
+###############################################
+	-- [3] --
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: 5 | value: FFFFF
+- key: 6 | value: GGGG
+- key: 7 | value: HHH
+- key: 8 | value: II
+###############################################
+	-- [4] --
+size: 2
+max_size: 576460752303423487
+
+Content is:
+- key: 5 | value: FFFFF
+- key: 8 | value: II
+###############################################
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: 5 | value: FFFFF
+- key: 8 | value: II
+- key: 10 | value: Hello
+- key: 11 | value: Hi there
+###############################################
+	-- [5] --
+size: 1
+max_size: 576460752303423487
+
+Content is:
+- key: 5 | value: FFFFF
+###############################################
+size: 5
+max_size: 576460752303423487
+
+Content is:
+- key: 5 | value: FFFFF
+- key: 12 | value: ONE
+- key: 13 | value: TWO
+- key: 14 | value: THREE
+- key: 15 | value: FOUR
+###############################################
+	-- [6] --
+size: 0
+max_size: 576460752303423487
+
+Content is:
+###############################################
+size: 6
+max_size: 576460752303423487
+
+Content is:
+- key: 0 | value: AAAAAA
+- key: 1 | value: BBBBB
+- key: 2 | value: CCCC
+- key: 3 | value: DDD
+- key: 4 | value: EE
+- key: 5 | value: F
+###############################################
+	-- [0] --
+ret: 1
+size: 5
+max_size: 576460752303423487
+
+Content is:
+- key: 0 | value: AAAAAA
+- key: 1 | value: BBBBB
+- key: 3 | value: DDD
+- key: 4 | value: EE
+- key: 5 | value: F
+###############################################
+	-- [1] --
+ret: 1
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: 0 | value: AAAAAA
+- key: 1 | value: BBBBB
+- key: 4 | value: EE
+- key: 5 | value: F
+###############################################
+	-- [2] --
+ret: 1
+size: 3
+max_size: 576460752303423487
+
+Content is:
+- key: 1 | value: BBBBB
+- key: 4 | value: EE
+- key: 5 | value: F
+###############################################
+	-- [3] --
+ret: 1
+size: 2
+max_size: 576460752303423487
+
+Content is:
+- key: 1 | value: BBBBB
+- key: 4 | value: EE
+###############################################
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: -1 | value: Hello
+- key: 1 | value: BBBBB
+- key: 4 | value: EE
+- key: 10 | value: Hi there
+###############################################
+	-- [4] --
+ret: 0
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: -1 | value: Hello
+- key: 1 | value: BBBBB
+- key: 4 | value: EE
+- key: 10 | value: Hi there
+###############################################
+	-- [5] --
+ret: 1
+size: 3
+max_size: 576460752303423487
+
+Content is:
+- key: -1 | value: Hello
+- key: 4 | value: EE
+- key: 10 | value: Hi there
+###############################################
+size: 6
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 25 | value: funny
+- key: 27 | value: bee
+- key: 42 | value: fgzgxfn
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- FIND --
+key: 12 | value: no
+map::find(3) returned end()
+map::find(35) returned end()
+key: 90 | value: 8
+map::find(100) returned end()
+	-- COUNT --
+map::count(-3)	returned [0]
+map::count(12)	returned [1]
+map::count(3)	returned [0]
+map::count(35)	returned [0]
+map::count(90)	returned [1]
+map::count(100)	returned [0]
+size: 6
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 25 | value: funny
+- key: 27 | value: newly inserted mapped_value
+- key: 42 | value: fgzgxfn
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+const map.find(42)->second: [fgzgxfn]
+const map.count(80): [1]
+	-- [0] --
+insert return: key: 42 | value: lol
+Created new node: 1
+size: 1
+max_size: 576460752303423487
+
+Content is:
+- key: 42 | value: lol
+###############################################
+	-- [1] --
+insert return: key: 42 | value: lol
+Created new node: 0
+size: 1
+max_size: 576460752303423487
+
+Content is:
+- key: 42 | value: lol
+###############################################
+	-- [2] --
+insert return: key: 50 | value: mdr
+Created new node: 1
+size: 2
+max_size: 576460752303423487
+
+Content is:
+- key: 42 | value: lol
+- key: 50 | value: mdr
+###############################################
+	-- [3] --
+insert return: key: 35 | value: funny
+Created new node: 1
+size: 3
+max_size: 576460752303423487
+
+Content is:
+- key: 35 | value: funny
+- key: 42 | value: lol
+- key: 50 | value: mdr
+###############################################
+	-- [4] --
+insert return: key: 45 | value: bunny
+Created new node: 1
+size: 4
+max_size: 576460752303423487
+
+Content is:
+- key: 35 | value: funny
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+###############################################
+	-- [5] --
+insert return: key: 21 | value: fizz
+Created new node: 1
+size: 5
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+###############################################
+	-- [6] --
+insert return: key: 38 | value: buzz
+Created new node: 1
+size: 6
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+###############################################
+	-- [7] --
+insert return: key: 55 | value: fuzzy
+size: 7
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+- key: 55 | value: fuzzy
+###############################################
+	-- [8] --
+insert return: key: 1337 | value: beauty
+size: 1
+max_size: 576460752303423487
+
+Content is:
+- key: 1337 | value: beauty
+###############################################
+	-- [9] --
+insert return: key: 1000 | value: Hello
+size: 2
+max_size: 576460752303423487
+
+Content is:
+- key: 1000 | value: Hello
+- key: 1337 | value: beauty
+###############################################
+	-- [10] --
+insert return: key: 1500 | value: World
+size: 3
+max_size: 576460752303423487
+
+Content is:
+- key: 1000 | value: Hello
+- key: 1337 | value: beauty
+- key: 1500 | value: World
+###############################################
+List contains:
+key: 42 | value: lol
+key: 50 | value: mdr
+key: 35 | value: funny
+key: 45 | value: bunny
+key: 21 | value: fizz
+key: 38 | value: buzz
+key: 55 | value: fuzzy
+	-- [0] --
+size: 7
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+- key: 55 | value: fuzzy
+###############################################
+List contains:
+key: 87 | value: hey
+key: 47 | value: eqweqweq
+key: 35 | value: this key is already inside
+key: 23 | value: but not that one
+key: 1 | value: surprising isnt it?
+key: 100 | value: is it enough??
+key: 55 | value: inside map too
+	-- [1] --
+size: 7
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+- key: 55 | value: fuzzy
+###############################################
+	-- [2] --
+size: 12
+max_size: 576460752303423487
+
+Content is:
+- key: 1 | value: surprising isnt it?
+- key: 21 | value: fizz
+- key: 23 | value: but not that one
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 47 | value: eqweqweq
+- key: 50 | value: mdr
+- key: 55 | value: fuzzy
+- key: 87 | value: hey
+- key: 100 | value: is it enough??
+###############################################
+size: 5
+max_size: 1537228672809129301
+
+Content is:
+- key: 2.5 | value: 1
+- key: 3.5 | value: 2
+- key: 4.5 | value: 3
+- key: 5.5 | value: 4
+- key: 6.5 | value: 5
+###############################################
+key: 3.5 | value: 2
+key: 3.5 | value: 2
+key: 4.5 | value: 3
+key: 6.5 | value: 5
+foo::m called [1]
+foo::m const called [5]
+key: 3.5 | value: 2
+key: 3.5 | value: 2
+key: 4.5 | value: 3
+key: 6.5 | value: 5
+key: 5.5 | value: 4
+key: 5.5 | value: 4
+key: 3.5 | value: 2
+key: 3.5 | value: 2
+foo::m called [5]
+foo::m const called [1]
+key: 5.5 | value: 4
+key: 5.5 | value: 4
+key: 4.5 | value: 3
+key: 2.5 | value: 1
+size: 6
+max_size: 576460752303423487
+
+Content is:
+- key: 90 | value: 8
+- key: 80 | value: hey
+- key: 42 | value: fgzgxfn
+- key: 27 | value: bee
+- key: 25 | value: funny
+- key: 12 | value: no
+###############################################
+size: 3
+max_size: 461168601842738790
+
+Content is:
+- key: a | value: an element
+- key: b | value: old element
+- key: c | value: another element
+###############################################
+insert a new element via operator[]: 
+size: 4
+max_size: 461168601842738790
+
+Content is:
+- key: a | value: an element
+- key: b | value: old element
+- key: c | value: another element
+- key: d | value: 
+###############################################
+############### [0] ###############
+eq: 1 | ne: 0
+lt: 0 | le: 1
+gt: 0 | ge: 1
+############### [1] ###############
+eq: 1 | ne: 0
+lt: 0 | le: 1
+gt: 0 | ge: 1
+############### [2] ###############
+eq: 0 | ne: 1
+lt: 1 | le: 1
+gt: 0 | ge: 0
+############### [3] ###############
+eq: 0 | ne: 1
+lt: 0 | le: 0
+gt: 1 | ge: 1
+############### [4] ###############
+eq: 0 | ne: 1
+lt: 0 | le: 0
+gt: 1 | ge: 1
+############### [5] ###############
+eq: 0 | ne: 1
+lt: 1 | le: 1
+gt: 0 | ge: 0
+############### [6] ###############
+eq: 0 | ne: 1
+lt: 1 | le: 1
+gt: 0 | ge: 0
+############### [7] ###############
+eq: 0 | ne: 1
+lt: 0 | le: 0
+gt: 1 | ge: 1
+OK
+size: 5
+max_size: 1537228672809129301
+
+Content is:
+- key: -1.5 | value: 35
+- key: -0.5 | value: 28
+- key: 0.5 | value: 21
+- key: 1.5 | value: 14
+- key: 2.5 | value: 7
+###############################################
+key: 1.5 | value: 14
+key: 1.5 | value: 14
+key: 0.5 | value: 21
+key: -1.5 | value: 35
+foo::m called [7]
+foo::m const called [35]
+key: 1.5 | value: 14
+key: 1.5 | value: 14
+key: 0.5 | value: 21
+key: -1.5 | value: 35
+key: -0.5 | value: 28
+key: -0.5 | value: 28
+key: 1.5 | value: 14
+key: 1.5 | value: 14
+foo::m called [35]
+foo::m const called [7]
+key: -0.5 | value: 28
+key: -0.5 | value: 28
+key: 0.5 | value: 21
+key: 2.5 | value: 7
+size: 5
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 7
+- key: b | value: 14
+- key: c | value: 21
+- key: d | value: 28
+- key: e | value: 35
+###############################################
+1
+0
+key: a | value: 7
+key: b | value: 14
+TEST OFFSET
+key: a | value: 7
+key: b | value: 14
+[rev] key: e | value: 35
+[rev] key: d | value: 28
+[rev] key: c | value: 21
+[rev] key: b | value: 14
+[rev] key: a | value: 7
+printReverse:
+-> key: e | value: 35
+-> key: d | value: 28
+-> key: c | value: 21
+-> key: b | value: 14
+-> key: a | value: 7
+_______________________________________________
+BEFORE SWAP
+foo contains:
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 7
+- key: b | value: 6
+- key: c | value: 5
+- key: d | value: 4
+- key: e | value: 3
+- key: f | value: 2
+- key: g | value: 1
+###############################################
+bar contains:
+size: 4
+max_size: 2305843009213693951
+
+Content is:
+- key: w | value: 15
+- key: x | value: 10
+- key: y | value: 5
+- key: z | value: 0
+###############################################
+AFTER SWAP
+foo contains:
+size: 4
+max_size: 2305843009213693951
+
+Content is:
+- key: w | value: 15
+- key: x | value: 10
+- key: y | value: 5
+- key: z | value: 0
+###############################################
+bar contains:
+size: 7
+max_size: 2305843009213693951
+
+Content is:
+- key: a | value: 7
+- key: b | value: 6
+- key: c | value: 5
+- key: d | value: 4
+- key: e | value: 3
+- key: f | value: 2
+- key: g | value: 1
+###############################################
+Iterator validity:
+1
+1
+List contains: 9 elements.
+key: 42 | value: lol
+key: 50 | value: mdr
+key: 35 | value: funny
+key: 45 | value: bunny
+key: 21 | value: fizz
+key: 35 | value: this key is already inside
+key: 55 | value: fuzzy
+key: 38 | value: buzz
+key: 55 | value: inside too
+---------------------------------------------
+size: 7
+max_size: 576460752303423487
+
+Content is:
+- key: 21 | value: fizz
+- key: 35 | value: funny
+- key: 38 | value: buzz
+- key: 42 | value: lol
+- key: 45 | value: bunny
+- key: 50 | value: mdr
+- key: 55 | value: fuzzy
+###############################################
+size: 31
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 22 | value: 123
+- key: 23 | value: coconut
+- key: 24 | value: 345
+- key: 25 | value: funny
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 54 | value: 6
+- key: 55 | value: fuzzy
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [0] --
+size: 30
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 22 | value: 123
+- key: 23 | value: coconut
+- key: 24 | value: 345
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 54 | value: 6
+- key: 55 | value: fuzzy
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [1] --
+size: 29
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 22 | value: 123
+- key: 23 | value: coconut
+- key: 24 | value: 345
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 54 | value: 6
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [2] --
+size: 28
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 22 | value: 123
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 54 | value: 6
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [3] --
+size: 27
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 22 | value: 123
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [4] --
+size: 26
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 51 | value: 5
+- key: 53 | value: this is a test
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [5] --
+size: 25
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 21 | value: fizz
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 53 | value: this is a test
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [6] --
+size: 24
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 53 | value: this is a test
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [7] --
+size: 23
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 20 | value: idea
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [8] --
+size: 22
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 23 | value: coconut
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [9] --
+size: 21
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 42 | value: lol
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [10] --
+size: 20
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 38 | value: 38
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [11] --
+size: 19
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 35 | value: fiesta
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [12] --
+size: 18
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 33 | value: 33
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################
+	-- [13] --
+size: 17
+max_size: 576460752303423487
+
+Content is:
+- key: 12 | value: no
+- key: 18 | value: bee
+- key: 27 | value: 27
+- key: 28 | value: diary
+- key: 29 | value: 29
+- key: 30 | value: buzz
+- key: 43 | value: 1
+- key: 44 | value: hello
+- key: 45 | value: 2
+- key: 46 | value: bunny
+- key: 47 | value: 3
+- key: 48 | value: world
+- key: 49 | value: 4
+- key: 50 | value: mdr
+- key: 60 | value: 7
+- key: 80 | value: hey
+- key: 90 | value: 8
+###############################################

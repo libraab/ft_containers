@@ -3,7 +3,7 @@ CC = clang++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 OUTPUT = $(NAME:=.output)
 
-all: $(NAME) diff clean
+all: $(NAME) diff fclean
 
 ${NAME}:
 	${CC} ${FLAGS} -DTESTED_NAMESPACE=$@ *.cpp -o $@
@@ -12,7 +12,9 @@ ${NAME}:
 diff: ${NAME}
 	diff $(OUTPUT)
 
-clean:
+fclean:
 	rm -rf $(NAME) $(OUTPUT)
 
-.PHONY: all $(NAME) diff clean
+re : 		fclean all
+
+.PHONY: all $(NAME) diff fclean re
