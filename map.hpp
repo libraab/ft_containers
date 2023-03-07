@@ -23,17 +23,16 @@ namespace ft
         //====================================================================//
         typedef Key                                             key_type;
         typedef T                                               mapped_type;
-        typedef ft::pair<Key, T>                          value_type;
+        typedef ft::pair<Key, T>                                value_type;
         typedef Compare                                         key_compare;
         typedef Alloc                                           allocator_type;
+        typedef typename allocator_type::template rebind<ft::pair<const Key,T> >::other rebind_alloc;
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef typename allocator_type::pointer                pointer; 
-        typedef typename allocator_type::const_pointer          const_pointer;
-	            
+        typedef typename allocator_type::const_pointer          const_pointer; 
         typedef ft::biterator<Key, T, Compare, Alloc>           iterator;
         typedef ft::const_biterator<Key, T, Compare, Alloc>     const_iterator;
-
         typedef ft::reverse_iterator<iterator>                  reverse_iterator;	    
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;	
         typedef std::ptrdiff_t                                  difference_type;  

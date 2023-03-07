@@ -1,17 +1,32 @@
-NAME = ft
-CC = clang++
-FLAGS = -Wall -Wextra -Werror -std=c++98
+# Compiler settings
+CXX = g++
+CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 
+# Source files
+SRCS = main_subject.cpp
 
-all: $(NAME) fclean
+# Object files
+OBJS = $(SRCS:.cpp=.o)
 
-${NAME}:
-	${CC} ${FLAGS} *.cpp -o $@
+# Build rules
+all: ft
 
-fclean:
-	rm -rf $(NAME) $(OUTPUT)
+ft: $(OBJS)
+	@echo "Run ./$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $^
 
-re :
-	fclean all
+%.o: %.cpp
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: all $(NAME) fclean re
+.PHONY: clean fclean re
+
+clean:
+	@echo "Cleaning up"
+	@rm -f $(OBJS) ft
+
+fclean: clean
+	@echo "Full Cleaning up"
+	@rm -f myprogram
+
+re: fclean all
